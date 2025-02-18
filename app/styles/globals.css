@@ -30,22 +30,3 @@ body {
   background: var(--background);
   font-family: "Galmuri9", sans-serif;
 }
-
-.text-main {
-  color: var(--color-main);
-}
-.text-second {
-  color: var(--color-second);
-}
-.text-point {
-  color: var(--color-point);
-}
-.text-secondPoint {
-  color: var(--color-secondPoint);
-}
-.text-amberOrange {
-  color: var(--color-amberOrange);
-}
-.text-ligthRed {
-  color: var(--color-ligthRed);
-}
