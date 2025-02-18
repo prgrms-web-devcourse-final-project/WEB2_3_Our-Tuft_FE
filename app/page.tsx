@@ -7,17 +7,7 @@ export default function Home() {
       <Link href="/lobby">로비</Link>
       <Link href="/shop">포인트 상점</Link>
       <Link href="/game">게임 화면</Link>
+      <Link href="/my">프로필 편집</Link>
     </div>
   );
 }
-
-// 애초에
-
-// 1. 대기실 -
-
-// 2. 게임 페이지
-//   - 조건 걸어서 렌더링?
-
-//   2-1. OX 퀴즈
-//   2-2. 스피드 퀴즈
-//   2-3. 캐치마인드
