@@ -14,6 +14,7 @@ export default function Home() {
       <div className="flex flex-col items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
         <Link href="/login">로그인</Link>
         <Link href="/lobby">로비</Link>
+        <Link href="/rooms">대기실</Link>
         <Link href="/shop">포인트 상점</Link>
         <Link href="/game">게임 화면</Link>
         <Link href="/my">프로필 편집</Link>
