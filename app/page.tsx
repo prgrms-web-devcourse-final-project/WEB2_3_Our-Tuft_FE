@@ -4,24 +4,12 @@ export default function Home() {
   return (
     <>
       <div className="flex gap-2">
-        <div className="text-bg-[var(--color-main)] bg-[var(--color-main)]">
-          Main 색상
-        </div>
-        <div className="text-bg-[var(--color-second)] bg-[var(--color-second)]">
-          Second 색상
-        </div>
-        <div className="text-bg-[var(--color-point)] bg-[var(--color-point)]">
-          Point 색상
-        </div>
-        <div className="text-bg-[var(--color-secondPoint)] bg-[var(--color-secondPoint)]">
-          SecondPoint 색상
-        </div>
-        <div className="text-bg-[var(--color-amberOrange)] bg-[var(--color-amberOrange)]">
-          amberOrange 색상
-        </div>
-        <div className="text-bg-[var(--color-ligthRed)] bg-[var(--color-ligthRed)]">
-          ligthRed 색상
-        </div>
+        <div className=" bg-[var(--color-main)]">Main 색상</div>
+        <div className=" bg-[var(--color-second)]">Second 색상</div>
+        <div className="bg-[var(--color-point)]">Point 색상</div>
+        <div className=" bg-[var(--color-secondPoint)]">SecondPoint 색상</div>
+        <div className=" bg-[var(--color-amberOrange)]">amberOrange 색상</div>
+        <div className=" bg-[var(--color-ligthRed)]">ligthRed 색상</div>
       </div>
       <div className="flex flex-col items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
         <Link href="/login">로그인</Link>
