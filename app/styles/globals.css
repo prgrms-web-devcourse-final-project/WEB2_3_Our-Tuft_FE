@@ -10,6 +10,12 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --color-main: #3dc2ec;
+  --color-second: #4b70f5;
+  --color-point: #4c3bcf;
+  --color-secondPoint: #402e7a;
+  --color-amberOrange: #ffa20e;
+  --color-ligthRed: #f05650;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -23,4 +29,23 @@ body {
   color: var(--foreground);
   background: var(--background);
   font-family: "Galmuri9", sans-serif;
+}
+
+.text-main {
+  color: var(--color-main);
+}
+.text-second {
+  color: var(--color-second);
+}
+.text-point {
+  color: var(--color-point);
+}
+.text-secondPoint {
+  color: var(--color-secondPoint);
+}
+.text-amberOrange {
+  color: var(--color-amberOrange);
+}
+.text-ligthRed {
+  color: var(--color-ligthRed);
 }
