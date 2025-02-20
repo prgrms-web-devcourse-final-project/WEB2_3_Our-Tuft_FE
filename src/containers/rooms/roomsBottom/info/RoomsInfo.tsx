@@ -4,28 +4,28 @@ import setting from "@/assets/icons/setting.svg";
 export default function RoomsInfo() {
   return (
     <div className="flex justify-between md:text-md lg:text-3xl items-center px-5 md:break-keep">
-      <button className="bg-[var(--color-secondPoint)] w-[20%] rounded-[20px] py-7 min-[1024px]:max-[1380px]:py-0">
+      <button className="bg-[var(--color-secondPoint)] w-[20%] lg:rounded-[20px] md:rounded-[16px] md:py-2 lg:py-7 cursor-pointer">
         주제: 상식{" "}
       </button>
-      <div className="flex md:gap-2 lg:gap-10 text-center items-center">
+      <div className="flex gap-2  text-center items-center">
         <div>제한 시간</div>
-        <div className="bg-[var(--color-point)] md:py-2 md:px-5 lg:py-7 lg:px-14 rounded-[20px]">
+        <div className="bg-[var(--color-point)] text-center md:py-2 md:px-5 lg:py-7 lg:px-10 lg:rounded-[20px] md:rounded-[16px]">
           120초
         </div>
       </div>
-      <div className="flex md:gap-2 lg:gap-10  text-center items-center">
+      <div className="flex gap-2  text-center items-center">
         <div>라운드</div>
-        <div className="bg-[var(--color-point)] md:py-2 md:px-5 lg:py-7 lg:px-20 rounded-[20px]">
+        <div className="bg-[var(--color-point)] md:py-2 md:px-5 lg:py-7 lg:px-10 lg:rounded-[20px] md:rounded-[16px]">
           25
         </div>
       </div>
-      <div className="flex md:gap-2 lg:gap-6 bg-[var(--color-point)] md:py-2 md:px-3 lg:py-7 lg:px-10 rounded-[20px] items-center">
+      <div className="flex md:gap-2 lg:gap-6 bg-[var(--color-point)] lg:w-[15%] md:py-2 md:px-4 lg:py-7 lg:px-10 lg:rounded-[20px] md:rounded-[16px] justify-center cursor-pointer">
         <Image
           src={setting}
           alt="설정 아이콘"
-          className="lg:w-8 lg:h-8 md:w-4 md:h-4"
+          className="lg:w-8 lg:h-8 md:w-6 md:h-6"
         />
-        <span>설정</span>
+        <span className="md:hidden lg:block">설정</span>
       </div>
     </div>
   );

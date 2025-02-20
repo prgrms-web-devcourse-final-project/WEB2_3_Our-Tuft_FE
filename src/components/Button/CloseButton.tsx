@@ -6,9 +6,13 @@ export default function CloseButton() {
   return (
     <Link
       href="/lobby"
-      className="bg-[var(--color-ligthRed)] p-4 rounded-[10px]"
+      className="bg-[var(--color-ligthRed)] lg:p-4 md:p-2 lg:rounded-[12px] md:rounded-[8px]"
     >
-      <Image src={close} alt="닫기 아이콘" className="w-5 h-5" />
+      <Image
+        src={close}
+        alt="닫기 아이콘"
+        className="lg:w-4 lg:h-4 md:w-3 md:h-3"
+      />
     </Link>
   );
 }

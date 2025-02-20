@@ -2,7 +2,7 @@ import UserCard from "./UserCard";
 
 export default function UserList() {
   return (
-    <div className="grid grid-cols-4 gap-10 rounded-[30px] bg-[var(--color-second)] p-9">
+    <div className="grid grid-cols-4 lg:gap-8 md:gap-3 lg:rounded-[32px] md:rounded-[20px] bg-[var(--color-second)] p-7">
       <UserCard color="point" />
       <UserCard color="secondPoint" />
       <UserCard />
