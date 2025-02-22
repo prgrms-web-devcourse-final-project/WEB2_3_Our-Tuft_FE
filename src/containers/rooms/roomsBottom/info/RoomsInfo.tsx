@@ -1,14 +1,17 @@
+"use client";
 import Image from "next/image";
 import setting from "@/assets/icons/setting.svg";
-import { useModalStore } from "../../../../store/modalStore";
+import { useState } from "react";
+import TopicModal from "../../roomsModal/TopicModal";
 
 export default function RoomsInfo() {
-  const { isOpen } = useModalStore();
+  const [isOpen, setOpen] = useState(false);
+
   return (
     <div className="flex justify-between md:text-md lg:text-3xl items-center px-5 md:break-keep">
       <button
         className="bg-[var(--color-secondPoint)] hover:bg-[var(--color-secondPoint-hover)] w-[20%] lg:rounded-[20px] md:rounded-[16px] md:py-2 lg:py-7 cursor-pointer"
-        onClick={() => isOpen("topic")}
+        onClick={() => setOpen(true)}
       >
         주제: 상식{" "}
       </button>
@@ -32,6 +35,8 @@ export default function RoomsInfo() {
         />
         <span className="md:hidden lg:block">설정</span>
       </div>
+
+      {isOpen && <TopicModal isClose={setOpen} />}
     </div>
   );
 }

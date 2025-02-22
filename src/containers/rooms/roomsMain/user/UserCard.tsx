@@ -2,9 +2,7 @@
 import Image from "next/image";
 import dummy from "@/assets/images/dummy.svg";
 
-import { useState } from "react";
-
-export default function UserCard({ color }: { color?: string }) {
+export default function UserCard() {
   return (
     <>
       <div className="flex flex-col items-center justify-center w-full bg-[var(--color-amberOrange)] lg:rounded-[16px] md:rounded-[8px] lg:px-8 md:px-4 lg:pt-8 md:pt-4 text-xl drop-shadow-custom cursor-pointer">

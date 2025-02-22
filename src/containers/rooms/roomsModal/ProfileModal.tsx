@@ -1,11 +1,20 @@
 import React from "react";
-import Modal from "../../../components/Modal/Modal";
+import Modal from "../../../components/Modal/index";
 import Image from "next/image";
 import dummy from "@/assets/images/dummy.svg";
 
-export default function ProfileModal() {
+export default function ProfileModal({
+  isClose,
+}: {
+  isClose: (val: boolean) => void;
+}) {
   return (
-    <Modal title={"프로필"} width={"w-[788px]"} height={"h-[450]"}>
+    <Modal
+      title={"프로필"}
+      width={"w-[788px]"}
+      height={"h-[450]"}
+      isClose={isClose}
+    >
       <div className="flex px-16 gap-7">
         <Image
           src={dummy}
