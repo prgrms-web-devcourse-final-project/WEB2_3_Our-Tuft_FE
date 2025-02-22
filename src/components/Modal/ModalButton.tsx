@@ -1,13 +1,13 @@
-import { useModalStore } from "../../store/modalStore";
-
-export default function ModalButton() {
-  const { isClose } = useModalStore();
-
+export default function ModalButton({
+  isClose,
+}: {
+  isClose: (val: boolean) => void;
+}) {
   return (
-    <div className="flex gap-4">
+    <div className="absolute bottom-0 right-0 flex p-8  gap-4 z-30">
       <button
         className="bg-[#4E4C4C] rounded-xl px-5 py-2 cursor-pointer"
-        onClick={isClose}
+        onClick={() => isClose(false)}
       >
         취소
       </button>
