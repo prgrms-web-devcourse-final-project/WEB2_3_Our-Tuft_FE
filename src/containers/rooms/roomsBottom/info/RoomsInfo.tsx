@@ -36,7 +36,7 @@ export default function RoomsInfo() {
         <span className="md:hidden lg:block">설정</span>
       </div>
 
-      {isOpen && <TopicModal isClose={setOpen} />}
+      {isOpen && <TopicModal setIsClose={setOpen} />}
     </div>
   );
 }

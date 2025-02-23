@@ -1,17 +1,22 @@
 export default function ModalButton({
-  isClose,
+  setIsClose,
+  setIsComplete,
 }: {
-  isClose: (val: boolean) => void;
+  setIsClose: (val: boolean) => void;
+  setIsComplete?: <T>(val?: T) => void;
 }) {
   return (
     <div className="absolute bottom-0 right-0 flex p-8  gap-4 z-30">
       <button
         className="bg-[#4E4C4C] rounded-xl px-5 py-2 cursor-pointer"
-        onClick={() => isClose(false)}
+        onClick={() => setIsClose(false)}
       >
         취소
       </button>
-      <button className="bg-[var(--color-point)] rounded-xl px-5 py-2 cursor-pointer">
+      <button
+        className="bg-[var(--color-point)] rounded-xl px-5 py-2 cursor-pointer"
+        onClick={() => setIsComplete?.()}
+      >
         확인
       </button>
     </div>

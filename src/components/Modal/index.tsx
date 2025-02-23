@@ -2,28 +2,31 @@
 
 import { createPortal } from "react-dom";
 import ModalContainer from "./ModalContainer";
-import ModalWrapper from "./ModalWrapper";
 import ModalButton from "./ModalButton";
 
 export default function Modal({
   title,
   width,
   height,
-  isClose,
+  setIsClose,
+  setIsComplete,
   children,
-}: modalProp & { isClose: (val: boolean) => void }) {
+  className,
+}: modalProp & {
+  setIsClose: (val: boolean) => void;
+  setIsComplete?: <T>(val?: T) => void;
+}) {
   return createPortal(
-    <ModalWrapper>
-      <ModalContainer
-        title={title}
-        width={width}
-        height={height}
-        isClose={isClose}
-      >
-        {children}
-        <ModalButton isClose={isClose} />
-      </ModalContainer>
-    </ModalWrapper>,
+    <ModalContainer
+      title={title}
+      width={width}
+      height={height}
+      setIsClose={setIsClose}
+      className={className}
+    >
+      {children}
+      <ModalButton setIsClose={setIsClose} setIsComplete={setIsComplete} />
+    </ModalContainer>,
     document.body
   );
 }
