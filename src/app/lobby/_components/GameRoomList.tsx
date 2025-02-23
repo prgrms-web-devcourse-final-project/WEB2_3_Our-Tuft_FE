@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import { useState, useEffect, useRef } from "react";
 import GameRoomItem from "./GameRoomItem";
 
@@ -156,7 +157,9 @@ export default function GameRoomList() {
       {/* 방 목록 */}
       <div className="grid grid-cols-2 gap-x-6 gap-y-4 overflow-y-auto h-[calc(100%-100px)] pr-4">
         {Array.from({ length: 15 }).map((_, index) => (
-          <GameRoomItem key={index} />
+          <Link href="/rooms" key={index}>
+            <GameRoomItem />
+          </Link>
         ))}
       </div>
     </div>
