@@ -17,7 +17,6 @@ export default function UserList() {
   const handleContextMenu = (event: React.MouseEvent) => {
     event.preventDefault();
     setPosition({ x: event.clientX, y: event.clientY });
-    console.log(event.clientX, event.clientY);
     setOpenMenu(true);
   };
 
@@ -32,15 +31,15 @@ export default function UserList() {
           <UserCard />
         </div>
       ))}
-      {isOpenDeport && <DeportModal isClose={setOpenDeport} />}
+      {isOpenDeport && <DeportModal setIsClose={setOpenDeport} />}
       {isOpenMenu && (
         <MenuModal
-          isClose={setOpenMenu}
+          setIsClose={setOpenMenu}
           position={position}
-          profileOpen={setOpenProfile}
+          openProfileModal={setOpenProfile}
         />
       )}
-      {isOpenProfile && <ProfileModal isClose={setOpenProfile} />}
+      {isOpenProfile && <ProfileModal setIsClose={setOpenProfile} />}
     </div>
   );
 }

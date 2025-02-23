@@ -1,29 +1,29 @@
 import { createPortal } from "react-dom";
 
 export default function MenuModal({
-  isClose,
+  setIsClose,
   position,
-  profileOpen,
+  openProfileModal,
 }: {
-  isClose: (val: boolean) => void;
+  setIsClose: (val: boolean) => void;
   position: { x: number; y: number } | null;
-  profileOpen: (val: boolean) => void;
+  openProfileModal: (val: boolean) => void;
 }) {
   return createPortal(
     <div className="fixed inset-0 flex items-center justify-center z-20">
       <div
         className="w-full h-full fixed bg-[rgba(0,0,0,0.5)]"
-        onClick={() => isClose(false)}
+        onClick={() => setIsClose(false)}
       ></div>
       <div
         className="flex flex-col items-center fixed bg-[var(--color-point)] rounded-xl text-[16px] cursor-pointer opacity-90"
-        style={{ top: position?.y, left: position?.x }}
+        style={{ top: position?.y ?? 0, left: position?.x ?? 0 }}
       >
         <div
           className="w-full h-full px-18 py-3  text-center hover:bg-[var(--color-point-hover)] hover:rounded-xl"
           onClick={() => {
-            isClose(false);
-            profileOpen(true);
+            setIsClose(false);
+            openProfileModal(true);
           }}
         >
           프로필
