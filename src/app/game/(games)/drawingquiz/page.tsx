@@ -1,3 +1,24 @@
+"use client";
+
+import { useState, useEffect } from "react";
+import DesktopContainer from "../../../../containers/game/drawingquiz/DesktopContainer";
+import MobileContainer from "../../../../containers/game/drawingquiz/MobileContainer";
+
 export default function DrawingQuiz() {
-  return <div>캐치마인드 화면입니다.</div>;
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 1025);
+    };
+
+    handleResize();
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
+  return isMobile ? <MobileContainer /> : <DesktopContainer />;
 }

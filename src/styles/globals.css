@@ -17,8 +17,8 @@
   --color-secondPoint: #402e7a;
   --color-secondPoint-hover: #332463;
   --color-amberOrange: #ffa20e;
-  --color-ligthRed: #f05650;
-  --color-ligthRed-hover: #d54c47;
+  --color-lightRed: #f05650;
+  --color-lightRed-hover: #d54c47;
 }
 
 @media (prefers-color-scheme: dark) {
