@@ -1,0 +1,75 @@
+@import "tailwindcss";
+
+@font-face {
+  font-family: "Galmuri9";
+  src: url("/fonts/Galmuri9.woff2") format("woff2");
+  font-weight: normal;
+  font-style: normal;
+}
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+  --color-main: #3dc2ec;
+  --color-second: #4b70f5;
+  --color-second-hover: #3d5ed9;
+  --color-point: #4c3bcf;
+  --color-secondPoint: #402e7a;
+  --color-secondPoint-hover: #332463;
+  --color-amberOrange: #ffa20e;
+  --color-lightRed: #f05650;
+  --color-lightRed-hover: #d54c47;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  color: var(--foreground);
+  background: var(--background);
+  font-family: "Galmuri9", sans-serif;
+  margin: 0 auto;
+  max-width: 100vw;
+}
+
+.drop-shadow-custom {
+  filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
+}
+
+/* 스크롤바 전체 */
+::-webkit-scrollbar {
+  width: 5px;
+  border-radius: 16px;
+}
+
+/* 스크롤바 트랙 (배경) */
+::-webkit-scrollbar-track {
+  background: transparent;
+  border-radius: 16px;
+  opacity: 0.8;
+}
+
+/* 스크롤바 핸들 (움직이는 부분) */
+::-webkit-scrollbar-thumb {
+  background: #d9d9d9; /* 스크롤바 색상 */
+  border-radius: 16px;
+  opacity: 0.8;
+  min-height: 30px;
+  max-height: 80%;
+}
+
+/* 스크롤바 핸들에 마우스를 올렸을 때 */
+::-webkit-scrollbar-thumb:hover {
+  background: #999999;
+}
+.drop-shadow-custom {
+  filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
+}
