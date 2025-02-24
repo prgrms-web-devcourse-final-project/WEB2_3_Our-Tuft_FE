@@ -1,9 +1,9 @@
 "use client";
 import { useState } from "react";
-import LeaveGameModal from "../../quizModal/LeaveGameModal";
-import RoundButton from "../../../../../components/RoundButton";
+import RoundButton from "../../components/RoundButton";
+import LeaveGameModal from "../../containers/game/speedQuiz/quizModal/LeaveGameModal";
 
-export default function Button() {
+export default function GameControlButtons() {
   const [isOpen, setOpenLeave] = useState<boolean>(false);
   return (
     <div className="flex gap-7 text-2xl items-center">

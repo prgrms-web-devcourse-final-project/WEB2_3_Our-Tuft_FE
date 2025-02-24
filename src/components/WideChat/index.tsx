@@ -1,4 +1,4 @@
-export default function Chat() {
+export default function WideChat() {
   return (
     <div className="text-2xl">
       <input

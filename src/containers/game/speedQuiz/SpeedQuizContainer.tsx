@@ -1,5 +1,5 @@
 import Quiz from "../../../components/Quiz";
-import QuizBottom from "./quizBottom";
+import QuizFooter from "./quizFooter";
 import QuizMain from "./quizMain";
 
 export default function SpeedQuizContainer() {
@@ -11,7 +11,7 @@ export default function SpeedQuizContainer() {
       >
         <Quiz />
         <QuizMain />
-        <QuizBottom />
+        <QuizFooter />
       </div>
     </>
   );
