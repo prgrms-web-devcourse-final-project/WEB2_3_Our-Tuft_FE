@@ -1,6 +1,6 @@
 import Timer from "./Timer";
 
-export default function Quize() {
+export default function Quiz() {
   return (
     <div className="flex w-[90%] h-84 bg-[var(--color-point)] drop-shadow-custom rounded-[12px] p-6 drop-shadow-custom">
       <div className="flex flex-col gap-6 h-72 w-full bg-[var(--color-second)] rounded-[12px] p-8 drop-shadow-custom relative">

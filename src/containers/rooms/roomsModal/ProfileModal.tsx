@@ -1,4 +1,3 @@
-import React from "react";
 import Modal from "../../../components/Modal";
 import Image from "next/image";
 import dummy from "@/assets/images/dummy.svg";

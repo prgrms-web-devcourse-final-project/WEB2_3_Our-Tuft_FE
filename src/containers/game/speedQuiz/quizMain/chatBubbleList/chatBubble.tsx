@@ -1,5 +1,3 @@
-import React from "react";
-
 export default function ChatBubble() {
   return (
     <div className="flex items-center justify-center p-4 h-34">

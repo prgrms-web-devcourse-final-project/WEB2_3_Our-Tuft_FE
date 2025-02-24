@@ -27,7 +27,7 @@ export default function RoomsInfo() {
           25
         </div>
       </div>
-      <div className="flex md:gap-2 lg:gap-6 bg-[var(--color-point)] lg:w-[15%] md:py-2 md:px-4 lg:py-7 lg:px-10 lg:rounded-[20px] md:rounded-[16px] justify-center cursor-pointer">
+      <div className="flex md:gap-2 lg:gap-6 bg-[var(--color-point)] hover:bg-[var(--color-point-hover)] lg:w-[15%] md:py-2 md:px-4 lg:py-7 lg:px-10 lg:rounded-[20px] md:rounded-[16px] justify-center cursor-pointer">
         <Image
           src={setting}
           alt="설정 아이콘"

@@ -1,4 +1,3 @@
-import React from "react";
 import ChatBubble from "./chatBubble";
 
 export default function ChatBubbleList() {
