@@ -1,6 +1,6 @@
 "use client";
 import RoomsMain from "./roomsMain";
-import RoomsBottom from "./roomsBottom";
+import RoomsFooter from "./roomsFooter";
 import RoomsHeader from "./roomsHeader";
 
 export default function RoomsContainer() {
@@ -12,7 +12,7 @@ export default function RoomsContainer() {
       >
         <RoomsHeader />
         <RoomsMain />
-        <RoomsBottom />
+        <RoomsFooter />
       </div>
     </>
   );

@@ -1,3 +1,5 @@
+import RoundButton from "../RoundButton";
+
 export default function ModalButton({
   setIsClose,
   setIsComplete,
@@ -7,18 +9,18 @@ export default function ModalButton({
 }) {
   return (
     <div className="absolute bottom-0 right-0 flex p-8  gap-4 z-30">
-      <button
-        className="bg-[#4E4C4C] rounded-xl px-5 py-2 cursor-pointer"
+      <RoundButton
+        bgColor={"bg-[#363535]"}
+        text={"취소"}
         onClick={() => setIsClose(false)}
-      >
-        취소
-      </button>
-      <button
-        className="bg-[var(--color-point)] rounded-xl px-5 py-2 cursor-pointer"
+        className={"px-5 py-2 hover:bg-[#1a1919]"}
+      />
+      <RoundButton
+        bgColor={"bg-[var(--color-point)]"}
+        text={"확인"}
         onClick={() => setIsComplete?.()}
-      >
-        확인
-      </button>
+        className={"px-5 py-2 hover:bg-[var(--color-point-hover)]"}
+      />
     </div>
   );
 }

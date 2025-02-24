@@ -1,6 +1,6 @@
-import Quize from "./quize";
-import QuizeBottom from "./quizeBottom";
-import QuizeMain from "./quizeMain";
+import Quiz from "../../../components/Quiz";
+import QuizFooter from "./quizFooter";
+import QuizMain from "./quizMain";
 
 export default function SpeedQuizContainer() {
   return (
@@ -9,9 +9,9 @@ export default function SpeedQuizContainer() {
         className="flex flex-col gap-9 w-full min-h-screen h-full items-center px-14 pt-28 bg-center bg-cover bg-repeat"
         style={{ backgroundImage: "url('/assets/images/bg.png')" }}
       >
-        <Quize />
-        <QuizeMain />
-        <QuizeBottom />
+        <Quiz />
+        <QuizMain />
+        <QuizFooter />
       </div>
     </>
   );
