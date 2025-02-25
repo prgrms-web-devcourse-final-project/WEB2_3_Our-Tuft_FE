@@ -44,7 +44,7 @@ export default function GameDescription() {
     }, 5000);
 
     return () => clearInterval(timer);
-  }, [nextGameIndex]);
+  }, [nextGameIndex, games.length]);
 
   return (
     <div className="w-full h-full bg-[var(--color-point)] rounded-lg p-4 flex flex-col relative overflow-hidden">

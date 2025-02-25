@@ -7,7 +7,7 @@ import GameRoomList from "./GameRoomList";
 
 export default function DesktopLayout() {
   return (
-    <div className="hidden lg:flex w-full h-full min-h-screen items-center justify-center px-[35px] py-[52px]">
+    <div className="hidden xl:flex w-full h-full min-h-screen items-center justify-center px-[35px] py-[52px]">
       <div className="w-full h-full min-w-[800px] max-w-[1850px] min-h-[600px] max-h-[975px] aspect-[1850/975] flex flex-col">
         <div className="flex flex-row gap-[20px] h-full">
           {/* 왼쪽 영역 */}
