@@ -1,3 +1,5 @@
+import { modalProp } from "../../types/modalType";
+
 export default function ModalContainer({
   title,
   width,

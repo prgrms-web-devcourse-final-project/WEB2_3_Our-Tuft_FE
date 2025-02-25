@@ -1,6 +1,6 @@
 import Image from "next/image";
 import OImg from "@/assets/images/O-img.png";
-import XImg from "@/assets/images/X-img.png";
+// import XImg from "@/assets/images/X-img.png";
 
 export default function OXList() {
   return (
