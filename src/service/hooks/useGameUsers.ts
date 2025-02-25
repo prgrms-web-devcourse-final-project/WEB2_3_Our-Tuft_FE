@@ -3,7 +3,7 @@
 import { useState, useMemo } from "react";
 
 export function useGameUsers() {
-  const [users, setUsers] = useState<{ id: string; name: string }[]>([
+  const [users] = useState<{ id: string; name: string }[]>([
     { id: "user1", name: "사용자1" },
     { id: "user2", name: "사용자2" },
     { id: "user3", name: "사용자3" },

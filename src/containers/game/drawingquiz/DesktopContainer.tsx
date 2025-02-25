@@ -1,6 +1,5 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import { useGameUsers } from "../../../service/hooks/useGameUsers";
 import { useGameChat } from "../../../service/hooks/useGameChat";
 
@@ -11,8 +10,8 @@ import WordTimeCount from "../../../components/WordTimeCount/WordTimeCount";
 import UserList from "../../../components/UserList/UserList";
 
 export default function DesktopContainer() {
-  const { users, paddedUsers, correctUsers, handleCorrectAnswer } =
-    useGameUsers();
+  // const { users, paddedUsers, correctUsers, handleCorrectAnswer } =
+  const { users, paddedUsers, correctUsers } = useGameUsers();
   const {
     chatMessages,
     currentMessage,
@@ -21,8 +20,6 @@ export default function DesktopContainer() {
     handleSendMessage,
     handleKeyDown,
   } = useGameChat(users[0]?.name); // 임시
-
-  const router = useRouter();
 
   return (
     <div
