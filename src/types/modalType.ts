@@ -1,4 +1,4 @@
-type modalProp = {
+export type modalProp = {
   title: string;
   width: string;
   height: string;
