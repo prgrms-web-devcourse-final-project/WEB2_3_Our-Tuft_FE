@@ -1,14 +1,17 @@
 import Link from "next/link";
+import Image from "next/image";
 
 export default function MobileLayout() {
   return (
-    <div className="lg:hidden w-full h-full min-h-screen flex flex-col gap-4 p-4">
+    <div className="block md:hidden w-full h-full min-h-screen flex flex-col gap-4 p-4">
       {/* 상단 버튼 영역 */}
       <div className="flex gap-2 justify-end">
         <button className="w-[50px] h-[50px] bg-[var(--color-second)]/90 rounded-lg">
-          <img
+          <Image
             src="/assets/images/setting.png"
             alt="setting"
+            width={50}
+            height={50}
             className="w-full p-2"
           />
         </button>
@@ -16,19 +19,23 @@ export default function MobileLayout() {
           href="/shop"
           className="w-[50px] h-[50px] bg-[var(--color-second)]/90 rounded-lg"
         >
-          <img
+          <Image
             src="/assets/images/shop.png"
             alt="shop"
+            width={50}
+            height={50}
             className="w-full p-2"
           />
         </Link>
         <Link
           href="/login"
-          className="w-[50px] h-[50px] bg-[var(--color-ligthRed)]/90 rounded-lg"
+          className="w-[50px] h-[50px] bg-[var(--color-lightRed)]/90 rounded-lg"
         >
-          <img
+          <Image
             src="/assets/images/exit.png"
             alt="exit"
+            width={50}
+            height={50}
             className="w-full p-2"
           />
         </Link>

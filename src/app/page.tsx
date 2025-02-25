@@ -9,7 +9,7 @@ export default function Home() {
         <div className="bg-[var(--color-point)]">Point 색상</div>
         <div className=" bg-[var(--color-secondPoint)]">SecondPoint 색상</div>
         <div className=" bg-[var(--color-amberOrange)]">amberOrange 색상</div>
-        <div className=" bg-[var(--color-ligthRed)]">ligthRed 색상</div>
+        <div className=" bg-[var(--color-lightRed)]">lightRed 색상</div>
       </div>
       <div className="flex flex-col items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
         <Link href="/login">로그인</Link>

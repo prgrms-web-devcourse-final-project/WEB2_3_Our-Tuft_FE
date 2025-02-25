@@ -1,9 +1,9 @@
 "use client";
 import { useState } from "react";
-import UserCard from "./UserCard";
 import DeportModal from "../../roomsModal/DeportModal";
 import MenuModal from "../../roomsModal/MenuModal";
 import ProfileModal from "../../roomsModal/ProfileModal";
+import UserCard from "../../../../components/UserCard";
 
 export default function UserList() {
   const [isOpenDeport, setOpenDeport] = useState<boolean>(false);
@@ -28,7 +28,11 @@ export default function UserList() {
           onContextMenu={handleContextMenu}
           key={index}
         >
-          <UserCard />
+          <UserCard>
+            <div className="bg-[var(--color-amberOrange)] justify-center text-[#993000] lg:py-5 md:py-2 lg:text-2xl md:text-sm md:font-bold">
+              준비 완료
+            </div>
+          </UserCard>
         </div>
       ))}
       {isOpenDeport && <DeportModal setIsClose={setOpenDeport} />}

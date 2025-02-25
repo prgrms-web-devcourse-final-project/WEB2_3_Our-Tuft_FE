@@ -1,6 +1,6 @@
 import Image from "next/image";
 import rock from "@/assets/icons/rock.png";
-import CloseButton from "../../../components/Button/CloseButton";
+import CloseButton from "../../../components/CloseButton/CloseButton";
 
 export default function RoomsHeader() {
   return (

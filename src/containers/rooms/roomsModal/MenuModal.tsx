@@ -20,7 +20,7 @@ export default function MenuModal({
         style={{ top: position?.y ?? 0, left: position?.x ?? 0 }}
       >
         <div
-          className="w-full h-full px-18 py-3  text-center hover:bg-[var(--color-point-hover)] hover:rounded-xl"
+          className="w-full h-full px-18 py-3  text-center hover:bg-[var(--color-point-hover)] hover:rounded-t-xl"
           onClick={() => {
             setIsClose(false);
             openProfileModal(true);
@@ -31,7 +31,7 @@ export default function MenuModal({
         <div className="w-full py-3 text-center hover:bg-[var(--color-point-hover)]">
           귓속말
         </div>
-        <div className="w-full py-3  text-center hover:bg-[var(--color-point-hover)] hover:rounded-xl">
+        <div className="w-full py-3  text-center hover:bg-[var(--color-point-hover)] hover:rounded-b-xl">
           방장 위임
         </div>
       </div>

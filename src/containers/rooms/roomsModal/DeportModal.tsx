@@ -1,4 +1,3 @@
-import React from "react";
 import Modal from "../../../components/Modal/index";
 import Image from "next/image";
 
