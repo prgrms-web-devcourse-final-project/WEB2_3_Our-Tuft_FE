@@ -15,7 +15,7 @@ export default function RoundButton({
 }) {
   return (
     <div
-      className={`flex items-center justify-center ${width} ${height} ${bgColor} ${className} opacity-90 rounded-[10px] drop-shadow-custom cursor-pointer hover:opacity-100`}
+      className={`flex items-center justify-center ${width} ${height} ${bgColor} ${className} opacity-90 rounded-3xl 2xl:rounded-[10px] drop-shadow-custom cursor-pointer hover:opacity-100`}
       onClick={onClick}
     >
       {text}

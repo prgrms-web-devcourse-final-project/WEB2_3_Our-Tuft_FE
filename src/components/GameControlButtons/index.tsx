@@ -6,18 +6,18 @@ import LeaveGameModal from "../../containers/game/speedQuiz/quizModal/LeaveGameM
 export default function GameControlButtons() {
   const [isOpen, setOpenLeave] = useState<boolean>(false);
   return (
-    <div className="flex gap-7 text-2xl items-center">
+    <div className="flex 2xl:gap-3 text-2xl items-center">
       <RoundButton
-        width={"w-[207px]"}
+        width={"2xl:w-[207px] w-full"}
         height={"h-[71px]"}
         bgColor={"bg-[var(--color-point)]"}
         text={"설정"}
         className={"hover:bg-[var(--color-point-hover)]"}
       />
       <RoundButton
-        width={"w-[207px]"}
+        width={"2xl:w-[207px] w-full"}
         height={"h-[71px]"}
-        bgColor={"bg-[var(--color-ligthRed)]"}
+        bgColor={"bg-[var(--color-lightRed)]"}
         text={"나가기"}
         className={"hover:bg-[var(--color-ligthRed-hover)]"}
         onClick={() => setOpenLeave(true)}
