@@ -21,7 +21,7 @@ export default function UserList() {
   };
 
   return (
-    <div className="grid grid-cols-4 lg:gap-8 md:gap-3 lg:rounded-[32px] md:rounded-[20px] bg-[var(--color-second)] p-7">
+    <div className="grid grid-cols-4 2xl:gap-8 md:gap-3 2xl:rounded-[32px] md:rounded-[20px] bg-[var(--color-second)] p-7">
       {[1, 2, 3, 4, 5].map((i, index) => (
         <div
           onClick={() => setOpenDeport(true)}
@@ -29,7 +29,7 @@ export default function UserList() {
           key={index}
         >
           <UserCard>
-            <div className="bg-[var(--color-amberOrange)] justify-center text-[#993000] lg:py-5 md:py-2 lg:text-2xl md:text-sm md:font-bold">
+            <div className="bg-[var(--color-amberOrange)] justify-center text-[#993000] 2xl:py-5 md:py-2 2xl:text-2xl md:text-sm ">
               준비 완료
             </div>
           </UserCard>

@@ -7,12 +7,14 @@ export default function RoomsContainer() {
   return (
     <>
       <div
-        className="flex flex-col w-full min-h-screen h-full items-center justify-center px-14 bg-center bg-cover bg-repeat"
+        className="w-full min-h-screen flex items-center justify-center bg-center bg-cover bg-repeat"
         style={{ backgroundImage: "url('/assets/images/bg.png')" }}
       >
-        <RoomsHeader />
-        <RoomsMain />
-        <RoomsFooter />
+        <div className="w-[90vw] h-[90vh]">
+          <RoomsHeader />
+          <RoomsMain />
+          <RoomsFooter />
+        </div>
       </div>
     </>
   );
