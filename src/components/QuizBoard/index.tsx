@@ -1,6 +1,6 @@
 import Timer from "./Timer";
 
-export default function Quiz() {
+export default function QuizBoard() {
   return (
     <div className="flex justify-center items-center h-66 mt-14 mb-2 2xl:h-84 bg-[var(--color-point)] drop-shadow-custom 2xl:rounded-[12px] rounded-[32px] p-3 2xl:p-6 drop-shadow-custom">
       <div className="flex flex-col gap-6 h-56 2xl:h-72 w-[97%] 2xl:w-full bg-[var(--color-second)] 2xl:rounded-[12px] rounded-[32px] 2xl:p-8 p-6 drop-shadow-custom relative">

@@ -1,8 +1,8 @@
 import Image from "next/image";
-import Modal from "../../../../components/Modal";
 
 import info from "@/assets/icons/info.svg";
 import { useRouter } from "next/navigation";
+import Modal from "../Modal";
 
 export default function LeaveGameModal({
   setIsClose,
