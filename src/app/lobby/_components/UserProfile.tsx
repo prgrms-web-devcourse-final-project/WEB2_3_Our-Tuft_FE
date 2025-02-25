@@ -15,7 +15,7 @@ interface UserProfile {
 }
 
 export default function UserProfile() {
-  const [userProfile, setUserProfile] = useState<UserProfile>({
+  const [userProfile] = useState<UserProfile>({
     id: "1",
     nickname: "jeongmin",
     profileImage: "/assets/images/profile.png",
@@ -29,8 +29,6 @@ export default function UserProfile() {
 
   return (
     <div className="w-full h-full bg-[var(--color-point)] rounded-xl p-4">
-      {" "}
-      {/* padding 조정 */}
       <div className="flex h-full">
         {/* 프로필 이미지 */}
         <div className="relative w-[40%] h-full overflow-hidden">

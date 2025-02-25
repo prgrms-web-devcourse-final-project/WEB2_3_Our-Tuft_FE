@@ -13,8 +13,8 @@ export default function InfoChange() {
           className="w-full py-4 px-3 rounded-lg bg-white text-black text-xl"
           placeholder="닉네임을 입력하세요"
         />
-        <div className="flex items-center justify-between mt-2">
-          <p className="text-[var(--color-ligthRed)] text-sm">
+        <div className="flex items-center justify-between mt-4">
+          <p className="text-[var(--color-lightRed)] text-sm">
             닉네임은 2주에 한 번만 변경할 수 있습니다. 신중하게 결정해주세요!
           </p>
           <button className="w-[110px] h-[50px] bg-[var(--color-secondPoint)] hover:bg-[var(--color-secondPoint-hover)] text-white text-xl rounded-xl transition-all flex items-center justify-center ml-4">
