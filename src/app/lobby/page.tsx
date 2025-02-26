@@ -7,7 +7,10 @@ export default function Lobby() {
   return (
     <div
       className="w-screen h-screen bg-cover bg-center"
-      style={{ backgroundImage: "url('/assets/images/bg.png')" }}
+      style={{
+        backgroundImage: "url('/assets/images/bg.png')",
+        backgroundRepeat: "repeat",
+      }}
     >
       {/* 모바일 레이아웃 */}
       <MobileLayout />
