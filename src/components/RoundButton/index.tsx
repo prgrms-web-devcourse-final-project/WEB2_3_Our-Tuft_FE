@@ -19,14 +19,19 @@ export default function RoundButton({
 }) {
   return (
     <div
-      className={`flex items-center justify-center ${width} ${height} ${bgColor} ${className} opacity-90 rounded-[12px] 2xl:rounded-[12px] drop-shadow-custom cursor-pointer hover:opacity-100`}
+      className={`
+        flex items-center justify-center 
+        rounded-[8px] md:rounded-[12px] 2xl:rounded-[12px] 
+        drop-shadow-custom cursor-pointer opacity-90 hover:opacity-100
+        ${width} ${height} ${bgColor} ${className} 
+      `}
       onClick={onClick}
     >
       {url ? (
         <Image
           src={url}
           alt={text}
-          className="w-8 h-8 2xl:w-9 2xl:h-9"
+          className="w-5 h-5 md:w-8 md:h-8 2xl:w-9 2xl:h-9"
           width={38}
           height={38}
         />
