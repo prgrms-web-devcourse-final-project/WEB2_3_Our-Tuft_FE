@@ -25,8 +25,9 @@ export default function UserCard({
   return (
     <div>
       <div
-        className={`flex flex-col items-center justify-center w-full ${bgColor} ${borderRadius} ${padding} ${textSize} ${className}  
-        hover:opacity-80 drop-shadow-custom cursor-pointer`}
+        className={`flex flex-col items-center justify-center w-full 
+          ${bgColor} ${borderRadius} ${padding} ${textSize} ${className}  
+          hover:opacity-80 drop-shadow-custom cursor-pointer`}
       >
         <Image
           src={dummy}

@@ -17,7 +17,7 @@ export default function ModalContainer({
       <div
         className={`relative flex flex-col ${className} ${width} ${height} rounded-4xl bg-[var(--color-second)] items-center justify-center opacity-90`}
       >
-        <div className="absolute top-7 text-4xl">{title}</div>
+        <div className="absolute top-7 xl:text-4xl text-2xl ">{title}</div>
         {children}
       </div>
     </div>

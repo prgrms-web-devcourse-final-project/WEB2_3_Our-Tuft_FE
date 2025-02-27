@@ -8,7 +8,7 @@ export default function ModalButton({
   setIsComplete?: <T>(val?: T) => void;
 }) {
   return (
-    <div className="absolute bottom-0 right-0 flex p-8  gap-4 z-30">
+    <div className="absolute bottom-0 right-0 flex p-8 xl:gap-4 gap-2 z-30">
       <RoundButton
         bgColor={"bg-[#363535]"}
         text={"취소"}

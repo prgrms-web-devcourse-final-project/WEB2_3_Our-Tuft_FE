@@ -1,12 +1,19 @@
-import OXButtons from "./oxButtons";
 import OXList from "./oxList";
 import ChatBubble from "../../../../components/ChatBubble";
 import UserCard from "../../../../components/UserCard";
 
 export default function OXMain() {
   return (
-    <div className="flex flex-col 2xl:flex-row 2xl:gap-10 gap-3 mb-2 2xl:bg-transparent 2xl:rounded-none 2xl:p-0 bg-[var(--color-second)] rounded-4xl p-5">
-      <OXButtons />
+    <div
+      className="
+        relative flex flex-col 2xl:flex-row gap-3 2xl:gap-10 mb-2
+        bg-[var(--color-second)] p-5 rounded-4xl 
+        h-[450px] overflow-y-scroll 
+        2xl:bg-transparent 2xl:p-0 2xl:rounded-none
+        md:h-auto md:overflow-visible 
+        xl:h-auto xl:overflow-visible
+      "
+    >
       {[0, 1, 2, 3, 4, 5, 6, 7].map((i, index) => (
         <div key={index}>
           <div className="flex flex-col">
@@ -18,12 +25,12 @@ export default function OXMain() {
             <UserCard
               bgColor={"bg-[#ffd377]"}
               imageSize={"h-40"}
-              textSize2={"2xl:text-[18px] text-[28px]"}
+              textSize2={"2xl:text-[18px] md:text-[28px] sm:text-[20px]"}
               padding={"p-3"}
             >
               <OXList />
               <div
-                className="absolute 2xl:static justify-center 2xl:pt-2 text-3xl"
+                className="absolute 2xl:static justify-center 2xl:pt-2 md:text-3xl sm:text-xl"
                 style={{
                   fontFamily: "PressStart2P, sans-serif",
                   color: "white",

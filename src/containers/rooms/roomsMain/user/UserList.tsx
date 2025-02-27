@@ -1,9 +1,10 @@
 "use client";
+
 import { useState } from "react";
 import DeportModal from "../../roomsModal/DeportModal";
 import MenuModal from "../../roomsModal/MenuModal";
 import ProfileModal from "../../roomsModal/ProfileModal";
-import UserCard from "../../../../components/UserCard";
+import UserCard from "./UserCard";
 
 export default function UserList() {
   const [isOpenDeport, setOpenDeport] = useState<boolean>(false);
@@ -21,20 +22,39 @@ export default function UserList() {
   };
 
   return (
-    <div className="grid grid-cols-4 2xl:gap-8 md:gap-3 2xl:rounded-[32px] md:rounded-[20px] bg-[var(--color-second)] p-7">
-      {[1, 2, 3, 4, 5].map((i, index) => (
+    <div
+      className="
+        grid xl:grid-cols-4 md:grid-cols-3 grid-row 
+        bg-[var(--color-second)] p-3
+        xl:gap-8 md:gap-2 gap-3 
+        xl:rounded-[32px] rounded-[20px] 
+        h-[50vh] overflow-y-scroll 
+        md:h-auto md:overflow-visible 
+        xl:h-auto xl:overflow-visible
+        "
+    >
+      {[1, 2, 3, 4, 5, 6, 7, 8].map((i, index) => (
         <div
           onClick={() => setOpenDeport(true)}
           onContextMenu={handleContextMenu}
           key={index}
         >
           <UserCard>
-            <div className="bg-[var(--color-amberOrange)] justify-center text-[#993000] 2xl:py-5 md:py-2 2xl:text-2xl md:text-sm ">
-              준비 완료
+            <div
+              className="
+                absolute xl:static md:static 
+                xl:text-2xl md:text-xl 
+                xl:py-5 md:py-3 py-0 
+                text-[#993000] 
+                bg-[var(--color-amberOrange)]  
+                md:w-full md:text-center"
+            >
+              준비완료
             </div>
           </UserCard>
         </div>
       ))}
+
       {isOpenDeport && <DeportModal setIsClose={setOpenDeport} />}
       {isOpenMenu && (
         <MenuModal

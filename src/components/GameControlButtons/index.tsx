@@ -6,10 +6,10 @@ import LeaveGameModal from "../LeaveGameModal/LeaveGameModal";
 export default function GameControlButtons() {
   const [isOpen, setOpenLeave] = useState<boolean>(false);
   return (
-    <div className="flex 2xl:gap-3 gap-2 text-2xl items-center">
+    <div className="flex 2xl:gap-3 gap-1 text-2xl items-center">
       <RoundButton
         width={"w-full"}
-        height={"h-[71px]"}
+        height={"xl:h-[70px] md:h-[55px] h-[50px]"}
         bgColor={"bg-[var(--color-second)]"}
         text={"설정"}
         className={"hover:bg-[var(--color-point-hover)]"}
@@ -17,10 +17,10 @@ export default function GameControlButtons() {
       />
       <RoundButton
         width={"w-full"}
-        height={"h-[71px]"}
+        height={"xl:h-[70px] md:h-[55px] h-[50px]"}
         bgColor={"bg-[var(--color-lightRed)]"}
         text={"나가기"}
-        className={"hover:bg-[var(--color-ligthRed-hover)]"}
+        className={"hover:bg-[var(--color-lightRed-hover)]"}
         url={"/assets/icons/exit.svg"}
         onClick={() => setOpenLeave(true)}
       />
