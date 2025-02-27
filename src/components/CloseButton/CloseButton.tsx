@@ -6,7 +6,7 @@ export default function CloseButton() {
   return (
     <Link
       href="/lobby"
-      className="bg-[var(--color-lightRed)] hover:bg-[var(--color-ligthRed-hover)] 2xl:p-4 p-2 2xl:rounded-[12px] rounded-[8px]"
+      className="bg-[var(--color-lightRed)] hover:bg-[var(--color-lightRed-hover)] 2xl:p-4 p-2 2xl:rounded-[12px] rounded-[8px]"
     >
       <Image
         src={close}

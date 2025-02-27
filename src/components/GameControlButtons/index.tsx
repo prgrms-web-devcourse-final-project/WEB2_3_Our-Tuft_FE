@@ -20,7 +20,7 @@ export default function GameControlButtons() {
         height={"xl:h-[70px] md:h-[55px] h-[50px]"}
         bgColor={"bg-[var(--color-lightRed)]"}
         text={"나가기"}
-        className={"hover:bg-[var(--color-ligthRed-hover)]"}
+        className={"hover:bg-[var(--color-lightRed-hover)]"}
         url={"/assets/icons/exit.svg"}
         onClick={() => setOpenLeave(true)}
       />
