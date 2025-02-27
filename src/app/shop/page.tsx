@@ -1,3 +1,5 @@
+import ShopContainer from "../../containers/shop/ShopContainer";
+
 export default function Shop() {
-  return <div>포인트 상점 페이지입니다.</div>;
+  return <ShopContainer />;
 }

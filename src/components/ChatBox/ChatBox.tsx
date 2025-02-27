@@ -48,7 +48,7 @@ export default function ChatBox({
         value={currentMessage}
         onChange={handleInputChange}
         onKeyDown={handleKeyDown}
-        className="bg-[#FFFFFF]/50 w-full h-12 flex items-center justify-center rounded-xl lg:rounded-2xl px-4 text-sm lg:text-base"
+        className="bg-[#FFFFFF]/50 w-full h-12 flex items-center justify-center rounded-xl lg:rounded-2xl px-4 text-sm lg:text-base placeholder-gray-300 outline-none"
       />
     </>
   );
