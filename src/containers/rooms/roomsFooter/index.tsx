@@ -12,7 +12,8 @@ export default function RoomsFooter() {
       <div
         className="
           xl:flex-3 md:flex-3 flex-8 min-w-0 bg-[var(--color-second)] 
-          xl:py-4 md:py-4 py-2 xl:rounded-[20px] rounded-[12px]
+          xl:py-4 md:py-4 py-2 
+          xl:rounded-[20px] rounded-[12px]
           "
       >
         <RoomsInfo />
