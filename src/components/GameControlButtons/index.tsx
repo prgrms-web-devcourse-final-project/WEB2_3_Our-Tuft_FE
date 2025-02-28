@@ -1,25 +1,27 @@
 "use client";
 import { useState } from "react";
 import RoundButton from "../../components/RoundButton";
-import LeaveGameModal from "../../containers/game/speedQuiz/quizModal/LeaveGameModal";
+import LeaveGameModal from "../LeaveGameModal/LeaveGameModal";
 
 export default function GameControlButtons() {
   const [isOpen, setOpenLeave] = useState<boolean>(false);
   return (
-    <div className="flex gap-7 text-2xl items-center">
+    <div className="flex 2xl:gap-3 gap-1 text-2xl items-center">
       <RoundButton
-        width={"w-[207px]"}
-        height={"h-[71px]"}
-        bgColor={"bg-[var(--color-point)]"}
+        width={"w-full"}
+        height={"xl:h-[70px] md:h-[55px] h-[50px]"}
+        bgColor={"bg-[var(--color-second)]"}
         text={"설정"}
         className={"hover:bg-[var(--color-point-hover)]"}
+        url={"/assets/icons/setting.svg"}
       />
       <RoundButton
-        width={"w-[207px]"}
-        height={"h-[71px]"}
-        bgColor={"bg-[var(--color-ligthRed)]"}
+        width={"w-full"}
+        height={"xl:h-[70px] md:h-[55px] h-[50px]"}
+        bgColor={"bg-[var(--color-lightRed)]"}
         text={"나가기"}
-        className={"hover:bg-[var(--color-ligthRed-hover)]"}
+        className={"hover:bg-[var(--color-lightRed-hover)]"}
+        url={"/assets/icons/exit.svg"}
         onClick={() => setOpenLeave(true)}
       />
       {isOpen && <LeaveGameModal setIsClose={setOpenLeave} />}

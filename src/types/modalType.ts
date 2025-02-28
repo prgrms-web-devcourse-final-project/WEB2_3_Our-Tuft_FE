@@ -3,5 +3,6 @@ export type modalProp = {
   width: string;
   height: string;
   className?: string;
+  showCancelButton?: string;
   children: React.ReactNode;
 };

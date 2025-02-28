@@ -10,21 +10,22 @@ export default function ProfileModal({
   return (
     <Modal
       title={"프로필"}
-      width={"w-[788px]"}
+      width={"xl:w-[788px] md:w-[60%] w-[80%]"}
       height={"h-[450]"}
-      setIsClose={setIsClose}
+      setIsComplete={() => setIsClose(false)}
+      showCancelButton={"hidden"}
     >
-      <div className="flex px-16 gap-7">
+      <div className="flex xl:px-16 xl:gap-7 gap-3 xl:w-[90%] w-[80%]">
         <Image
           src={dummy}
           alt="아이콘"
-          className="w-3xs rounded-[16px] object-cover"
+          className="xl:w-3xs w-[50%] rounded-[16px] object-cover"
         />
-        <div className="flex flex-col gap-5">
-          <div className="flex items-center justify-center text-2xl bg-[var(--color-point)] w-[400px] h-[60px] rounded-xl">
+        <div className="flex flex-col xl:gap-5 gap-3 w-full text-white">
+          <div className="flex items-center justify-center xl:text-xl text-lg bg-[var(--color-point)] w-full h-[60px] rounded-xl">
             닉네임
           </div>
-          <div className="flex items-center justify-center text-2xl bg-[var(--color-point)] w-[400px] h-[180px] rounded-xl">
+          <div className="flex items-center justify-center xl:text-xl text-lg bg-[var(--color-point)] w-full h-[180px] rounded-xl">
             자기소개
           </div>
         </div>

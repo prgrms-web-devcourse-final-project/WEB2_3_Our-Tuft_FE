@@ -6,8 +6,12 @@ import TabletLayout from "./_components/TabletLayout";
 export default function Lobby() {
   return (
     <div
-      className="w-screen h-screen bg-cover bg-center"
-      style={{ backgroundImage: "url('/assets/images/bg.png')" }}
+      className="w-screen h-screen bg-center"
+      style={{
+        backgroundImage: "url('/assets/images/bg.png')",
+        backgroundRepeat: "repeat",
+        backgroundSize: "auto",
+      }}
     >
       {/* 모바일 레이아웃 */}
       <MobileLayout />

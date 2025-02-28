@@ -47,17 +47,17 @@ export default function GameDescription() {
   }, [nextGameIndex, games.length]);
 
   return (
-    <div className="w-full h-full bg-[var(--color-point)] rounded-lg p-4 flex flex-col relative overflow-hidden">
+    <div className="w-full h-full bg-[var(--color-point)] rounded-lg p-4 flex flex-col relative overflow-hidden text-[0.85vw] md:text-[0.75vw] lg:text-[0.65vw] xl:text-[0.55vw]">
       <div
         key={currentGameIndex}
         className={`absolute inset-0 w-full h-full flex flex-col items-center justify-center
-          transition-transform duration-500 ease-in-out transform px-4
+          transition-transform duration-500 ease-in-out transform px-[5%]
           ${isAnimating ? "-translate-x-full" : "translate-x-0"}`}
       >
-        <h2 className="text-2xl font-bold text-white text-center mb-8">
+        <h2 className="text-[2.4em] font-bold text-white text-center mb-[5%] leading-tight">
           {games[currentGameIndex].title}
         </h2>
-        <ul className="list-disc text-white space-y-3 text-base text-center max-w-md pl-4">
+        <ul className="list-disc text-white space-y-[0.8em] text-[1.7em] text-center w-[90%] pl-[5%] leading-tight">
           {games[currentGameIndex].descriptions.map((desc, index) => (
             <li key={index} className="whitespace-pre-wrap">
               {desc}
@@ -68,13 +68,13 @@ export default function GameDescription() {
       <div
         key={nextGameIndex}
         className={`absolute inset-0 w-full h-full flex flex-col items-center justify-center
-          transition-transform duration-500 ease-in-out transform px-4
+          transition-transform duration-500 ease-in-out transform px-[5%]
           ${isAnimating ? "translate-x-0" : "translate-x-full"}`}
       >
-        <h2 className="text-2xl font-bold text-white text-center mb-8">
+        <h2 className="text-[2.4em] font-bold text-white text-center mb-[5%] leading-tight">
           {games[nextGameIndex].title}
         </h2>
-        <ul className="list-disc text-white space-y-3 text-base text-center max-w-md pl-4">
+        <ul className="list-disc text-white space-y-[0.8em] text-[1.7em] text-center w-[90%] pl-[5%] leading-tight">
           {games[nextGameIndex].descriptions.map((desc, index) => (
             <li key={index} className="whitespace-pre-wrap">
               {desc}
