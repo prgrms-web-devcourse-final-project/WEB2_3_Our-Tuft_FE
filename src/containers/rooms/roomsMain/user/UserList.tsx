@@ -7,9 +7,12 @@ import ProfileModal from "../../roomsModal/ProfileModal";
 import UserCard from "./UserCard";
 
 export default function UserList() {
+  const [nickName, setNicKName] = useState<string>("");
   const [isOpenDeport, setOpenDeport] = useState<boolean>(false);
   const [isOpenMenu, setOpenMenu] = useState<boolean>(false);
-  const [isOpenProfile, setOpenProfile] = useState<boolean>(false);
+  const [isOpenProfile, setOpenProfile] = useState<boolean | undefined>(
+    undefined
+  );
 
   const [position, setPosition] = useState<{ x: number; y: number } | null>(
     null
@@ -23,14 +26,14 @@ export default function UserList() {
 
   const data = {
     players: [
-      "한놈",
-      "두식이",
-      "석삼",
-      "너구리",
-      "너구리",
-      "너구리",
-      "너구리",
-      "너구리",
+      "호랑이",
+      "독수리",
+      "고양이",
+      "늑대",
+      "여우",
+      "판다",
+      "드래곤",
+      "사자",
     ],
   };
 
@@ -49,7 +52,10 @@ export default function UserList() {
       {data.players.map((i, index) => (
         <div
           className="h-auto max-h-fit"
-          onClick={() => setOpenDeport(true)}
+          onClick={() => {
+            setOpenDeport(true);
+            setNicKName(i);
+          }}
           onContextMenu={handleContextMenu}
           key={index}
         >
@@ -70,7 +76,7 @@ export default function UserList() {
       ))}
 
       {isOpenDeport && (
-        <DeportModal nickName={"닉네임"} setIsClose={setOpenDeport} />
+        <DeportModal nickName={nickName} setIsClose={setOpenDeport} />
       )}
       {isOpenMenu && (
         <MenuModal
