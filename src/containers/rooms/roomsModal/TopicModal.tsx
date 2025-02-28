@@ -16,7 +16,7 @@ export default function TopicModal({
         {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 165].map(
           (i, index) => (
             <div
-              className="text-center py-4 w-full h-full hover:bg-[var(--color-second-hover)] cursor-pointer"
+              className="text-center py-4 w-full h-full hover:bg-[var(--color-second-hover)] cursor-pointer text-white"
               key={index}
             >
               단어

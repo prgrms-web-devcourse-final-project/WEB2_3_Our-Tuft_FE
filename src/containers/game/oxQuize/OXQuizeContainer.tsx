@@ -11,7 +11,7 @@ export default function OXQuizeContainer() {
         style={{ backgroundImage: "url('/assets/images/bg.png')" }}
       >
         <div className="relative w-[90vw]">
-          <QuizBoard type={"OX"} />
+          <QuizBoard />
           <OXMain />
           <OXButtons />
           <SpeedOXFooter />

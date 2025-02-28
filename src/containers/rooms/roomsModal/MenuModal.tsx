@@ -16,7 +16,7 @@ export default function MenuModal({
         onClick={() => setIsClose(false)}
       ></div>
       <div
-        className="flex flex-col items-center fixed bg-[var(--color-point)] rounded-xl text-[16px] cursor-pointer opacity-90"
+        className="flex flex-col items-center fixed bg-[var(--color-point)] text-white rounded-xl text-[16px] cursor-pointer opacity-90"
         style={{ top: position?.y ?? 0, left: position?.x ?? 0 }}
       >
         <div

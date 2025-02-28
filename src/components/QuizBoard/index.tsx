@@ -1,7 +1,6 @@
-import OXButtons from "../../containers/game/oxQuize/OXMain/oxButtons";
 import Timer from "./Timer";
 
-export default function QuizBoard({ type }: { type?: string }) {
+export default function QuizBoard() {
   return (
     <div
       className="
@@ -18,7 +17,7 @@ export default function QuizBoard({ type }: { type?: string }) {
           p-6 2xl:p-8
           h-56 2xl:h-72 w-[97%] 2xl:w-full 
           bg-[var(--color-second)] drop-shadow-custom 
-          rounded-[32px] 2xl:rounded-[12px] 
+          rounded-[32px] 2xl:rounded-[12px] text-white 
           "
       >
         <div className="text-2xl md:text-3xl 2xl:text-4xl">문제 12</div>
@@ -30,7 +29,6 @@ export default function QuizBoard({ type }: { type?: string }) {
           <Timer />
         </div>
       </div>
-      {/* {type && <OXButtons />} */}
     </div>
   );
 }

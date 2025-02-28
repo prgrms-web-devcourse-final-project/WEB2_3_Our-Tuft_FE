@@ -13,7 +13,7 @@ export default function RoomsHeader() {
           xl:text-3xl md:text-xl text-md 
           px-5 
           xl:rounded-[20px] md:rounded-[12px] rounded-[20px] 
-          drop-shadow-custom
+          drop-shadow-custom text-white
           "
       >
         <div className="flex gap-5 items-center">

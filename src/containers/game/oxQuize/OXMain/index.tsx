@@ -6,12 +6,11 @@ export default function OXMain() {
   return (
     <div
       className="
-        relative flex flex-col 2xl:flex-row gap-3 2xl:gap-10 mb-2
-        bg-[var(--color-second)] p-5 rounded-4xl 
+        relative flex flex-col 2xl:flex-row gap-3 2xl:gap-10 
+        bg-[var(--color-second)] p-5 mb-2
         h-[450px] overflow-y-scroll 
-        2xl:bg-transparent 2xl:p-0 2xl:rounded-none
-        md:h-auto md:overflow-visible 
-        xl:h-auto xl:overflow-visible
+        2xl:bg-transparent 2xl:p-0 2xl:rounded-none rounded-4xl 
+        xl:h-auto xl:overflow-visible md:h-auto md:overflow-visible
       "
     >
       {[0, 1, 2, 3, 4, 5, 6, 7].map((i, index) => (

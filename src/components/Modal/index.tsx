@@ -13,8 +13,9 @@ export default function Modal({
   setIsComplete,
   children,
   className,
+  showCancelButton,
 }: modalProp & {
-  setIsClose: (val: boolean) => void;
+  setIsClose?: (val: boolean) => void;
   setIsComplete?: <T>(val?: T) => void;
 }) {
   return createPortal(
@@ -26,7 +27,11 @@ export default function Modal({
       className={className}
     >
       {children}
-      <ModalButton setIsClose={setIsClose} setIsComplete={setIsComplete} />
+      <ModalButton
+        isVisible={showCancelButton}
+        setIsClose={setIsClose}
+        setIsComplete={setIsComplete}
+      />
     </ModalContainer>,
     document.body
   );
