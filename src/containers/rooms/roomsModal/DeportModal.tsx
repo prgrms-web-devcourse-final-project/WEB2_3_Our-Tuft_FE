@@ -4,8 +4,10 @@ import Image from "next/image";
 import info from "@/assets/icons/info.svg";
 
 export default function DeportModal({
+  nickName,
   setIsClose,
 }: {
+  nickName: string;
   setIsClose: (val: boolean) => void;
 }) {
   return (
@@ -17,12 +19,12 @@ export default function DeportModal({
     >
       <div
         className="
-          flex items-center justify-center bg-[var(--color-point)] rounded-xl 
+          flex items-center justify-center bg-[var(--color-point)] rounded-xl text-white 
           xl:text-xl text-md 
           xl:w-[707px] w-[80%] h-[96px] "
       >
         <Image src={info} alt="경고 아이콘" className="xl:h-32 h-16" />
-        <div>유저 님을 강퇴 하시겠습니까 ?</div>
+        <div>{nickName} 님을 강퇴 하시겠습니까 ?</div>
       </div>
     </Modal>
   );

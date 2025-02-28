@@ -1,6 +1,6 @@
 export default function RoomActionButtons() {
   return (
-    <div className="flex md:text-xl xl:text-3xl text-[10px] cursor-pointer break-keep">
+    <div className="flex md:text-xl xl:text-3xl text-[10px] cursor-pointer break-keep text-white">
       <button
         className="
           hidden xl:block md:block flex-1 

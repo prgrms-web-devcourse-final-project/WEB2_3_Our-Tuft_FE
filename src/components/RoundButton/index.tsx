@@ -23,6 +23,7 @@ export default function RoundButton({
         flex items-center justify-center 
         rounded-[8px] md:rounded-[12px] 2xl:rounded-[12px] 
         drop-shadow-custom cursor-pointer opacity-90 hover:opacity-100
+        text-white
         ${width} ${height} ${bgColor} ${className} 
       `}
       onClick={onClick}

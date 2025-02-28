@@ -12,7 +12,8 @@ export default function ProfileModal({
       title={"프로필"}
       width={"xl:w-[788px] md:w-[60%] w-[80%]"}
       height={"h-[450]"}
-      setIsClose={setIsClose}
+      setIsComplete={() => setIsClose(false)}
+      showCancelButton={"hidden"}
     >
       <div className="flex xl:px-16 xl:gap-7 gap-3 xl:w-[90%] w-[80%]">
         <Image
@@ -20,7 +21,7 @@ export default function ProfileModal({
           alt="아이콘"
           className="xl:w-3xs w-[50%] rounded-[16px] object-cover"
         />
-        <div className="flex flex-col xl:gap-5 gap-3 w-full">
+        <div className="flex flex-col xl:gap-5 gap-3 w-full text-white">
           <div className="flex items-center justify-center xl:text-xl text-lg bg-[var(--color-point)] w-full h-[60px] rounded-xl">
             닉네임
           </div>

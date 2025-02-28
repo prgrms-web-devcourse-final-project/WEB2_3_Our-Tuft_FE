@@ -10,7 +10,7 @@ export default function RoomsInfo() {
   return (
     <div
       className="
-        flex justify-between items-center
+        flex justify-between items-center text-white
         xl:text-2xl md:text-lg text-sm
         xl:py-1 md:px-4 px-2
         md:break-keep"
