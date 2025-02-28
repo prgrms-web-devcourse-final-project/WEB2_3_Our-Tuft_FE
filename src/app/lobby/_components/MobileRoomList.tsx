@@ -2,12 +2,14 @@ import React, { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import MobileGameRoomItem from "./MobileGameRoomItem";
+import MobileRoomModal from "./MobileRoomModal";
 
 export default function MobileRoomList() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [selectedMode, setSelectedMode] = useState("전체");
   const [isFilterDropdownOpen, setIsFilterDropdownOpen] = useState(false);
   const [selectedFilter, setSelectedFilter] = useState("방 제목");
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
 
   const gameModes = ["전체", "그림 맞추기", "스피드 퀴즈", "OX 퀴즈"];
   const searchTypes = ["방 제목", "방 번호"];
@@ -155,7 +157,10 @@ export default function MobileRoomList() {
         ))}
       </div>
       {/* 방 생성 버튼 */}
-      <button className="absolute bottom-4 right-4 w-15 h-15 bg-[var(--color-secondPoint)] hover:bg-[var(--color-secondPoint-hover)] drop-shadow-custom rounded-full flex items-center justify-center shadow-lg">
+      <button
+        className="absolute bottom-4 right-4 w-15 h-15 bg-[var(--color-secondPoint)] hover:bg-[var(--color-secondPoint-hover)] drop-shadow-custom rounded-full flex items-center justify-center shadow-lg"
+        onClick={() => setIsCreateModalOpen(true)}
+      >
         <Image
           src="/assets/images/create-room.png"
           alt="방 생성"
@@ -163,6 +168,12 @@ export default function MobileRoomList() {
           height={24}
         />
       </button>
+
+      {/* 모바일버전 방 생성 모달 */}
+      <MobileRoomModal
+        isOpen={isCreateModalOpen}
+        onClose={() => setIsCreateModalOpen(false)}
+      />
     </div>
   );
 }
