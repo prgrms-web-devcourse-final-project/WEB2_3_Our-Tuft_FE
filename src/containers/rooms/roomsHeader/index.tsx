@@ -67,7 +67,7 @@ export default function RoomsHeader() {
           </div>
         </div>
 
-        <CloseButton />
+        <CloseButton url={"/lobby"} />
       </div>
     </div>
   );

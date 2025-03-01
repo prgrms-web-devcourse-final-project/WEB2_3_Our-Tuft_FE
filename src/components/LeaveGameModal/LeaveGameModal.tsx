@@ -19,7 +19,7 @@ export default function LeaveGameModal({
       setIsClose={setIsClose}
       setIsComplete={() => router.push("/lobby")}
     >
-      <div className="flex items-center justify-center text-2xl bg-[var(--color-point)] w-[707px] h-[96px] rounded-xl">
+      <div className="flex items-center justify-center text-2xl bg-[var(--color-point)] w-[707px] h-[96px] rounded-xl z-80">
         <Image src={info} alt="경고 아이콘" className="2xl:h-32" />
         <div className="text-white">게임에서 나가시겠습니까 ?</div>
       </div>
