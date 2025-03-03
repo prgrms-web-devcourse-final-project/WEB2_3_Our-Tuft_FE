@@ -8,12 +8,13 @@ export default function OXMain() {
       className="
         relative flex flex-col 2xl:flex-row gap-3 2xl:gap-10 
         bg-[var(--color-second)] p-5 mb-2
-        h-[450px] overflow-y-scroll 
         2xl:bg-transparent 2xl:p-0 2xl:rounded-none rounded-4xl 
-        xl:h-auto xl:overflow-visible md:h-auto md:overflow-visible
+        xl:h-auto md:h-[940px] h-[50vh] 
+        md:overflow-visible overflow-y-scroll 
+        xl:overflow-visible
       "
     >
-      {[0, 1, 2, 3, 4, 5, 6, 7].map((i, index) => (
+      {[0, 1, 2, 3, 4].map((i, index) => (
         <div key={index}>
           <div className="flex flex-col">
             <div className="hidden 2xl:flex flex-col justify-end h-[200px]">

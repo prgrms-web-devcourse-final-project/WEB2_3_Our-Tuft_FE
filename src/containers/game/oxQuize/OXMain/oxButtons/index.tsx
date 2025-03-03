@@ -4,7 +4,7 @@ import XImg from "@/assets/images/X-img.svg";
 
 export default function OXButtons() {
   return (
-    <div className="2xl:fixed md:absolute absolute left-1/2 transform -translate-x-1/2 top-[27%] md:top-[20%] 2xl:top-[30%] flex gap-3 z-50">
+    <div className="2xl:fixed md:absolute absolute left-1/2 transform -translate-x-1/2 top-[30%] md:top-[15%] 2xl:top-[30%] flex gap-3 z-10 cursor-pointer">
       <div
         className="
           relative flex items-center justify-center 
@@ -21,7 +21,7 @@ export default function OXButtons() {
         className="
           relative flex items-center justify-center 
           bg-white rounded-xl opacity-90 drop-shadow-custom 
-          w-14 h-14 md:w-20 md:h-20 2xl:w-32 2xl:h-32"
+          w-14 h-14 md:w-20 md:h-20 2xl:w-32 2xl:h-32 cursor-pointer"
       >
         <div className="absolute top-2 right-2 text-black text-xl font-bold hidden 2xl:block">
           F2
