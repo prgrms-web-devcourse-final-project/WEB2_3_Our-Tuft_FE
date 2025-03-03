@@ -1,16 +1,20 @@
+"use client";
+
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 import googleIcon from "@/assets/icons/google.svg";
 import kakaoIcon from "@/assets/icons/kakao.svg";
 
 export default function Login() {
+  const router = useRouter();
   return (
     <div
       style={{ backgroundImage: "url('/assets/images/bg.png')" }}
-      className="w-screen h-screen flex items-center justify-center bg-center bg-cover bg-repeat"
+      className="w-full min-h-screen flex items-center justify-center bg-center bg-cover bg-repeat"
     >
       {/* 로그인 박스 */}
-      <div className="bg-[var(--color-second)]/90 max-w-[1000px] w-[80%] md:w-[60%] max-h-[800px] h-[90vh] flex flex-col items-center justify-center rounded-2xl  overflow-auto">
+      <div className="bg-[var(--color-second)]/90 max-w-[1000px] w-[80%] md:w-[60%] max-h-[700px] h-[66vh] flex flex-col items-center justify-center rounded-2xl overflow-auto">
         {/* 로고 위치 */}
         <div className="flex items-center justify-center my-[2vh] md:my-[4vh]">
           <svg
@@ -31,7 +35,10 @@ export default function Login() {
         </div>
         {/* 소셜 로그인 버튼 */}
         <div className="flex flex-col gap-4 md:gap-8 w-full max-w-[300px] px-4 pb-2 md:pb-4">
-          <button className="relative w-full bg-white text-black py-3 rounded-lg flex items-center justify-center gap-2 shadow-md hover:bg-[#2A56C6] hover:text-white cursor-pointer">
+          <button
+            className="relative w-full bg-white text-black py-3 rounded-lg flex items-center justify-center gap-2 shadow-md hover:bg-[#2A56C6] hover:text-white cursor-pointer"
+            onClick={() => router.push("/lobby")}
+          >
             <Image
               src={googleIcon}
               alt="Google"
@@ -39,7 +46,10 @@ export default function Login() {
             />
             Google 로그인
           </button>
-          <button className="relative w-full bg-yellow-400 text-black py-3 rounded-lg flex items-center justify-center gap-2 shadow-md hover:bg-[#F7E300] hover:text-white cursor-pointer">
+          <button
+            className="relative w-full bg-yellow-400 text-black py-3 rounded-lg flex items-center justify-center gap-2 shadow-md hover:bg-[#F7E300] hover:text-white cursor-pointer"
+            onClick={() => router.push("/lobby")}
+          >
             <Image
               src={kakaoIcon}
               alt="Kakao"

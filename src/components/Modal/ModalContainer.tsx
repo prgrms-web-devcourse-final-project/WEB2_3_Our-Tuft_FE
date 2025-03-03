@@ -9,7 +9,7 @@ export default function ModalContainer({
   className,
 }: modalProp & { setIsClose?: (val: boolean) => void }) {
   return (
-    <div className="fixed inset-0 flex items-center justify-center z-20 ">
+    <div className="fixed inset-0 flex items-center justify-center z-60">
       <div
         className="w-full h-full fixed bg-[rgba(0,0,0,0.5)]"
         onClick={() => setIsClose?.(false)}

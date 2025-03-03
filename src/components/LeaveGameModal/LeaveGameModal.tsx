@@ -14,7 +14,7 @@ export default function LeaveGameModal({
   return (
     <Modal
       title={"나가기"}
-      width={"w-[788px]"}
+      width={"xl:w-[788px] md:w-[60%] w-[80%]"}
       height={"h-[268px]"}
       setIsClose={setIsClose}
       setIsComplete={() => router.push("/lobby")}

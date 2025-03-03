@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState, useEffect, useRef } from "react";
 import GameRoomItem from "./GameRoomItem";
+import CreateRoomModal from "./CreateRoomModal";
 
 export default function GameRoomList() {
   // 상태 변수 선언
@@ -9,6 +10,7 @@ export default function GameRoomList() {
   const [selectedMode, setSelectedMode] = useState("전체");
   const [isFilterDropdownOpen, setIsFilterDropdownOpen] = useState(false);
   const [selectedFilter, setSelectedFilter] = useState("방 제목");
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
 
   // 게임 모드와 검색 타입 배열
   const gameModes = ["전체", "그림 맞추기", "스피드 퀴즈", "OX 퀴즈"];
@@ -43,26 +45,29 @@ export default function GameRoomList() {
   }, []);
 
   return (
-    <div className="bg-[var(--color-point)] h-full w-full rounded-2xl pt-[11px] pb-[0px] pl-[28px] pr-[16px] overflow-hidden">
+    <div className="bg-[var(--color-point)] h-full w-full rounded-2xl pt-[0.7rem] pb-0 pl-[1.75rem] pr-[1rem] overflow-hidden">
       {/* 상단 버튼과 검색창 */}
       <div className="flex gap-2 items-center mb-4">
         {/* 방 생성 버튼 */}
-        <button className="h-[70px] w-[170px] bg-[var(--color-second)] border border-black text-white text-2xl rounded-xl cursor-pointer transition-all inline-flex items-center justify-center drop-shadow-custom hover:bg-[var(--color-second-hover)]">
+        <button
+          onClick={() => setIsCreateModalOpen(true)}
+          className="h-[3.5rem] w-[9.5rem] xl:h-[4rem] xl:w-[10rem] bg-[var(--color-second)] border border-black text-white text-lg xl:text-xl rounded-xl cursor-pointer transition-all inline-flex items-center justify-center drop-shadow-custom hover:bg-[var(--color-second-hover)]"
+        >
           방 생성
         </button>
         {/* 게임 모드 드롭다운 */}
         <div className="relative" ref={dropdownRef}>
           <button
             onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-            className="h-[70px] w-[170px] border border-black text-white text-2xl rounded-xl cursor-pointer transition-all inline-flex items-center drop-shadow-custom overflow-hidden group"
+            className="h-[3.5rem] w-[9.5rem] xl:h-[4rem] xl:w-[10rem] border border-black text-white text-lg xl:text-xl rounded-xl cursor-pointer transition-all inline-flex items-center drop-shadow-custom overflow-hidden group"
           >
             <div className="flex-1 h-full flex items-center justify-center bg-[var(--color-second)] group-hover:bg-[var(--color-second-hover)] transition-all">
               <span
                 className={`${
                   selectedMode === "그림 맞추기" ||
                   selectedMode === "스피드 퀴즈"
-                    ? "text-xl"
-                    : "text-2xl"
+                    ? "text-md xl:text-lg"
+                    : "text-lg xl:text-xl"
                 }`}
               >
                 {selectedMode}
@@ -74,7 +79,7 @@ export default function GameRoomList() {
                 alt="드롭다운"
                 width={36}
                 height={36}
-                className={` ${isDropdownOpen ? "rotate-180" : ""}`}
+                className={`${isDropdownOpen ? "rotate-180" : ""}`}
               />
             </div>
           </button>
@@ -96,7 +101,7 @@ export default function GameRoomList() {
           )}
         </div>
         {/* 검색창 */}
-        <div className="relative inline-flex items-center h-[57px] w-[550px] bg-transparent border-none">
+        <div className="relative inline-flex items-center h-[3.5rem] w-[34rem] bg-transparent border-none">
           <div className="relative w-full">
             <div className="relative flex items-center">
               <input
@@ -104,21 +109,22 @@ export default function GameRoomList() {
                 placeholder={`${selectedFilter}${
                   selectedFilter === "방 제목" ? "으로" : "로"
                 } 검색`}
-                className="w-full h-[57px] pl-[180px] pr-6 bg-[var(--color-second)] text-white text-xl outline-none placeholder:text-white/70 rounded-[40px] drop-shadow-custom"
+                className="w-full h-[3.5rem] pl-[11.25rem] pr-[1.5rem] bg-[var(--color-second)] text-white text-lg xl:text-xl outline-none placeholder:text-white/70 rounded-[2.5rem] drop-shadow-custom"
               />
-              <div className="absolute right-6 top-1/2 transform -translate-y-1/2">
+              <div className="absolute right-[1.5rem] top-1/2 transform -translate-y-1/2">
                 <Image
                   src="/assets/images/search.png"
                   alt="검색"
                   width={36}
                   height={36}
+                  className="hidden xl:block"
                 />
               </div>
               {/* 필터 드롭다운 */}
               <div className="absolute left-0 top-0" ref={filterDropdownRef}>
                 <button
                   onClick={() => setIsFilterDropdownOpen(!isFilterDropdownOpen)}
-                  className="h-[57px] w-[170px] border border-black text-white text-2xl rounded-[40px] cursor-pointer transition-all inline-flex items-center drop-shadow-custom overflow-hidden group"
+                  className="h-[3.5rem] w-[10.5rem] border border-black text-white text-xl rounded-[2.5rem] cursor-pointer transition-all inline-flex items-center drop-shadow-custom overflow-hidden group"
                 >
                   <div className="flex-1 h-full flex items-center justify-center bg-[var(--color-second)] group-hover:bg-[var(--color-second-hover)] transition-all">
                     <span className="text-xl">{selectedFilter}</span>
@@ -155,13 +161,19 @@ export default function GameRoomList() {
         </div>
       </div>
       {/* 방 목록 */}
-      <div className="grid grid-cols-2 gap-x-6 gap-y-4 overflow-y-auto h-[calc(100%-100px)] pr-4">
+      <div className="grid grid-cols-2 gap-x-3 gap-y-3 overflow-y-auto h-[calc(100%-6.25rem)] pr-2 xl:pr-4">
         {Array.from({ length: 15 }).map((_, index) => (
-          <Link href="/rooms" key={index}>
+          <Link href="/rooms" key={index} className="h-[8em]">
             <GameRoomItem />
           </Link>
         ))}
       </div>
+
+      {/* 방 생성 모달 */}
+      <CreateRoomModal
+        isOpen={isCreateModalOpen}
+        onClose={() => setIsCreateModalOpen(false)}
+      />
     </div>
   );
 }

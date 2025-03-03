@@ -36,7 +36,7 @@ export default function GameBanner() {
   }, [nextGameIndex, games.length]);
 
   return (
-    <div className="w-full h-full md:w-[266px] md:h-[207px] lg:w-full lg:h-full relative overflow-hidden rounded-lg">
+    <div className="w-full h-full  relative overflow-hidden rounded-lg">
       <div
         key={currentGameIndex}
         className={`absolute inset-0 w-full h-full
@@ -48,7 +48,7 @@ export default function GameBanner() {
             src={games[currentGameIndex].image}
             alt={games[currentGameIndex].name}
             fill
-            sizes="(max-width: 768px) 100vw, (max-width: 1024px) 266px, 440px"
+            sizes="(max-width: 768px) 100vw, (max-width: 1024px) 16.625rem, 27.5rem"
             priority
             className="object-cover"
           />
@@ -65,7 +65,7 @@ export default function GameBanner() {
             src={games[nextGameIndex].image}
             alt={games[nextGameIndex].name}
             fill
-            sizes="(max-width: 768px) 100vw, (max-width: 1024px) 266px, 440px"
+            sizes="(max-width: 768px) 100vw, (max-width: 1024px) 16.625rem, 27.5rem"
             priority
             className="object-cover"
           />
