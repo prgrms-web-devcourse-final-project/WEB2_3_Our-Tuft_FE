@@ -17,7 +17,7 @@ export async function defaultFetch<T>(
   // 세션 스토리지에서 토큰 가져오기
   // const token = typeof window !== "undefined" ? sessionStorage.getItem("token") : null;
 
-  const res = await fetch(`${API_BASE_URL}${endpoint}`, {
+  const res = await fetch(`${API_BASE_URL}/api/v1${endpoint}`, {
     ...options,
     headers: {
       "Content-Type": "application/json",
@@ -36,7 +36,7 @@ export async function defaultFetch<T>(
     throw new Error(`Catch API Error: ${res.status}`);
   }
 
-  // 응답 상태 체크 (API 응답 실패, ex) HTTP 400 error)
+  // 응답 상태 체크 (API 응답 실패, ex) HTTP 401 error)
   if (!res.ok) {
     throw new Error(`API Error: ${res.status}`);
   }

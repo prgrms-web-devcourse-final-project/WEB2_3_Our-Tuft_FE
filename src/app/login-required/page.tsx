@@ -1,10 +1,10 @@
-import LoginContainer from "../../containers/login/LoginContainer";
+import LoginRequiredContainer from "../../containers/login-required/LoginRequiredContainer";
 import NonProtectedRoute from "../../components/NonProtectedRoute/NonProtectedRoute";
 
 export default function page() {
   return (
     <NonProtectedRoute>
-      <LoginContainer />
+      <LoginRequiredContainer />
     </NonProtectedRoute>
   );
 }

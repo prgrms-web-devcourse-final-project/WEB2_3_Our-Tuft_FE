@@ -3,28 +3,78 @@
 import Image from "next/image";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { useLoginStore } from "../../store/store";
+import { defaultFetch } from "../../service/api/defaultFetch";
 
 import googleIcon from "@/assets/icons/google.svg";
 import kakaoIcon from "@/assets/icons/kakao.svg";
 
 export default function LoginContainer() {
   const router = useRouter();
+  const { login } = useLoginStore();
 
-  const handleSocialLogin = (provider: "google" | "kakao") => {
-    window.location.href = `http://43.202.142.57:8080/oauth2/authorization/${provider}`;
-  };
+  // const handleSocialLogin = (provider: "google" | "kakao") => {
+  //   window.location.href = `http://43.202.142.57:8080/oauth2/authorization/${provider}`;
+  // };
 
-  // URL에 토큰이 있는지 확인
-  useEffect(() => {
-    const urlParams = new URLSearchParams(window.location.hash.substring(1)); // #token=엑세스토큰값
-    const token = urlParams.get("token");
-    console.log("token", token);
+  // // URL에 토큰이 있는지 확인
+  // useEffect(() => {
+  //   const urlParams = new URLSearchParams(window.location.hash.substring(1)); // #token=엑세스토큰값
+  //   const token = urlParams.get("token");
+  //   console.log("token", token);
 
-    if (token) {
-      sessionStorage.setItem("accessToken", token);
-      router.push("/lobby");
+  //   if (token) {
+  //     sessionStorage.setItem("accessToken", token);
+  //     router.push("/lobby");
+  //   }
+  // }, [router]);
+
+  // // 임시 회원가입 로직
+  // const registerUser = async () => {
+  //   try {
+  //     const response = await defaultFetch("/test/user", {
+  //       method: "POST",
+  //       body: JSON.stringify({
+  //         providerId: "test12",
+  //         name: "최영규",
+  //         email: "test123@test.com",
+  //       }),
+  //     });
+
+  //     console.log("회원가입 성공:", response);
+  //   } catch (error) {
+  //     console.error("회원가입 실패:", error);
+  //   }
+  // };
+
+  // 임시 로그인 로직
+  const loginUser = async () => {
+    try {
+      const response = await defaultFetch<{
+        isSuccess: boolean;
+        data: string;
+        message: string;
+      }>("/test/login", {
+        method: "POST",
+        body: JSON.stringify({
+          socialId: "test12",
+        }),
+      });
+
+      if (response.isSuccess && response.data) {
+        const token = response.data; // response.data에서 토큰을 추출
+
+        // 로그인 후 토큰 저장
+        login(token);
+        console.log("토큰 저장 완료: ", token);
+        router.push("/lobby");
+      } else {
+        console.error("로그인 실패: 토큰 없음", response.message);
+      }
+    } catch (error) {
+      console.error("로그인 실패:", error);
     }
-  }, [router]);
+  };
 
   return (
     <div
@@ -55,7 +105,8 @@ export default function LoginContainer() {
         <div className="flex flex-col gap-4 md:gap-8 w-full max-w-[300px] px-4 pb-2 md:pb-4">
           <button
             className="relative w-full bg-white text-black py-3 rounded-lg flex items-center justify-center gap-2 shadow-md hover:bg-[#2A56C6] hover:text-white cursor-pointer"
-            onClick={() => handleSocialLogin("google")}
+            // onClick={() => handleSocialLogin("google")}
+            onClick={loginUser}
           >
             <Image
               src={googleIcon}
@@ -66,7 +117,7 @@ export default function LoginContainer() {
           </button>
           <button
             className="relative w-full bg-yellow-400 text-black py-3 rounded-lg flex items-center justify-center gap-2 shadow-md hover:bg-[#F7E300] hover:text-white cursor-pointer"
-            onClick={() => handleSocialLogin("kakao")}
+            // onClick={() => handleSocialLogin("kakao")}
           >
             <Image
               src={kakaoIcon}

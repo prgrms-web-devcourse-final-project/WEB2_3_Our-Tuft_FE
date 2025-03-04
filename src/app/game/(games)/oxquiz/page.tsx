@@ -1,5 +1,10 @@
 import OXQuizeContainer from "../../../../containers/game/oxQuize/OXQuizeContainer";
+import ProtectedRoute from "../../../../components/ProtectedRoute/ProtectedRoute";
 
 export default function OXQuiz() {
-  return <OXQuizeContainer />;
+  return (
+    <ProtectedRoute>
+      <OXQuizeContainer />
+    </ProtectedRoute>
+  );
 }
