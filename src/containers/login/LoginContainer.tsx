@@ -118,6 +118,7 @@ export default function LoginContainer() {
           <button
             className="relative w-full bg-yellow-400 text-black py-3 rounded-lg flex items-center justify-center gap-2 shadow-md hover:bg-[#F7E300] hover:text-white cursor-pointer"
             // onClick={() => handleSocialLogin("kakao")}
+            onClick={loginUser}
           >
             <Image
               src={kakaoIcon}
