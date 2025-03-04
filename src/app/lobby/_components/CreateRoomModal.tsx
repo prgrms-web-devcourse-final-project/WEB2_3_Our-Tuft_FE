@@ -5,6 +5,8 @@ import { createPortal } from "react-dom";
 interface CreateRoomModalProps {
   isOpen: boolean;
   onClose: () => void;
+  title?: string;
+  gameType?: string;
 }
 
 interface GameModeInfo {
@@ -17,6 +19,8 @@ interface GameModeInfo {
 export default function CreateRoomModal({
   isOpen,
   onClose,
+  title = "방 생성",
+  gameType,
 }: CreateRoomModalProps) {
   const modalRef = useRef<HTMLDivElement>(null);
   const [isPrivate, setIsPrivate] = useState(false);
@@ -144,7 +148,7 @@ export default function CreateRoomModal({
         className="bg-[var(--color-second)]/90 w-[90%] max-w-[1100px] h-[80%] max-h-[800px] rounded-2xl drop-shadow-custom overflow-hidden flex flex-col relative z-10"
       >
         <div className="p-6 flex items-center justify-center">
-          <h2 className="text-white text-4xl md:text-3xl font-bold">방 생성</h2>
+          <h2 className="text-white text-4xl md:text-3xl font-bold">{title}</h2>
         </div>
 
         {/* 공개/비공개 전환 버튼 */}
@@ -416,7 +420,10 @@ export default function CreateRoomModal({
                     setIsPlayersOpen(false);
                     setIsRoundsOpen(false);
                   }}
-                  className="w-full bg-[#D9D9D9] border border-white/50 rounded-xl p-3 text-black text-left flex justify-between items-center"
+                  // 임시이름 바꿔야함
+                  disabled={gameType !== "그림퀴즈"}
+                  className="disabled:bg-[#a0a0a0] disabled:text-gray-500 disabled:border-gray-400 
+                  w-full bg-[#D9D9D9] border border-white/50 rounded-xl p-3 text-black text-left flex justify-between items-center"
                 >
                   <span>{timeLimit}초</span>
                   <svg
@@ -470,7 +477,7 @@ export default function CreateRoomModal({
                   onClick={handleCreateRoom}
                   className="px-6 py-2.5 md:px-4 md:py-2 bg-[var(--color-secondPoint)] text-white text-lg md:text-base rounded-lg hover:opacity-90 transition-opacity"
                 >
-                  생성
+                  {title === "방 생성" ? "생성" : "변경"}
                 </button>
               </div>
             </div>
