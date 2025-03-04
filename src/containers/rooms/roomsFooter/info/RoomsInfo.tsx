@@ -3,10 +3,13 @@ import Image from "next/image";
 import setting from "@/assets/icons/setting.svg";
 import { useState } from "react";
 import TopicModal from "../../roomsModal/TopicModal";
+import CreateRoomModal from "../../../../app/lobby/_components/CreateRoomModal";
 
 export default function RoomsInfo() {
   const [isOpen, setOpen] = useState<boolean>(false);
   const [topic, setTopic] = useState<string>("");
+  const [isCreateRoomOpen, setCreateRoomOpen] = useState<boolean>(false);
+
   return (
     <div
       className="
@@ -52,6 +55,7 @@ export default function RoomsInfo() {
         </div>
       </div>
       <div
+        onClick={() => setCreateRoomOpen(true)}
         className="
           flex justify-center
           xl:gap-6 md:gap-2 
@@ -70,6 +74,13 @@ export default function RoomsInfo() {
       </div>
 
       {isOpen && <TopicModal setIsClose={setOpen} setTopic={setTopic} />}
+      {isCreateRoomOpen && (
+        <CreateRoomModal
+          title="설정"
+          isOpen={isCreateRoomOpen}
+          onClose={() => setCreateRoomOpen(false)}
+        />
+      )}
     </div>
   );
 }
