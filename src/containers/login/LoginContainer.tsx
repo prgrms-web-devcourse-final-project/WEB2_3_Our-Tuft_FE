@@ -57,7 +57,7 @@ export default function LoginContainer() {
       }>("/test/login", {
         method: "POST",
         body: JSON.stringify({
-          socialId: "test12",
+          socialId: "tester1",
         }),
       });
 

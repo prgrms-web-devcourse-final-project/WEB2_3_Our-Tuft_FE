@@ -14,16 +14,25 @@ export default function ProtectedRoute({
   const token = useLoginStore((state) => state.token);
   const [isAuthChecked, setIsAuthChecked] = useState(false);
 
+  // 초기 토큰 로딩을 위해 로컬 스토리지 확인
   useEffect(() => {
-    if (!token) {
-      router.replace("/login-required"); // 토큰이 없으면 로그인 페이지로 리디렉트
-    } else {
-      setIsAuthChecked(true);
+    const storedToken = sessionStorage.getItem("token");
+    if (storedToken) {
+      // 상태 업데이트
+      useLoginStore.getState().login(storedToken);
     }
-  }, [token, router]);
+    setIsAuthChecked(true);
+  }, []);
 
-  // 깜빡임 방지
+  useEffect(() => {
+    if (isAuthChecked && !token) {
+      router.replace("/login-required"); // 토큰이 없으면 로그인 페이지로 리디렉트
+    }
+  }, [isAuthChecked, token, router]);
+
+  // 로딩 중일시 스피너, 토큰 없으면 리디렉션
   if (!isAuthChecked) return <LoadingSpinner />;
+  if (!token) return <LoadingSpinner />;
 
   return <>{children}</>;
 }

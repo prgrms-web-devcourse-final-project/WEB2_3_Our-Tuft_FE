@@ -1,36 +1,73 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+
+import { defaultFetch } from "../../service/api/defaultFetch";
+import { Item } from "../../types/item";
 
 import ItemTab from "./tabs/ItemTab";
 import MainTab from "./tabs/MainTab";
 import ShopProfile from "../../components/ShopProfile/ShopProfile";
 
+interface ShopData {
+  content: Item[];
+  hasNext: boolean;
+  numberOfElements: number;
+  empty: boolean;
+  first: boolean;
+  last: boolean;
+}
+
 export default function ShopContainer() {
   const [selectedTab, setSelectedTab] = useState("main");
+  const [shopData, setShopData] = useState<ShopData | null>(null);
+  const [sortedData, setSortedData] = useState<Item[]>([]);
+  const [groupedData, setGroupedData] = useState<{ [key: string]: Item[] }>({});
 
-  // 더미데이터
-  const dummyData = {
-    "Hair/Eyes": [
-      { id: 1, imgSrc: "머리/눈 1", name: "머리/눈 1" },
-      { id: 2, imgSrc: "머리/눈 2", name: "머리/눈 2" },
-    ],
-    Mouth: [
-      { id: 5, imgSrc: "입 1", name: "입 1" },
-      { id: 6, imgSrc: "입 2", name: "입 2" },
-      { id: 7, imgSrc: "입 3", name: "입 3" },
-    ],
-    Skin: [
-      { id: 8, imgSrc: "피부 1", name: "피부 1" },
-      { id: 9, imgSrc: "피부 2", name: "피부 2" },
-      { id: 10, imgSrc: "피부 3", name: "피부 3" },
-    ],
-    Decoration: [
-      { id: 11, imgSrc: "치장 1", name: "치장 1" },
-      { id: 12, imgSrc: "치장 2", name: "치장 2" },
-      { id: 13, imgSrc: "치장 3", name: "치장 3" },
-    ],
+  const fetchShopData = async () => {
+    try {
+      const response = await defaultFetch<{
+        isSuccess: boolean;
+        message: string;
+        data: ShopData;
+      }>("/items", {
+        method: "GET",
+      });
+
+      if (response.isSuccess && response.data) {
+        setShopData(response.data);
+        console.log("상점 데이터 불러오기 성공: ", response.data);
+      } else {
+        console.error("상점 데이터 불러오기 실패: ", response.message);
+      }
+    } catch (error) {
+      console.error("상점 데이터 불러오기 오류: ", error);
+    }
   };
+
+  useEffect(() => {
+    fetchShopData();
+  }, []);
+
+  useEffect(() => {
+    if (shopData?.content) {
+      // 메인 탭에서는 ID 순으로 정렬
+      const sorted = [...shopData.content].sort((a, b) => a.id - b.id);
+      setSortedData(sorted);
+
+      // 아이템 탭에서는 카테고리별로 그룹화
+      const grouped = shopData.content.reduce((acc, item) => {
+        const category = item.category;
+        if (!acc[category]) {
+          acc[category] = [];
+        }
+        acc[category].push(item);
+        return acc;
+      }, {} as { [key: string]: Item[] });
+
+      setGroupedData(grouped);
+    }
+  }, [shopData]);
 
   return (
     <div
@@ -69,8 +106,8 @@ export default function ShopContainer() {
 
         {/* 선택된 탭 내용 */}
         <div className="w-full h-full row-span-8">
-          {selectedTab === "main" && <MainTab data={dummyData} />}
-          {selectedTab === "item" && <ItemTab data={dummyData} />}
+          {selectedTab === "main" && <MainTab data={sortedData} />}
+          {selectedTab === "item" && <ItemTab data={groupedData} />}
         </div>
       </div>
     </div>

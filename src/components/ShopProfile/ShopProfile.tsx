@@ -23,7 +23,7 @@ export default function ShopProfile() {
         </div>
         <button
           className="flex flex-3 sm:flex-4 items-center justify-center bg-[var(--color-lightRed)]/90 hover:bg-[var(--color-lightRed-hover)]/90 rounded-xl sm:rounded-2xl text-white md:text-lg lg:text-2xl xl:text-3xl 2xl:text-4xl border border-black drop-shadow-custom cursor-pointer"
-          onClick={() => router.push("/")}
+          onClick={() => router.push("/lobby")}
         >
           {/* sm 이상일 때 텍스트 표시 */}
           <span className="hidden sm:inline">나가기</span>

@@ -1,13 +1,15 @@
 "use client";
+import React from "react";
 import { useState } from "react";
 import Image from "next/image";
+
 import ItemCard from "../../../components/ItemCard/ItemCard";
+import { Item } from "../../../types/item";
 
 import searchIcon from "@/assets/images/search.png";
-import React from "react";
 
 interface MainTabProps {
-  data: Record<string, { id: number; imgSrc: string; name: string }[]>;
+  data: Item[];
 }
 
 export default function MainTab({ data }: MainTabProps) {
@@ -49,13 +51,26 @@ export default function MainTab({ data }: MainTabProps) {
             <span>베너</span>
           </div>
           {/* 전체 아이템을 렌더링 */}
-          {categories.map((category) => (
-            <React.Fragment key={category}>
-              {data[category].map((item) => (
-                <ItemCard key={item.id} imgSrc={item.imgSrc} name={item.name} />
-              ))}
+          {data.map((item) => (
+            <React.Fragment key={item.id}>
+              <ItemCard
+                key={item.id}
+                imageUrl={item.imageUrl}
+                name={item.name}
+              />
             </React.Fragment>
           ))}
+          {/* {categories.map((category) => (
+            <React.Fragment key={category}>
+              {data[category].map((item) => (
+                <ItemCard
+                  key={item.id}
+                  imageUrl={item.imageUrl}
+                  name={item.name}
+                />
+              ))}
+            </React.Fragment>
+          ))} */}
         </div>
       </div>
     </div>

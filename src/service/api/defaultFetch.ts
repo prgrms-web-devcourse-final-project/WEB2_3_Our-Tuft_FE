@@ -15,14 +15,15 @@ export async function defaultFetch<T>(
   }
 
   // 세션 스토리지에서 토큰 가져오기
-  // const token = typeof window !== "undefined" ? sessionStorage.getItem("token") : null;
+  const token =
+    typeof window !== "undefined" ? sessionStorage.getItem("token") : null;
 
   const res = await fetch(`${API_BASE_URL}/api/v1${endpoint}`, {
     ...options,
     headers: {
       "Content-Type": "application/json",
       // 여기에 토큰 넣기
-      // ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
       ...(options.headers || {}),
     },
   });
