@@ -2,10 +2,23 @@
 import MobileLayout from "./_components/MobileLayout";
 import DesktopLayout from "./_components/DesktopLayout";
 import TabletLayout from "./_components/TabletLayout";
+import {
+  socketConnection,
+  subscribeToTopic,
+} from "../../service/api/socketConnection";
 
 import ProtectedRoute from "../../components/ProtectedRoute/ProtectedRoute";
 
 export default function Lobby() {
+  /*
+   * 로비 구독 (/topic/lobby)
+   * 채팅, 변경사항 실시간으로 받기
+   */
+  socketConnection();
+  subscribeToTopic("/topic/lobby", (msg) => {
+    console.log("구독:", msg);
+  });
+
   return (
     <ProtectedRoute>
       <div
