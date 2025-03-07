@@ -3,7 +3,7 @@ export interface Item {
   name: string;
   category: string;
   imageUrl: string;
-  nickColor: string | null;
+  nickColor: string;
   originalPrice: number;
   discountPrice: number;
   finalPrice: number;

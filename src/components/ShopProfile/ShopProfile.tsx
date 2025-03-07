@@ -1,19 +1,78 @@
 "use client";
-import { useRouter } from "next/navigation";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { useState, useEffect } from "react";
 
 import coinIcon from "@/assets/icons/coin.svg";
 import exitIcon from "@/assets/icons/exit.svg";
-import profileImg from "@/assets/images/profile.png";
+import { ShopUserData } from "../../types/shopUser";
 
-export default function ShopProfile() {
+export default function ShopProfile({
+  exp,
+  nickname,
+  eye,
+  mouth,
+  skin,
+  nickColor,
+}: ShopUserData) {
+  const [avatarProfile, setAvatarProfile] = useState<ShopUserData>({
+    exp: 0,
+    nickname: "사용자",
+    eye: {
+      itemId: 1,
+      imageUrl: `${process.env.NEXT_PUBLIC_S3_BUCKET_URL}/eye/default-eye.png`,
+    },
+    mouth: {
+      itemId: 4,
+      imageUrl: `${process.env.NEXT_PUBLIC_S3_BUCKET_URL}/mouth/default-mouth.png`,
+    },
+    skin: {
+      itemId: 7,
+      imageUrl: `${process.env.NEXT_PUBLIC_S3_BUCKET_URL}/skin/default-skin.png`,
+    },
+    nickColor: {
+      itemId: 10,
+      value: "#000000",
+    },
+  });
+
   const router = useRouter();
+
+  useEffect(() => {
+    setAvatarProfile({
+      exp: exp || 0,
+      nickname: nickname || "사용자",
+      eye: {
+        itemId: eye?.itemId ?? 1,
+        imageUrl:
+          eye?.imageUrl ??
+          `${process.env.NEXT_PUBLIC_S3_BUCKET_URL}/eye/default-eye.png`,
+      },
+      mouth: {
+        itemId: mouth?.itemId ?? 4,
+        imageUrl:
+          mouth?.imageUrl ??
+          `${process.env.NEXT_PUBLIC_S3_BUCKET_URL}/mouth/default-mouth.png`,
+      },
+      skin: {
+        itemId: skin?.itemId ?? 7,
+        imageUrl:
+          skin?.imageUrl ??
+          `${process.env.NEXT_PUBLIC_S3_BUCKET_URL}/skin/default-skin.png`,
+      },
+      nickColor: {
+        itemId: nickColor?.itemId ?? 10,
+        value: nickColor?.value ?? "#000000",
+      },
+    });
+  }, [nickname, eye, mouth, skin, nickColor]);
+
   return (
     <div className="grid grid-rows-9 grid-cols-2 w-full h-full">
       <div className="flex row-span-1 col-span-2 gap-x-2 sm:gap-x-4 lg:gap-x-6 pb-6">
         <div className="flex flex-7 sm:flex-6 items-center justify-evenly sm:justify-end bg-[var(--color-main)]/90 drop-shadow-custom rounded-xl sm:rounded-2xl">
           <span className="text-white text-base md:text-lg lg:text-2xl xl:text-3xl 2xl:text-4xl lg:mr-1.5 xl:mr-3">
-            5200
+            {exp}
           </span>
           <Image
             src={coinIcon}
@@ -25,21 +84,75 @@ export default function ShopProfile() {
           className="flex flex-3 sm:flex-4 items-center justify-center bg-[var(--color-lightRed)]/90 hover:bg-[var(--color-lightRed-hover)]/90 rounded-xl sm:rounded-2xl text-white md:text-lg lg:text-2xl xl:text-3xl 2xl:text-4xl border border-black drop-shadow-custom cursor-pointer"
           onClick={() => router.push("/lobby")}
         >
-          {/* sm 이상일 때 텍스트 표시 */}
           <span className="hidden sm:inline">나가기</span>
-          {/* sm보다 작을 때 이미지 표시 */}
           <Image src={exitIcon} alt="나가기" className="w-6 h-6 sm:hidden" />
         </button>
       </div>
-      {/* 사용자 프로필 이미지 */}
+
       <div className="flex items-center justify-center row-span-4 col-span-2 w-full h-full bg-[#1B399C] rounded-t-2xl drop-shadow-custom">
-        <Image src={profileImg} alt="프로필" className="w-auto h-[80%]" />
+        <div className="relative w-[60%] h-[80%] flex items-center justify-center">
+          {/* 배경 이미지 */}
+          <div className="absolute inset-0 z-0">
+            <Image
+              src="/assets/profile/profile-bg.png"
+              alt="프로필 배경"
+              fill
+              className="object-cover rounded-xl"
+              style={{ objectPosition: "center top" }}
+              priority
+            />
+          </div>
+
+          {/* 스킨 레이어 */}
+          <div className="absolute inset-0 z-5">
+            <Image
+              src={avatarProfile.skin.imageUrl}
+              alt="스킨"
+              fill
+              className="object-contain"
+              style={{ objectPosition: "center bottom" }}
+              priority
+            />
+          </div>
+
+          {/* 눈 레이어 */}
+          <div
+            className="absolute inset-x-0 z-10"
+            style={{ top: "30%", height: "35%" }}
+          >
+            <div className="relative w-[80%] h-full mx-auto">
+              <Image
+                src={avatarProfile.eye.imageUrl}
+                alt="눈"
+                fill
+                className="object-contain"
+                priority
+              />
+            </div>
+          </div>
+
+          {/* 입 레이어 */}
+          <div
+            className="absolute inset-x-0 z-20"
+            style={{ top: "45%", height: "30%" }}
+          >
+            <div className="relative w-[70%] h-full mx-auto">
+              <Image
+                src={avatarProfile.mouth.imageUrl}
+                alt="입"
+                fill
+                className="object-contain"
+                priority
+              />
+            </div>
+          </div>
+        </div>
       </div>
       {/* 사용자 닉네임, 장바구니 */}
       <div className="grid grid-rows-3 grid-cols-1 row-span-3 col-span-2 justify-center w-full h-full">
         <div className="row-span-1 bg-[#E9ECEF] w-full h-full flex items-center justify-center drop-shadow-custom">
           <span className="md:text-xl lg:text-3xl xl:text-4xl 2xl:text-5xl">
-            닉네임
+            {nickname === null ? "사용자" : nickname}
           </span>
         </div>
         {/* 피그마 상 비어있는 공간, 장바구니 */}

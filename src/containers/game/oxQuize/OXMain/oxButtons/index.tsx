@@ -4,13 +4,13 @@ import OImg from "@/assets/images/O-img.png";
 import XImg from "@/assets/images/X-img.svg";
 import { useEffect, useState } from "react";
 import io from "socket.io-client";
-import { useUser } from "../../../../../store/testuser";
+// import { useUser } from "../../../../../store/testuser";
 
 const socket = io("http://localhost:8080");
 
 export default function OXButtons({ oxAnswer }: { oxAnswer: boolean | null }) {
   const [answers, setAnswer] = useState<boolean | null>(null);
-  const { userList } = useUser();
+  // const { userList } = useUser();
   // F1 = O 버튼 F2 = X버튼
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -30,8 +30,8 @@ export default function OXButtons({ oxAnswer }: { oxAnswer: boolean | null }) {
 
   const socketAnswer = (val: boolean) => {
     setAnswer(val);
-    socket.emit("answer", { user: userList, answer: val });
-    console.log("userList", userList, val);
+    // socket.emit("answer", { user: userList, answer: val });
+    // console.log("userList", userList, val);
   };
 
   return (

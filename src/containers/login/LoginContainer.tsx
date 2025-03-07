@@ -4,7 +4,6 @@ import Image from "next/image";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useLoginStore } from "../../store/store";
-import { defaultFetch } from "../../service/api/defaultFetch";
 
 import googleIcon from "@/assets/icons/google.svg";
 import kakaoIcon from "@/assets/icons/kakao.svg";
@@ -24,7 +23,7 @@ export default function LoginContainer() {
     if (token) {
       console.log("token", token);
       login(token);
-      router.push("/lobby");
+      router.replace("/lobby");
     }
   }, [router]);
 
@@ -58,7 +57,6 @@ export default function LoginContainer() {
           <button
             className="relative w-full bg-white text-black py-3 rounded-lg flex items-center justify-center gap-2 shadow-md hover:bg-[#2A56C6] hover:text-white cursor-pointer"
             onClick={() => handleSocialLogin("google")}
-            // onClick={loginUser}
           >
             <Image
               src={googleIcon}
@@ -70,7 +68,6 @@ export default function LoginContainer() {
           <button
             className="relative w-full bg-yellow-400 text-black py-3 rounded-lg flex items-center justify-center gap-2 shadow-md hover:bg-[#F7E300] hover:text-white cursor-pointer"
             onClick={() => handleSocialLogin("kakao")}
-            // onClick={loginUser}
           >
             <Image
               src={kakaoIcon}

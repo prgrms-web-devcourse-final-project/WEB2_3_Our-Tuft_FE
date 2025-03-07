@@ -12,10 +12,6 @@ export async function defaultFetch<T>(
 ): Promise<T> {
   const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
-  if (!API_BASE_URL) {
-    throw new Error("API_BASE_URL is not defined");
-  }
-
   // 세션 스토리지에서 토큰 가져오기
   let token =
     typeof window !== "undefined" ? sessionStorage.getItem("token") : null;
