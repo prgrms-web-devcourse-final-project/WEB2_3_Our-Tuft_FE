@@ -1,14 +1,14 @@
-import OXQuizeContainer from "../../../../containers/game/oxQuize/OXQuizeContainer";
+import RoomsContainer from "../../../../containers/rooms/RoomsContainer";
 import ProtectedRoute from "../../../../components/ProtectedRoute/ProtectedRoute";
 
 export const metadata = {
-  title: "OX 퀴즈",
+  title: "대기방",
 };
 
-export default function OXQuiz() {
+export default async function Room() {
   return (
     <ProtectedRoute>
-      <OXQuizeContainer />
+      <RoomsContainer />
     </ProtectedRoute>
   );
 }

@@ -1,6 +1,68 @@
-import Timer from "./Timer";
+"use client";
 
-export default function QuizBoard() {
+import { useEffect, useState } from "react";
+import Timer from "./Timer";
+import io from "socket.io-client";
+
+const socket = io("http://localhost:8080");
+
+export default function QuizBoard({
+  oxAnswer,
+}: {
+  oxAnswer: (val: boolean | null) => void;
+}) {
+  const [quize, setQuize] = useState<
+    { question: string; hint: string; answer: boolean }[]
+  >([]);
+  const [showAnswer, setShowAnswer] = useState<boolean>(false);
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  useEffect(() => {
+    socket.on("connect", () => {
+      console.log("Socket connected:", socket.id);
+    });
+
+    socket.on(
+      "quize",
+      (msg: { question: string; hint: string; answer: boolean }[]) => {
+        console.log("Received quize data:", msg);
+        setQuize(msg);
+        setCurrentIndex(0);
+      }
+    );
+
+    return () => {
+      socket.off("quize");
+      socket.off("connect");
+    };
+  }, []);
+
+  useEffect(() => {
+    let isActive = true;
+    const timer = (ms: number) =>
+      new Promise((resolve) => setTimeout(resolve, ms));
+
+    const quizeLoop = async () => {
+      for (let index = 0; index < quize.length; index++) {
+        if (!isActive) return;
+        setCurrentIndex(index);
+        setShowAnswer(false);
+        await timer(10000); // 5초 동안 퀴즈 표시
+
+        setShowAnswer(true);
+        oxAnswer(quize[currentIndex].answer);
+        await timer(5000); // 3초 동안 정답 표시
+        oxAnswer(null);
+      }
+    };
+
+    quizeLoop();
+
+    return () => {
+      isActive = false;
+    };
+  }, [quize]);
+
   return (
     <div
       className="
@@ -20,10 +82,21 @@ export default function QuizBoard() {
           rounded-[32px] 2xl:rounded-[12px] text-white 
           "
       >
-        <div className="text-2xl md:text-3xl 2xl:text-4xl">문제 12</div>
         <div className="text-xl md:text-2xl 2xl:text-3xl whitespace-normal">
-          보험금을 노리고 퇴원하지 않는 ( ) 때문에 골치를 앓고 있다. 에서 ( ) 에
-          해당하는 단어는?
+          {quize.length > 0 && currentIndex < quize.length && (
+            <div>
+              <div className="text-2xl md:text-3xl 2xl:text-4xl mb-5">
+                문제 {currentIndex + 1}
+              </div>
+              <p>
+                {showAnswer
+                  ? quize[currentIndex].answer
+                    ? "O"
+                    : "X"
+                  : quize[currentIndex].question}
+              </p>
+            </div>
+          )}
         </div>
         <div className="absolute bottom-5 2xl:bottom-7 right-5 2xl:right-7">
           <Timer />

@@ -3,14 +3,54 @@ import Link from "next/link";
 import { useState, useEffect, useRef } from "react";
 import GameRoomItem from "./GameRoomItem";
 import CreateRoomModal from "./CreateRoomModal";
+import { defaultFetch } from "../../../service/api/defaultFetch";
+import {
+  socketConnection,
+  subscribeToTopic,
+  unsubscribeFromTopic,
+} from "../../../service/api/socketConnection";
+import { useLoginStore } from "../../../store/store";
+
+// 방 정보 인터페이스 정의
+interface Room {
+  roomId: number;
+  roomName: string;
+  round: number;
+  hostId: number;
+  disclosure: boolean;
+  gameType: "SPEED" | "DRAWING" | "OX";
+  time?: number; // 시간 제한
+  maxUsers?: number; // 최대 인원수
+  currentUsers?: number; // 현재 인원수
+}
+
+// API 응답 인터페이스 정의
+interface ApiResponse {
+  isSuccess: boolean;
+  message?: string;
+  data: Room[];
+}
+
+// 웹소켓 메시지 인터페이스 정의
+interface WebSocketRoomMessage {
+  type: "ROOM_LIST" | "ROOM_CREATED" | "ROOM_UPDATED" | "ROOM_DELETED";
+  data: Room | Room[] | number; // 메시지 타입에 따라 다른 데이터 형식
+}
 
 export default function GameRoomList() {
+  // 토큰 가져오기
+  const { token } = useLoginStore();
+
   // 상태 변수 선언
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [selectedMode, setSelectedMode] = useState("전체");
   const [isFilterDropdownOpen, setIsFilterDropdownOpen] = useState(false);
   const [selectedFilter, setSelectedFilter] = useState("방 제목");
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [rooms, setRooms] = useState<Room[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState("");
 
   // 게임 모드와 검색 타입 배열
   const gameModes = ["전체", "그림 맞추기", "스피드 퀴즈", "OX 퀴즈"];
@@ -19,6 +59,91 @@ export default function GameRoomList() {
   // 드롭다운과 필터 드롭다운을 위한 ref
   const dropdownRef = useRef<HTMLDivElement>(null);
   const filterDropdownRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    // 초기 로딩 상태 설정
+    setLoading(true);
+
+    // 소켓 연결 초기화
+    const client = socketConnection(token ?? undefined);
+
+    // 로비 메시지 핸들러
+    const handleLobbyMessage = (message: WebSocketRoomMessage) => {
+      console.log("로비 메시지 수신:", message);
+
+      switch (message.type) {
+        case "ROOM_LIST":
+          // 전체 방 목록 업데이트
+          if (Array.isArray(message.data)) {
+            setRooms(message.data as Room[]);
+            setLoading(false);
+          }
+          break;
+
+        case "ROOM_CREATED":
+          // 새 방 추가
+          if (!Array.isArray(message.data)) {
+            setRooms((prevRooms) => [...prevRooms, message.data as Room]);
+          }
+          break;
+
+        case "ROOM_UPDATED":
+          // 방 정보 업데이트
+          if (!Array.isArray(message.data)) {
+            const updatedRoom = message.data as Room;
+            setRooms((prevRooms) =>
+              prevRooms.map((room) =>
+                room.roomId === updatedRoom.roomId ? updatedRoom : room
+              )
+            );
+          }
+          break;
+
+        case "ROOM_DELETED":
+          // 방 삭제
+          const roomId = message.data as number;
+          setRooms((prevRooms) =>
+            prevRooms.filter((room) => room.roomId !== roomId)
+          );
+          break;
+
+        default:
+          console.warn("처리되지 않은 메시지 타입:", message.type);
+      }
+    };
+
+    // 로비 구독
+    subscribeToTopic("/topic/room/lobby", handleLobbyMessage);
+
+    // 초기 방 목록을 요청하기 위해 서버에 직접 API 호출
+    // 웹소켓에서 초기 데이터를 받기 전에 보여줄 데이터를 위함
+    const fetchInitialRooms = async () => {
+      try {
+        const data = await defaultFetch<ApiResponse>("/lobbies/rooms");
+        if (data.isSuccess) {
+          setRooms(data.data);
+        } else {
+          throw new Error(data.message || "데이터를 불러오는데 실패했습니다");
+        }
+      } catch (err) {
+        console.error("Error fetching initial rooms:", err);
+        setError(
+          err instanceof Error
+            ? err.message
+            : "방 목록을 불러오는데 실패했습니다"
+        );
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchInitialRooms();
+
+    // 컴포넌트 언마운트 시 구독 해제
+    return () => {
+      unsubscribeFromTopic("/topic/room/lobby");
+    };
+  }, [token]);
 
   // 클릭 시 드롭다운을 닫기 위한 이벤트 핸들러
   useEffect(() => {
@@ -44,6 +169,41 @@ export default function GameRoomList() {
     };
   }, []);
 
+  // 게임 모드에 따라 필터링된 방 목록 구하기
+  const getFilteredRooms = () => {
+    let filteredRooms = [...rooms];
+
+    // 게임 타입 필터링
+    if (selectedMode !== "전체") {
+      const modeMap: Record<string, string> = {
+        "그림 맞추기": "DRAWING",
+        "스피드 퀴즈": "SPEED",
+        "OX 퀴즈": "OX",
+      };
+      filteredRooms = filteredRooms.filter(
+        (room) => room.gameType === modeMap[selectedMode]
+      );
+    }
+
+    // 검색어 필터링
+    if (searchQuery) {
+      if (selectedFilter === "방 제목") {
+        filteredRooms = filteredRooms.filter((room) =>
+          room.roomName.toLowerCase().includes(searchQuery.toLowerCase())
+        );
+      } else if (selectedFilter === "방 번호") {
+        filteredRooms = filteredRooms.filter((room) =>
+          room.roomId.toString().includes(searchQuery)
+        );
+      }
+    }
+
+    return filteredRooms;
+  };
+
+  // 필터링된 방 목록
+  const filteredRooms = getFilteredRooms();
+
   return (
     <div className="bg-[var(--color-point)] h-full w-full rounded-2xl pt-[0.7rem] pb-0 pl-[1.75rem] pr-[1rem] overflow-hidden">
       {/* 상단 버튼과 검색창 */}
@@ -57,6 +217,7 @@ export default function GameRoomList() {
         </button>
         {/* 게임 모드 드롭다운 */}
         <div className="relative" ref={dropdownRef}>
+          {/* 기존 드롭다운 코드 */}
           <button
             onClick={() => setIsDropdownOpen(!isDropdownOpen)}
             className="h-[3.5rem] w-[9.5rem] xl:h-[4rem] xl:w-[10rem] border border-black text-white text-lg xl:text-xl rounded-xl cursor-pointer transition-all inline-flex items-center drop-shadow-custom overflow-hidden group"
@@ -109,6 +270,8 @@ export default function GameRoomList() {
                 placeholder={`${selectedFilter}${
                   selectedFilter === "방 제목" ? "으로" : "로"
                 } 검색`}
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
                 className="w-full h-[3.5rem] pl-[11.25rem] pr-[1.5rem] bg-[var(--color-second)] text-white text-lg xl:text-xl outline-none placeholder:text-white/70 rounded-[2.5rem] drop-shadow-custom"
               />
               <div className="absolute right-[1.5rem] top-1/2 transform -translate-y-1/2">
@@ -160,13 +323,44 @@ export default function GameRoomList() {
           </div>
         </div>
       </div>
+
       {/* 방 목록 */}
-      <div className="grid grid-cols-2 gap-x-3 gap-y-3 overflow-y-auto h-[calc(100%-6.25rem)] pr-2 xl:pr-4">
-        {Array.from({ length: 15 }).map((_, index) => (
-          <Link href="/rooms" key={index} className="h-[8em]">
-            <GameRoomItem />
-          </Link>
-        ))}
+      <div className="grid grid-cols-2 gap-x-3 gap-y-3 overflow-y-auto h-[calc(100%-6.25rem)] pr-2 xl:pr-4 grid-flow-row-dense content-start">
+        {loading ? (
+          <div className="col-span-2 flex items-center justify-center h-32 text-white text-xl">
+            방 목록을 불러오는 중...
+          </div>
+        ) : error ? (
+          <div className="col-span-2 flex items-center justify-center h-32 text-white text-xl">
+            {error}
+          </div>
+        ) : filteredRooms.length === 0 ? (
+          <div className="col-span-2 flex items-center justify-center h-32 text-white text-xl">
+            검색 결과가 없습니다
+          </div>
+        ) : (
+          filteredRooms.map((room) => (
+            <Link
+              href={{
+                pathname: `/lobby/rooms/${room.roomId}`,
+                query: { password: room.disclosure }, // query로 props 전달
+              }}
+              key={room.roomId}
+              className="h-[8em]"
+            >
+              <GameRoomItem
+                roomId={room.roomId}
+                roomName={room.roomName}
+                round={room.round}
+                disclosure={room.disclosure}
+                gameType={room.gameType}
+                time={room.time}
+                maxUsers={room.maxUsers}
+                currentUsers={room.currentUsers}
+              />
+            </Link>
+          ))
+        )}
       </div>
 
       {/* 방 생성 모달 */}

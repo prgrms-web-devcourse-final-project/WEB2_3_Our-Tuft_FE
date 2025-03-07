@@ -9,9 +9,9 @@ export default function RoomsMain() {
       </div>
       <div
         className="
-          bottom-0 w-full
-          flex-1 xl:static md:static fixed 
-          xl:block md:block hidden"
+          -bottom-60 w-full
+          flex-1 xl:static md:static absolute 
+          xl:block md:block"
       >
         <Chat />
       </div>

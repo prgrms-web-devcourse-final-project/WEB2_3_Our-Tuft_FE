@@ -16,23 +16,23 @@ export default function ProtectedRoute({
 
   // 초기 토큰 로딩을 위해 로컬 스토리지 확인
   useEffect(() => {
-    const storedToken = sessionStorage.getItem("token");
+    const storedToken = localStorage.getItem("token");
     if (storedToken) {
       // 상태 업데이트
       useLoginStore.getState().login(storedToken);
     }
-    setIsAuthChecked(true);
   }, []);
 
   useEffect(() => {
-    if (isAuthChecked && !token) {
+    if (!token) {
       router.replace("/login-required"); // 토큰이 없으면 로그인 페이지로 리디렉트
+    } else {
+      setIsAuthChecked(true);
     }
-  }, [isAuthChecked, token, router]);
+  }, [token, router]);
 
-  // 로딩 중일시 스피너, 토큰 없으면 리디렉션
+  // 깜빡임 방지
   if (!isAuthChecked) return <LoadingSpinner />;
-  if (!token) return <LoadingSpinner />;
 
   return <>{children}</>;
 }
