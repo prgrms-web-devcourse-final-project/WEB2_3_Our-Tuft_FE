@@ -97,6 +97,20 @@ function processPendingSubscriptions() {
 }
 
 /**
+ * 현재 클라이언트 인스턴스 반환
+ */
+export function getClient(): Client | null {
+  return client;
+}
+
+/**
+ * 웹소켓이 연결되어 있는지 확인
+ */
+export function isConnected(): boolean {
+  return client !== null && client.connected;
+}
+
+/**
  * 특정 채널을 구독
  */
 export function subscribeToTopic(
@@ -187,7 +201,7 @@ export function unsubscribeFromTopic(topic: string) {
 /**
  * STOMP를 통해 메시지를 전송
  */
-export function sendMessage(destination: string, message: any) {
+export function publishMessage(destination: string, message: any) {
   if (!client || !client.connected) {
     console.error("STOMP 클라이언트가 연결되지 않았습니다.");
     return;
@@ -254,4 +268,11 @@ export function disconnectSocket() {
     activeSubscriptions = {}; // 구독 정보 초기화
     console.log("STOMP 연결 종료");
   }
+}
+
+/**
+ * 메시지 전송 (publishMessage와 동일 기능, 호환성 유지)
+ */
+export function sendMessage(destination: string, message: any) {
+  return publishMessage(destination, message);
 }

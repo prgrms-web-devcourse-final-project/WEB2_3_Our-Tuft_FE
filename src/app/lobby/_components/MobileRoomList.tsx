@@ -3,19 +3,66 @@ import Image from "next/image";
 import Link from "next/link";
 import MobileGameRoomItem from "./MobileGameRoomItem";
 import MobileRoomModal from "./MobileRoomModal";
+import { Room } from "../../../types/Room";
+import { defaultFetch } from "../../../service/api/defaultFetch";
 
-export default function MobileRoomList() {
+interface MobileRoomListProps {
+  roomsData?: Room[];
+}
+
+// API 응답 인터페이스 정의
+interface ApiResponse {
+  isSuccess: boolean;
+  message?: string;
+  data: Room[];
+}
+
+export default function MobileRoomList({ roomsData }: MobileRoomListProps) {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [selectedMode, setSelectedMode] = useState("전체");
   const [isFilterDropdownOpen, setIsFilterDropdownOpen] = useState(false);
   const [selectedFilter, setSelectedFilter] = useState("방 제목");
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [rooms, setRooms] = useState<Room[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState("");
 
   const gameModes = ["전체", "그림 맞추기", "스피드 퀴즈", "OX 퀴즈"];
   const searchTypes = ["방 제목", "방 번호"];
 
   const dropdownRef = useRef<HTMLDivElement>(null);
   const filterDropdownRef = useRef<HTMLDivElement>(null);
+
+  // roomsData를 rooms 상태에 설정
+  useEffect(() => {
+    if (roomsData) {
+      setRooms(roomsData);
+      setLoading(false);
+    } else {
+      fetchInitialRooms();
+    }
+  }, [roomsData]);
+
+  // 초기 방 목록을 API로 가져오는 함수
+  const fetchInitialRooms = async () => {
+    setLoading(true);
+    try {
+      const data = await defaultFetch<ApiResponse>("/lobbies/rooms");
+      if (data.isSuccess) {
+        setRooms(data.data);
+      } else {
+        throw new Error(data.message || "데이터를 불러오는데 실패했습니다");
+      }
+    } catch (err) {
+      console.error("Error fetching initial rooms:", err);
+      setError(
+        err instanceof Error ? err.message : "방 목록을 불러오는데 실패했습니다"
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -39,6 +86,41 @@ export default function MobileRoomList() {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
+
+  // 필터링된 방 목록 구하기
+  const getFilteredRooms = () => {
+    let filteredRooms = [...rooms];
+
+    // 게임 타입 필터링
+    if (selectedMode !== "전체") {
+      const modeMap: Record<string, string> = {
+        "그림 맞추기": "CATCHMIND",
+        "스피드 퀴즈": "SPEED",
+        "OX 퀴즈": "OX",
+      };
+      filteredRooms = filteredRooms.filter(
+        (room) => room.gameType === modeMap[selectedMode]
+      );
+    }
+
+    // 검색어 필터링
+    if (searchQuery) {
+      if (selectedFilter === "방 제목") {
+        filteredRooms = filteredRooms.filter((room) =>
+          room.roomName.toLowerCase().includes(searchQuery.toLowerCase())
+        );
+      } else if (selectedFilter === "방 번호") {
+        filteredRooms = filteredRooms.filter((room) =>
+          room.roomId.toString().includes(searchQuery)
+        );
+      }
+    }
+
+    return filteredRooms;
+  };
+
+  // 필터링된 방 목록
+  const filteredRooms = getFilteredRooms();
 
   return (
     <div className="bg-[var(--color-point)] w-full h-full rounded-xl p-1 relative">
@@ -98,6 +180,8 @@ export default function MobileRoomList() {
                 placeholder={`${selectedFilter}${
                   selectedFilter === "방 제목" ? "으로" : "로"
                 } 검색`}
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
                 className="w-full h-[30px] pl-[85px] pr-6 bg-[var(--color-second)] text-white text-xs outline-none placeholder:text-white/70 rounded-[15px] drop-shadow-custom"
               />
               <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
@@ -149,12 +233,39 @@ export default function MobileRoomList() {
         </div>
       </div>
       {/* 방 목록 */}
-      <div className="grid grid-cols-1 gap-2 overflow-y-auto h-[calc(100%-40px)] pr-1">
-        {Array.from({ length: 15 }).map((_, index) => (
-          <Link href="/rooms" key={index}>
-            <MobileGameRoomItem />
-          </Link>
-        ))}
+      <div className="flex flex-col space-y-1 overflow-y-auto h-[calc(100%-40px)] pr-1">
+        {loading ? (
+          <div className="flex items-center justify-center h-20 text-white text-sm">
+            방 목록을 불러오는 중...
+          </div>
+        ) : error ? (
+          <div className="flex items-center justify-center h-20 text-white text-sm">
+            {error}
+          </div>
+        ) : filteredRooms.length === 0 ? (
+          <div className="flex items-center justify-center h-20 text-white text-sm">
+            검색 결과가 없습니다
+          </div>
+        ) : (
+          filteredRooms.map((room) => (
+            <Link
+              href={`/rooms/${room.roomId}`}
+              key={room.roomId}
+              className="block w-full"
+            >
+              <MobileGameRoomItem
+                roomId={room.roomId}
+                roomName={room.roomName}
+                round={room.round}
+                disclosure={room.disclosure}
+                gameType={room.gameType}
+                time={room.time}
+                maxUsers={room.maxUsers}
+                currentUsers={room.currentUsers}
+              />
+            </Link>
+          ))
+        )}
       </div>
       {/* 방 생성 버튼 */}
       <button

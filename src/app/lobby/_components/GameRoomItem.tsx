@@ -5,7 +5,7 @@ interface GameRoomItemProps {
   roomName: string;
   round: number;
   disclosure: boolean;
-  gameType: "SPEED" | "DRAWING" | "OX";
+  gameType: "SPEED" | "CATCHMIND" | "OX";
   time?: number;
   maxUsers?: number;
   currentUsers?: number;
@@ -24,13 +24,12 @@ export default function GameRoomItem({
   // 게임 타입에 맞는 한글 이름으로 변환
   const gameTypeToKorean = {
     SPEED: "스피드 퀴즈",
-    DRAWING: "그림 맞추기",
+    CATCHMIND: "그림 맞추기",
     OX: "OX 퀴즈",
   };
 
   return (
     <div className="w-full h-full bg-white border border-black rounded-xl flex items-center justify-center relative text-[1vw] md:text-[0.8vw] xl:text-[0.55vw]">
-      {/* 세로 구분선 */}
       <div className="absolute left-[20%] top-[5%] bottom-[5%] w-[1px] bg-black"></div>
 
       {/* 방 번호 영역 */}

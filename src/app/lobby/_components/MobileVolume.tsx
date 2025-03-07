@@ -68,7 +68,6 @@ export default function MobileVolume({ isOpen, onClose }: MobileVolumeProps) {
             볼륨 설정
           </h2>
           <div className="flex-1 flex flex-col justify-center items-center w-full">
-            {/* 볼륨 아이콘과 퍼센트 표시 */}
             <div className="flex items-center justify-between w-full mb-4">
               <button onClick={toggleMute} className="p-1">
                 <Image
