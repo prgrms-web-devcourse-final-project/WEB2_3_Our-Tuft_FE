@@ -1,22 +1,21 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import DeportModal from "../../roomsModal/DeportModal";
 import MenuModal from "../../roomsModal/MenuModal";
 import ProfileModal from "../../roomsModal/ProfileModal";
 import UserCard from "./UserCard";
-import { roomUserList } from "../../../../types/roomType";
+import { roomUserList, roomUserListData } from "../../../../types/roomType";
 import { defaultFetch } from "../../../../service/api/defaultFetch";
 
-export default function UserList() {
+export default function UserList({ userList }: { userList: roomUserListData }) {
   const [user, setUser] = useState<roomUserList>();
-  const [userList, setUserList] = useState<roomUserList[]>([]);
+
   const [isOpenDeport, setOpenDeport] = useState<boolean>(false);
   const [isOpenMenu, setOpenMenu] = useState<boolean>(false);
   const [isOpenProfile, setOpenProfile] = useState<boolean | undefined>(
     undefined
   );
-
   const [position, setPosition] = useState<{ x: number; y: number } | null>(
     null
   );
@@ -31,16 +30,6 @@ export default function UserList() {
     defaultFetch(`/rooms/${userId}/deport`, { method: "POST" });
   };
 
-  useEffect(() => {
-    setUserList([
-      {
-        userId: "안녕",
-        username: "녕안",
-        isReady: "true",
-      },
-    ]);
-  }, []);
-
   return (
     <div
       className="
@@ -53,7 +42,7 @@ export default function UserList() {
         xl:rounded-[32px] rounded-[20px] 
         "
     >
-      {userList.map((i, index) => (
+      {userList?.data.map((i, index) => (
         <div
           className="h-auto max-h-fit"
           onClick={() => {
