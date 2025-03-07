@@ -1,23 +1,25 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import VolumeModal from "./VolumeModal";
 import MobileVolume from "./MobileVolume";
+import { useLoginStore } from "../../../store/store";
 
 export default function ButtonGroup() {
   const [isVolumeModalOpen, setIsVolumeModalOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const router = useRouter();
+  const logout = useLoginStore((state) => state.logout);
 
   // 화면 크기 변경 시 모바일 여부 확인
   useEffect(() => {
     const checkIfMobile = () => {
-      setIsMobile(window.innerWidth < 768); // md 브레이크포인트 기준
+      setIsMobile(window.innerWidth < 768);
     };
 
-    // 초기 확인
     checkIfMobile();
 
-    // 리사이즈 이벤트에 대한 리스너 추가
     window.addEventListener("resize", checkIfMobile);
 
     // 클린업 함수
@@ -25,6 +27,31 @@ export default function ButtonGroup() {
       window.removeEventListener("resize", checkIfMobile);
     };
   }, []);
+
+  // 로그아웃 처리 함수
+  const handleLogout = () => {
+    // 세션 스토리지에서 토큰 및 사용자 정보 삭제
+    if (typeof window !== "undefined") {
+      // 스토어 상태 업데이트 - 중요!
+      logout(); // Zustand 스토어의 logout 함수 호출
+
+      // 로컬 저장소에서 토큰 제거
+      sessionStorage.removeItem("token");
+      sessionStorage.removeItem("user");
+      localStorage.removeItem("token");
+      localStorage.removeItem("user");
+
+      // 쿠키에서도 토큰 제거
+      document.cookie =
+        "token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+      document.cookie = "user=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+
+      // 잠시 지연 후 리디렉션 (상태 업데이트를 위한 시간 확보)
+      setTimeout(() => {
+        router.push("/login");
+      }, 100);
+    }
+  };
 
   return (
     <>
@@ -56,8 +83,8 @@ export default function ButtonGroup() {
           />
         </Link>
         {/* 로그아웃 버튼 */}
-        <Link
-          href="/login"
+        <button
+          onClick={handleLogout}
           className="flex-1 h-full bg-[var(--color-lightRed)]/90 hover:bg-[var(--color-lightRed-hover)]/90 rounded-lg sm:rounded-xl md:rounded-2xl p-2 drop-shadow-custom flex items-center justify-center cursor-pointer transition-all"
         >
           <Image
@@ -67,7 +94,7 @@ export default function ButtonGroup() {
             height={40}
             className="w-[30px] h-[30px] md:w-[30px] md:h-[30px] xl:w-[40px] xl:h-[40px]"
           />
-        </Link>
+        </button>
       </div>
 
       {/* 모달 렌더링 */}

@@ -18,7 +18,7 @@ interface Room {
   round: number;
   hostId: number;
   disclosure: boolean;
-  gameType: "SPEED" | "DRAWING" | "OX";
+  gameType: "SPEED" | "CATCHMIND" | "OX";
   time?: number; // 시간 제한
   maxUsers?: number; // 최대 인원수
   currentUsers?: number; // 현재 인원수
@@ -176,7 +176,7 @@ export default function GameRoomList() {
     // 게임 타입 필터링
     if (selectedMode !== "전체") {
       const modeMap: Record<string, string> = {
-        "그림 맞추기": "DRAWING",
+        "그림 맞추기": "CATCHMIND",
         "스피드 퀴즈": "SPEED",
         "OX 퀴즈": "OX",
       };

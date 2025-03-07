@@ -1,6 +1,10 @@
 import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import { createPortal } from "react-dom";
+import { defaultFetch } from "../../../service/api/defaultFetch";
+import { useRouter } from "next/navigation";
+import { useLoginStore } from "../../../store/store";
+import { publishMessage } from "../../../service/api/socketConnection";
 
 interface CreateRoomModalProps {
   isOpen: boolean;
@@ -16,15 +20,38 @@ interface GameModeInfo {
   descriptions: string[];
 }
 
+interface CreateRoomRequest {
+  roomName: string;
+  disclosure: boolean; // true=공개방, false=비공개방
+  password: string;
+  round: number;
+  gameType: "SPEED" | "CATCHMIND" | "OX";
+  time: number;
+  maxUsers: number;
+}
+
+// 방 생성 응답 인터페이스 정의
+interface CreateRoomResponse {
+  isSuccess: boolean;
+  message?: string;
+  data: {
+    roomId: number;
+  };
+}
+
 export default function CreateRoomModal({
   isOpen,
   onClose,
   title = "방 생성",
   gameType,
 }: CreateRoomModalProps) {
+  const { token } = useLoginStore();
   const modalRef = useRef<HTMLDivElement>(null);
   const [isPrivate, setIsPrivate] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   // 컴포넌트 마운트 상태 관리
   useEffect(() => {
@@ -44,7 +71,7 @@ export default function CreateRoomModal({
     };
   }, [isOpen, mounted]);
 
-  // 폼 상태 변수들
+  // 폼 상태 변수
   const [roomTitle, setRoomTitle] = useState("");
   const [password, setPassword] = useState("");
   const [players, setPlayers] = useState(4);
@@ -91,7 +118,7 @@ export default function CreateRoomModal({
   const [isRoundsOpen, setIsRoundsOpen] = useState(false);
   const [isTimeLimitOpen, setIsTimeLimitOpen] = useState(false);
 
-  // 선택 옵션들
+  // 선택 옵션
   const playerOptions = [2, 3, 4, 5, 6, 7, 8];
   const roundOptions = [1, 3, 5, 7, 10];
   const timeLimitOptions = [30, 45, 60, 90, 120];
@@ -103,20 +130,85 @@ export default function CreateRoomModal({
     setSelectedGameMode(newIndex);
   };
 
-  // 방 생성 핸들러
-  const handleCreateRoom = () => {
-    // 방 생성 로직 구현
-    console.log({
-      gameMode: gameModes[selectedGameMode].name,
-      roomTitle,
-      isPrivate,
-      password: isPrivate ? password : "",
-      players,
-      rounds,
-      timeLimit,
-    });
+  // 게임 모드 이름 매핑
+  const gameModeToType: { [key: string]: string } = {
+    "그림 맞추기": "CATCHMIND",
+    "스피드 퀴즈": "SPEED",
+    "OX 퀴즈": "OX",
+  };
 
-    onClose();
+  const handleCreateRoom = async () => {
+    if (!token) {
+      setErrorMessage("로그인이 필요합니다.");
+      return;
+    }
+
+    // 방 제목 유효성 검증
+    if (!roomTitle.trim()) {
+      setErrorMessage("방 제목을 입력해주세요.");
+      return;
+    }
+    // 비밀번호 유효성 검증
+    if (
+      isPrivate &&
+      (!password || password.length !== 4 || !/^\d{4}$/.test(password))
+    ) {
+      setErrorMessage("비공개 방은 4자리 숫자 비밀번호가 필요합니다.");
+      return;
+    }
+
+    setIsLoading(true);
+    setErrorMessage(null);
+
+    try {
+      const requestData: CreateRoomRequest = {
+        roomName: roomTitle,
+        disclosure: !isPrivate,
+        password: isPrivate ? password : "",
+        round: rounds,
+        gameType: gameModeToType[gameModes[selectedGameMode].name] as
+          | "SPEED"
+          | "CATCHMIND"
+          | "OX",
+        time: timeLimit,
+        maxUsers: players,
+      };
+
+      // 방 생성 API 호출
+      const data = await defaultFetch<CreateRoomResponse>("/lobbies/rooms", {
+        method: "POST",
+        body: JSON.stringify(requestData),
+      });
+
+      if (data.isSuccess) {
+        console.log("방 생성 성공");
+
+        // 방 생성 알림 메시지
+        publishMessage("/app/lobby/rooms", { type: "GET_ROOMS" });
+
+        // 잠시 기다린 후 방으로 이동
+        setTimeout(() => {
+          onClose();
+
+          // 생성된 방으로 이동
+          const roomId = data.data?.roomId;
+          if (roomId) {
+            router.push(`/rooms/${roomId}`);
+          } else {
+            throw new Error("방 ID를 찾을 수 없습니다.");
+          }
+        }, 300); // 300ms 기다리기
+      } else {
+        throw new Error(data.message || "방 생성에 실패했습니다.");
+      }
+    } catch (err) {
+      console.error("방 생성 오류:", err);
+      setErrorMessage(
+        err instanceof Error ? err.message : "방 생성에 실패했습니다."
+      );
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   // ESC 키로 모달 닫기
@@ -140,7 +232,7 @@ export default function CreateRoomModal({
 
   const modalContent = (
     <div className="fixed inset-0 flex items-center justify-center z-[9999]">
-      {/* 전체 화면 마스킹 - 별도 div로 분리하여 명확하게 표시 */}
+      {/* 전체 화면 마스킹*/}
       <div className="absolute inset-0 bg-black/70" onClick={onClose}></div>
 
       <div
@@ -169,11 +261,9 @@ export default function CreateRoomModal({
 
         {/* 모달 내용 */}
         <div className="flex-1 p-6 md:p-10 overflow-y-auto">
-          {/* 2개의 컬럼으로 나눔 */}
           <div className="flex h-full">
             {/* 왼쪽 영역 */}
             <div className="flex-1 pr-6 flex flex-col items-center">
-              {/* 게임 모드 타이틀 */}
               <h3 className="text-white text-xl mb-6 self-center">게임 모드</h3>
 
               {/* 게임 모드 이미지 캐러셀 */}
@@ -188,7 +278,7 @@ export default function CreateRoomModal({
                     xmlns="http://www.w3.org/2000/svg"
                     className="h-8 w-8 transform rotate-90"
                     fill="none"
-                    viewBox="0 0 24 24"
+                    viewBox="0 24 24"
                     stroke="currentColor"
                   >
                     <path
@@ -230,7 +320,7 @@ export default function CreateRoomModal({
                     xmlns="http://www.w3.org/2000/svg"
                     className="h-8 w-8 transform -rotate-90"
                     fill="none"
-                    viewBox="0 0 24 24"
+                    viewBox="0 24 24"
                     stroke="currentColor"
                   >
                     <path
@@ -243,7 +333,6 @@ export default function CreateRoomModal({
                 </button>
               </div>
 
-              {/* 선택된 게임 모드 이름 */}
               <h3 className="text-white text-2xl font-bold mt-4 mb-5">
                 {gameModes[selectedGameMode].title}
               </h3>
@@ -265,12 +354,10 @@ export default function CreateRoomModal({
               </div>
             </div>
 
-            {/* 세로 구분선 */}
             <div className="w-[2px] bg-white mx-2 h-full"></div>
 
             {/* 오른쪽 영역 - 설정 폼 */}
             <div className="flex-1 pl-6 flex flex-col gap-4">
-              {/* 방 제목 입력 */}
               <div className="flex flex-col gap-2">
                 <label className="text-white text-xl">방 제목</label>
                 <input
@@ -335,7 +422,7 @@ export default function CreateRoomModal({
                     <path
                       strokeLinecap="round"
                       strokeLinejoin="round"
-                      strokeWidth={2}
+                      strokeWidth="2"
                       d="M19 9l-7 7-7-7"
                     />
                   </svg>
@@ -385,7 +472,7 @@ export default function CreateRoomModal({
                     <path
                       strokeLinecap="round"
                       strokeLinejoin="round"
-                      strokeWidth={2}
+                      strokeWidth="2"
                       d="M19 9l-7 7-7-7"
                     />
                   </svg>
@@ -438,7 +525,7 @@ export default function CreateRoomModal({
                     <path
                       strokeLinecap="round"
                       strokeLinejoin="round"
-                      strokeWidth={2}
+                      strokeWidth="2"
                       d="M19 9l-7 7-7-7"
                     />
                   </svg>
@@ -464,21 +551,38 @@ export default function CreateRoomModal({
               </div>
 
               {/* 버튼 영역 */}
-              <div className="mt-auto flex justify-end gap-4">
-                <button
-                  type="button"
-                  onClick={onClose}
-                  className="px-6 py-2.5 md:px-4 md:py-2 bg-[#4E4C4C] text-white text-lg md:text-base rounded-lg hover:opacity-90 transition-opacity"
-                >
-                  취소
-                </button>
-                <button
-                  type="button"
-                  onClick={handleCreateRoom}
-                  className="px-6 py-2.5 md:px-4 md:py-2 bg-[var(--color-secondPoint)] text-white text-lg md:text-base rounded-lg hover:opacity-90 transition-opacity"
-                >
-                  {title === "방 생성" ? "생성" : "변경"}
-                </button>
+              <div className="mt-auto flex flex-col gap-2">
+                {/* 에러 메시지 표시 */}
+                {errorMessage && (
+                  <div className="text-red-500 text-sm bg-white/80 p-2 rounded-md">
+                    {errorMessage}
+                  </div>
+                )}
+
+                <div className="flex justify-end gap-4">
+                  <button
+                    type="button"
+                    onClick={onClose}
+                    className="px-6 py-2.5 md:px-4 md:py-2 bg-[#4E4C4C] text-white text-lg md:text-base rounded-lg hover:opacity-90 transition-opacity"
+                    disabled={isLoading}
+                  >
+                    취소
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handleCreateRoom}
+                    className={`px-6 py-2.5 md:px-4 md:py-2 bg-[var(--color-secondPoint)] text-white text-lg md:text-base rounded-lg hover:opacity-90 transition-opacity ${
+                      isLoading ? "opacity-70 cursor-wait" : ""
+                    }`}
+                    disabled={isLoading}
+                  >
+                    {isLoading
+                      ? "생성 중..."
+                      : title === "방 생성"
+                      ? "생성"
+                      : "변경"}
+                  </button>
+                </div>
               </div>
             </div>
           </div>
