@@ -1,13 +1,16 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import DeportModal from "../../roomsModal/DeportModal";
 import MenuModal from "../../roomsModal/MenuModal";
 import ProfileModal from "../../roomsModal/ProfileModal";
 import UserCard from "./UserCard";
+import { roomUserList } from "../../../../types/roomType";
+import { defaultFetch } from "../../../../service/api/defaultFetch";
 
 export default function UserList() {
-  const [nickName, setNicKName] = useState<string>("");
+  const [user, setUser] = useState<roomUserList>();
+  const [userList, setUserList] = useState<roomUserList[]>([]);
   const [isOpenDeport, setOpenDeport] = useState<boolean>(false);
   const [isOpenMenu, setOpenMenu] = useState<boolean>(false);
   const [isOpenProfile, setOpenProfile] = useState<boolean | undefined>(
@@ -24,18 +27,19 @@ export default function UserList() {
     setOpenMenu(true);
   };
 
-  const data = {
-    players: [
-      "호랑이",
-      "독수리",
-      "고양이",
-      "늑대",
-      "여우",
-      "판다",
-      "드래곤",
-      "사자",
-    ],
+  const deportUser = (userId: string) => {
+    defaultFetch(`/rooms/${userId}/deport`, { method: "POST" });
   };
+
+  useEffect(() => {
+    setUserList([
+      {
+        userId: "안녕",
+        username: "녕안",
+        isReady: "true",
+      },
+    ]);
+  }, []);
 
   return (
     <div
@@ -49,17 +53,17 @@ export default function UserList() {
         xl:rounded-[32px] rounded-[20px] 
         "
     >
-      {data.players.map((i, index) => (
+      {userList.map((i, index) => (
         <div
           className="h-auto max-h-fit"
           onClick={() => {
             setOpenDeport(true);
-            setNicKName(i);
+            setUser(i);
           }}
           onContextMenu={handleContextMenu}
           key={index}
         >
-          <UserCard nickName={i}>
+          <UserCard nickName={i.username}>
             <div
               className="
                 absolute xl:static md:static 
@@ -75,8 +79,12 @@ export default function UserList() {
         </div>
       ))}
 
-      {isOpenDeport && (
-        <DeportModal nickName={nickName} setIsClose={setOpenDeport} />
+      {isOpenDeport && user && (
+        <DeportModal
+          nickName={user.username}
+          setIsClose={setOpenDeport}
+          setIsComplete={() => deportUser(user?.userId)}
+        />
       )}
       {isOpenMenu && (
         <MenuModal
