@@ -23,7 +23,7 @@ export default function LoginContainer() {
     if (token) {
       console.log("token", token);
       login(token);
-      router.push("/lobby");
+      router.replace("/lobby");
     }
   }, [router]);
 

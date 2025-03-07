@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 
 import { defaultFetch } from "../../service/api/defaultFetch";
 import { Item } from "../../types/item";
@@ -8,6 +8,7 @@ import { Item } from "../../types/item";
 import ItemTab from "./tabs/ItemTab";
 import MainTab from "./tabs/MainTab";
 import ShopProfile from "../../components/ShopProfile/ShopProfile";
+import { ShopUserData } from "../../types/shopUser";
 
 interface ShopData {
   content: Item[];
@@ -21,8 +22,7 @@ interface ShopData {
 export default function ShopContainer() {
   const [selectedTab, setSelectedTab] = useState("main");
   const [shopData, setShopData] = useState<ShopData | null>(null);
-  const [sortedData, setSortedData] = useState<Item[]>([]);
-  const [groupedData, setGroupedData] = useState<{ [key: string]: Item[] }>({});
+  const [userData, setUserData] = useState<ShopUserData | null>(null);
 
   const fetchShopData = async () => {
     try {
@@ -36,7 +36,7 @@ export default function ShopContainer() {
 
       if (response.isSuccess && response.data) {
         setShopData(response.data);
-        console.log("상점 데이터 불러오기 성공: ", response.data);
+        console.log("상점 데이터: ", response.data);
       } else {
         console.error("상점 데이터 불러오기 실패: ", response.message);
       }
@@ -45,28 +45,47 @@ export default function ShopContainer() {
     }
   };
 
+  const fetchUserProfile = async () => {
+    try {
+      const response = await defaultFetch<{
+        isSuccess: boolean;
+        message: string;
+        data: ShopUserData;
+      }>("/myInfo", {
+        method: "GET",
+      });
+
+      if (response.isSuccess && response.data) {
+        setUserData(response.data);
+        console.log("유저 정보: ", response.data);
+      } else {
+        console.error("유저 데이터 불러오기 실패: ", response.message);
+      }
+    } catch (error) {
+      console.error("유저 데이터 불러오기 오류: ", error);
+    }
+  };
+
   useEffect(() => {
     fetchShopData();
+    fetchUserProfile();
   }, []);
 
-  useEffect(() => {
-    if (shopData?.content) {
-      // 메인 탭에서는 ID 순으로 정렬
-      const sorted = [...shopData.content].sort((a, b) => a.id - b.id);
-      setSortedData(sorted);
+  // 메인 탭에서는 ID 순으로 정렬
+  const sortedData = useMemo(() => {
+    if (!shopData?.content) return [];
+    return [...shopData.content].sort((a, b) => a.id - b.id);
+  }, [shopData]);
 
-      // 아이템 탭에서는 카테고리별로 그룹화
-      const grouped = shopData.content.reduce((acc, item) => {
-        const category = item.category;
-        if (!acc[category]) {
-          acc[category] = [];
-        }
-        acc[category].push(item);
-        return acc;
-      }, {} as { [key: string]: Item[] });
-
-      setGroupedData(grouped);
-    }
+  // 아이템 탭에서는 카테고리별로 그룹화
+  const groupedData = useMemo(() => {
+    if (!shopData?.content) return {};
+    return shopData.content.reduce((acc, item) => {
+      const category = item.category;
+      if (!acc[category]) acc[category] = [];
+      acc[category].push(item);
+      return acc;
+    }, {} as { [key: string]: Item[] });
   }, [shopData]);
 
   return (
@@ -81,8 +100,8 @@ export default function ShopContainer() {
             onClick={() => setSelectedTab("main")}
             className={`rounded-t-md text-white transition-colors h-[80%] aspect-[1/1] md:aspect-[1.5/1] min-[1025px]:aspect-[2/1] transition-colors duration-200 cursor-pointer ${
               selectedTab === "main"
-                ? "bg-[var(--color-second)]/80"
-                : "bg-[var(--color-main)]/80 hover:bg-[var(--color-main)]"
+                ? "bg-[var(--color-main)]/80"
+                : "bg-[var(--color-second)]/80 hover:bg-[var(--color-second-hover)]"
             }`}
           >
             메인
@@ -92,19 +111,43 @@ export default function ShopContainer() {
             onClick={() => setSelectedTab("item")}
             className={`rounded-t-md text-white transition-colors h-[80%] aspect-[1/1] md:aspect-[1.5/1] min-[1025px]:aspect-[2/1] transition-colors duration-200 cursor-pointer ${
               selectedTab === "item"
-                ? "bg-[var(--color-second)]/80"
-                : "bg-[var(--color-main)]/80 hover:bg-[var(--color-main)]"
+                ? "bg-[var(--color-main)]/80"
+                : "bg-[var(--color-second)]/80 hover:bg-[var(--color-second-hover)]"
             }`}
           >
             아이템
           </button>
         </div>
-        {/* 두 번째 그리드 영역(보유 코인량, 나가기 버튼, 사용자 정보) */}
         <div className="w-full h-full row-span-9">
-          <ShopProfile />
+          <ShopProfile
+            exp={userData?.exp || 0}
+            nickname={userData?.nickname || "사용자"}
+            eye={
+              userData?.eye || {
+                itemId: 1,
+                imageUrl: `${process.env.NEXT_PUBLIC_S3_BUCKET_URL}/eye/default-mouth.png`,
+              }
+            }
+            mouth={
+              userData?.mouth || {
+                itemId: 4,
+                imageUrl: `${process.env.NEXT_PUBLIC_S3_BUCKET_URL}/mouth/default-mouth.png`,
+              }
+            }
+            skin={
+              userData?.skin || {
+                itemId: 7,
+                imageUrl: `${process.env.NEXT_PUBLIC_S3_BUCKET_URL}/skin/default-skin.png`,
+              }
+            }
+            nickColor={
+              userData?.nickColor || {
+                itemId: 10,
+                value: "#000000",
+              }
+            }
+          />
         </div>
-
-        {/* 선택된 탭 내용 */}
         <div className="w-full h-full row-span-8">
           {selectedTab === "main" && <MainTab data={sortedData} />}
           {selectedTab === "item" && <ItemTab data={groupedData} />}

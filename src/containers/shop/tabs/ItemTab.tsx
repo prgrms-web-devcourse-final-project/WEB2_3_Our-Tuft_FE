@@ -83,8 +83,10 @@ export default function ItemTab({ data }: ItemTabProps) {
             filteredItems.map((item) => (
               <ItemCard
                 key={item.id}
+                id={item.id}
                 imageUrl={item.imageUrl}
                 name={item.name}
+                finalPrice={item.finalPrice}
               />
             ))
           ) : (
