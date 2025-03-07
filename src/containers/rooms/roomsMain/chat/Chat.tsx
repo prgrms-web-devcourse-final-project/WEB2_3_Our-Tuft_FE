@@ -66,6 +66,9 @@ export default function Chat({
     subscribeToTopic(`/topic/room/${params.id}`, handleNewMessage);
 
     fetchUserList();
+    return () => {
+      unsubscribeFromTopic(`/topic/room/${params.id}`);
+    };
   }, []);
 
   useEffect(() => {
@@ -73,7 +76,10 @@ export default function Chat({
       fetchUserList();
       console.log(msg);
     };
-    subscribeToTopic(`/app/room/${params.id}/event`, handleNewMessage);
+    subscribeToTopic(`/topic/room/${params.id}/event`, handleNewMessage);
+    return () => {
+      unsubscribeFromTopic(`/topic/room/${params.id}/event`);
+    };
   }, []);
 
   useEffect(() => {
