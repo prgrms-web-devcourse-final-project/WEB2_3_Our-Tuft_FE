@@ -1,8 +1,10 @@
 import Image from "next/image";
-import rock from "@/assets/icons/rock.png";
+import lock from "@/assets/icons/rock.png";
+import unlock from "@/assets/images/public.png";
 import CloseButton from "../../../components/CloseButton/CloseButton";
+import { roomInfoData } from "../../../types/roomType";
 
-export default function RoomsHeader() {
+export default function RoomsHeader({ roomInfo }: { roomInfo: roomInfoData }) {
   return (
     <div className="flex w-full">
       <div
@@ -18,7 +20,7 @@ export default function RoomsHeader() {
       >
         <div className="flex gap-5 items-center">
           <Image
-            src={rock}
+            src={roomInfo.data.disclosure ? unlock : lock}
             alt="잠금 아이콘"
             className="
               xl:w-12 xl:h-12 
@@ -35,7 +37,7 @@ export default function RoomsHeader() {
               p-0 pl-20 xl:p-4 md:p-2
               "
           >
-            # 1078
+            # {roomInfo.data.roomId}
           </div>
 
           <div
@@ -47,7 +49,7 @@ export default function RoomsHeader() {
               mt-3 xl:m-0 md:m-0
               "
           >
-            스피드 퀴즈
+            {roomInfo.data.gameType} 퀴즈
           </div>
 
           <div
@@ -63,7 +65,7 @@ export default function RoomsHeader() {
               xl:overflow-visible xl:whitespace-normal xl:max-w-none 
               "
           >
-            방 제목이 길어지는 경우는 이렇게
+            {roomInfo.data.roomName}
           </div>
         </div>
 

@@ -12,10 +12,6 @@ export async function defaultFetch<T>(
 ): Promise<T> {
   const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
-  if (!API_BASE_URL) {
-    throw new Error("API_BASE_URL is not defined");
-  }
-
   // 세션 스토리지에서 토큰 가져오기
   let token =
     typeof window !== "undefined" ? sessionStorage.getItem("token") : null;
@@ -39,6 +35,11 @@ export async function defaultFetch<T>(
     data = await res.json();
   } catch (error) {
     throw new Error(`Catch API Error: ${res.status}`);
+  }
+
+  // 400 에러 처리 추가
+  if (res.status === 400) {
+    throw new Error("잘못된 요청입니다. 비밀번호를 확인해주세요.");
   }
 
   // 401 Unauthorized 발생한 경우, refreshToken을 사용하여 accessToken 갱신 시도
