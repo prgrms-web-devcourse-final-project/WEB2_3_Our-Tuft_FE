@@ -37,6 +37,11 @@ export async function defaultFetch<T>(
     throw new Error(`Catch API Error: ${res.status}`);
   }
 
+  // 400 에러 처리 추가
+  if (res.status === 400) {
+    throw new Error("잘못된 요청입니다. 비밀번호를 확인해주세요.");
+  }
+
   // 응답 상태 체크 (API 응답 실패, ex) HTTP 401 error)
   if (!res.ok) {
     throw new Error(`API Error: ${res.status}`);
