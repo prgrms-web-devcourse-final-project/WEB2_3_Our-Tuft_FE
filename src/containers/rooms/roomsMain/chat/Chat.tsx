@@ -1,13 +1,22 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 import {
   unsubscribeFromTopic,
   subscribeToTopic,
   sendMessage,
 } from "../../../../service/api/socketConnection";
+import { useParams } from "next/navigation";
+import { roomUserListData } from "../../../../types/roomType";
+import { defaultFetch } from "../../../../service/api/defaultFetch";
 
-export default function Chat() {
+export default function Chat({
+  setUserList,
+}: {
+  setUserList: Dispatch<SetStateAction<roomUserListData | undefined>>;
+}) {
+  const params = useParams();
+
   const inputRef = useRef<HTMLInputElement>(null);
   const lastMessageRef = useRef<HTMLInputElement>(null);
 
@@ -19,15 +28,21 @@ export default function Chat() {
     if (e.key === "Enter") {
       if (inputRef.current) {
         console.log("전송");
-        sendMessage("/topic/room/2", inputRef.current.value);
+        sendMessage(`/topic/room/${params.id}`, inputRef.current.value);
         inputRef.current.value = "";
       }
     }
   };
 
-  useEffect(() => {
-    lastMessageRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [chatList.length]);
+  const fetchUserList = async () => {
+    const response = await defaultFetch<roomUserListData>(
+      `/room/${params.id}/players`,
+      {
+        method: "GET",
+      }
+    );
+    setUserList(response);
+  };
 
   /*
    * 해당 방 구독 - 채팅 보내기 (/topic/room/${roomId})
@@ -48,8 +63,22 @@ export default function Chat() {
         console.warn("Unexpected message format:", msg);
       }
     };
-    subscribeToTopic("/topic/room/2", handleNewMessage);
+    subscribeToTopic(`/topic/room/${params.id}`, handleNewMessage);
+
+    fetchUserList();
   }, []);
+
+  useEffect(() => {
+    const handleNewMessage = (msg: any) => {
+      fetchUserList();
+      console.log(msg);
+    };
+    subscribeToTopic(`/app/room/${params.id}/event`, handleNewMessage);
+  }, []);
+
+  useEffect(() => {
+    lastMessageRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [chatList.length]);
 
   return (
     <div

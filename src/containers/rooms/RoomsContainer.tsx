@@ -1,19 +1,20 @@
 "use client";
+
+import { defaultFetch } from "../../service/api/defaultFetch";
+import { useEffect, useRef, useState } from "react";
+import { useSearchParams, useParams } from "next/navigation";
+
+import Image from "next/image";
 import RoomsMain from "./roomsMain";
 import RoomsFooter from "./roomsFooter";
 import RoomsHeader from "./roomsHeader";
-import loading from "@/assets/images/loading.gif";
-import { defaultFetch } from "../../service/api/defaultFetch";
-import { useEffect, useRef, useState } from "react";
-
-import { useSearchParams, useParams } from "next/navigation";
-import { roomInfoData } from "../../types/roomType";
 import RoundButton from "../../components/RoundButton";
-import Image from "next/image";
-import { setTimeout } from "timers/promises";
+import loading from "@/assets/images/loading.gif";
+import { roomInfoData } from "../../types/roomType";
 
 export default function RoomsContainer() {
   const params = useParams();
+
   const searchParams = useSearchParams();
   const Param = searchParams.get("password");
 
@@ -44,7 +45,6 @@ export default function RoomsContainer() {
   };
 
   useEffect(() => {
-    // userInfo();
     if (Param === "true") {
       fetchRoomInfo();
     }
@@ -75,7 +75,6 @@ export default function RoomsContainer() {
           className="w-full 2xl:pt-5 md:pt-5 min-h-screen  bg-center bg-cover bg-repeat flex flex-col items-center justify-center bg-[var(--color-second)]"
           style={{ backgroundImage: "url('/assets/images/bg.png')" }}
         >
-          <Image src={loading} alt="로딩" />
           <div className="flex flex-col gap-4 bg-[var(--color-second)] py-15 px-30 rounded-2xl">
             <div className="axl:text-4xl text-2xl text-white mb-4">
               비밀번호를 입력하세요

@@ -13,6 +13,10 @@ export type roomInfo = {
   time: number;
 };
 
+export type roomUserListData = {
+  data: roomUserList[];
+};
+
 export type roomUserList = {
   userId: string;
   username: string;
