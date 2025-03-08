@@ -1,20 +1,36 @@
 import Image from "next/image";
 import dummy from "@/assets/images/dummy.svg";
+import { useIsHostStore } from "../../../../store/roomStore";
+import { useEffect } from "react";
 
 export default function UserCard({
   nickName,
+  isReady,
+  host,
   children,
 }: {
   nickName: string;
+  isReady: string;
+  host: boolean;
   children?: React.ReactNode;
 }) {
+  const { setIsHost } = useIsHostStore();
+  useEffect(() => {
+    setIsHost(host);
+  }, []);
   return (
     <div className="flex flex-col items-center justify-center">
       <div
         className={`
           flex flex-col items-center justify-center
           cursor-pointer hover:opacity-80 drop-shadow-custom 
-          bg-[var(--color-amberOrange)] 
+          ${
+            host
+              ? "bg-[var(--color-main)]"
+              : isReady === "true"
+              ? "bg-[var(--color-amberOrange)]"
+              : "bg-[var(--color-point)]"
+          } 
           w-full 2xl:w-full 
           xl:px-8 xl:pt-8 md:p-3 py-3 px-7 
           2xl:rounded-[20px] md:rounded-[18px] rounded-[28px] 

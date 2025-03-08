@@ -11,12 +11,14 @@ import { roomUserListData } from "../../../../types/roomType";
 import { defaultFetch } from "../../../../service/api/defaultFetch";
 
 export default function Chat({
+  userList,
   setUserList,
 }: {
+  userList: roomUserListData;
   setUserList: Dispatch<SetStateAction<roomUserListData | undefined>>;
 }) {
   const params = useParams();
-
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   const inputRef = useRef<HTMLInputElement>(null);
   const lastMessageRef = useRef<HTMLInputElement>(null);
 
@@ -35,6 +37,7 @@ export default function Chat({
   };
 
   const fetchUserList = async () => {
+    setIsLoading(true);
     const response = await defaultFetch<roomUserListData>(
       `/room/${params.id}/players`,
       {
@@ -42,6 +45,8 @@ export default function Chat({
       }
     );
     setUserList(response);
+    console.log(response);
+    setIsLoading(false);
   };
 
   /*
@@ -50,7 +55,7 @@ export default function Chat({
    */
   useEffect(() => {
     unsubscribeFromTopic("/topic/room/lobby");
-    const handleNewMessage = (msg: any) => {
+    const handleNewMessage = async (msg: any) => {
       if (
         typeof msg === "object" &&
         msg !== null &&
@@ -62,6 +67,13 @@ export default function Chat({
       } else {
         console.warn("Unexpected message format:", msg);
       }
+
+      if (msg.event) {
+        console.log("유저 리스트 업데이트 대기 중...");
+        setTimeout(() => {
+          fetchUserList();
+        }, 1000);
+      }
     };
     subscribeToTopic(`/topic/room/${params.id}`, handleNewMessage);
 
@@ -71,21 +83,24 @@ export default function Chat({
     };
   }, []);
 
-  useEffect(() => {
-    const handleNewMessage = (msg: any) => {
-      fetchUserList();
-      console.log(msg);
-    };
-    subscribeToTopic(`/topic/room/${params.id}/event`, handleNewMessage);
-    return () => {
-      unsubscribeFromTopic(`/topic/room/${params.id}/event`);
-    };
-  }, []);
+  // useEffect(() => {
+  //   const handleNewMessage = (msg: any) => {
+  //     fetchUserList();
+  //     console.log(msg);
+  //   };
+  //   subscribeToTopic(`/topic/room/${params.id}/event`, handleNewMessage);
+  //   return () => {
+  //     unsubscribeFromTopic(`/topic/room/${params.id}/event`);
+  //   };
+  // }, []);
 
   useEffect(() => {
     lastMessageRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [chatList.length]);
 
+  if (isLoading) {
+    return "로딩중";
+  }
   return (
     <div
       className="

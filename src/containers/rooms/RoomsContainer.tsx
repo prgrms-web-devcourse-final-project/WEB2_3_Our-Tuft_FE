@@ -18,13 +18,9 @@ export default function RoomsContainer() {
   const searchParams = useSearchParams();
   const Param = searchParams.get("password");
 
-  const [roomInfo, setRoomInfo] = useState<roomInfoData>();
   const password = useRef<HTMLInputElement>(null);
+  const [roomInfo, setRoomInfo] = useState<roomInfoData>();
   const [disclosure, setDisclosure] = useState<boolean>(false);
-
-  const userInfo = async () => {
-    const response = await defaultFetch("/myInfo", { method: "GET" });
-  };
 
   const fetchRoomInfo = async (val?: string) => {
     const response = await defaultFetch<roomInfoData>(

@@ -20,7 +20,7 @@ export default function RoomsFooter({ roomInfo }: { roomInfo: roomInfoData }) {
         <RoomsInfo roomInfo={roomInfo} />
       </div>
       <div className="flex-1">
-        <RoomActionButtons />
+        <RoomActionButtons roomInfo={roomInfo} />
       </div>
     </div>
   );

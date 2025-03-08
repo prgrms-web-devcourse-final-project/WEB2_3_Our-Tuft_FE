@@ -1,19 +1,37 @@
 "use client";
-import { tree } from "next/dist/build/templates/app-page";
-import Link from "next/link";
-import { useState } from "react";
 
-export default function RoomActionButtons() {
-  const [host, setHost] = useState<string>("");
+import { useState } from "react";
+import { sendMessage } from "../../../../service/api/socketConnection";
+import { useParams, useRouter } from "next/navigation";
+import { roomInfoData } from "../../../../types/roomType";
+import { useIsHostStore } from "../../../../store/roomStore";
+
+export default function RoomActionButtons({
+  roomInfo,
+}: {
+  roomInfo: roomInfoData;
+}) {
+  const router = useRouter();
+
+  const { isHost } = useIsHostStore();
   const [ready, setReady] = useState<boolean>(false);
+  const params = useParams();
 
   const sendReadyState = () => {
     setReady((prev) => !prev);
+    sendMessage(`/app/room/${params.id}/event`, "PLAYER_CHANGE_READY");
   };
+
+  const sendStartGame = () => {
+    sendMessage(`/app/room/${params.id}/event`, "SWITCHING_ROOM_TO_GAME");
+    router.push(`/game/${roomInfo.data.gameType}`);
+  };
+
   return (
     <div className="flex md:text-xl xl:text-3xl text-[10px] cursor-pointer break-keep text-white">
-      {host === "방장" ? (
+      {isHost ? (
         <button
+          onClick={sendStartGame}
           className="
           flex-1 
           bg-[#4C3BCF] hover:bg-[var(--color-point-hover)]
@@ -25,18 +43,6 @@ export default function RoomActionButtons() {
         </button>
       ) : (
         <>
-          {/* <Link href="/game/oxquiz">
-            <button
-              className="
-            hidden xl:block md:block flex-1 
-            
-            xl:py-8 py-5
-            xl:rounded-l-[20px] rounded-l-[12px]"
-            >
-              {ready ? "준비 완료" : "대기 중"}
-            </button>
-          </Link> */}
-
           <button
             onClick={sendReadyState}
             className={`flex-1 

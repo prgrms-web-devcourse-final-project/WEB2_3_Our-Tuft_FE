@@ -182,22 +182,36 @@ export default function CreateRoomModal({
 
       if (data.isSuccess) {
         console.log("방 생성 성공");
+        const roomId = data.data?.roomId;
 
-        // 방 생성 알림 메시지
-        publishMessage("/app/lobby/rooms", { type: "GET_ROOMS" });
+        // 방 생성 이벤트 메시지 전송
+        if (roomId) {
+          // 방 생성 이벤트 전송
+          publishMessage("/app/lobby/event", {
+            type: "ROOM_CREATED",
+            data: {
+              roomId: roomId,
+              roomName: requestData.roomName,
+              round: requestData.round,
+              hostId: null,
+              disclosure: requestData.disclosure,
+              gameType: requestData.gameType,
+              time: requestData.time,
+              maxUsers: requestData.maxUsers,
+              currentUsers: 1, // 방장이 처음 입장
+            },
+          });
 
-        // 잠시 기다린 후 방으로 이동
-        setTimeout(() => {
-          onClose();
+          // 잠시 기다린 후 방으로 이동
+          setTimeout(() => {
+            onClose();
 
-          // 생성된 방으로 이동
-          const roomId = data.data?.roomId;
-          if (roomId) {
-            router.push(`/rooms/${roomId}`);
-          } else {
-            throw new Error("방 ID를 찾을 수 없습니다.");
-          }
-        }, 300); // 300ms 기다리기
+            // 생성된 방으로 이동
+            router.push(`lobby/rooms/${roomId}?password=true`);
+          }, 300); // 300ms 기다리기
+        } else {
+          throw new Error("방 ID를 찾을 수 없습니다.");
+        }
       } else {
         throw new Error(data.message || "방 생성에 실패했습니다.");
       }

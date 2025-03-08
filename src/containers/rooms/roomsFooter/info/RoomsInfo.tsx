@@ -11,7 +11,7 @@ export default function RoomsInfo({ roomInfo }: { roomInfo: roomInfoData }) {
   const [isOpen, setOpen] = useState<boolean>(false);
   const [topic, setTopic] = useState<topic>({
     quizSetId: 0,
-    quizSetName: "주제를 선택해주세요",
+    quizSetName: "주제 선택",
   });
   const [isCreateRoomOpen, setCreateRoomOpen] = useState<boolean>(false);
 
@@ -29,7 +29,7 @@ export default function RoomsInfo({ roomInfo }: { roomInfo: roomInfoData }) {
           xl:rounded-[20px] rounded-[16px] xl:py-5 py-2 w-[40%] cursor-pointer"
         onClick={() => setOpen(true)}
       >
-        주제: {topic?.quizSetName || "선택해주세요"}
+        {topic?.quizSetName || "선택해주세요"}
       </button>
       <div className="flex gap-4 text-center items-center">
         <div className="xl:block md:block hidden">제한 시간</div>
