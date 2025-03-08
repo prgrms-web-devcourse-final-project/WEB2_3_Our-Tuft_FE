@@ -5,7 +5,6 @@ import { sendMessage } from "../../../../service/api/socketConnection";
 import { useParams, useRouter } from "next/navigation";
 import { roomInfoData } from "../../../../types/roomType";
 import { useIsRoomStore } from "../../../../store/roomStore";
-import { useLoginStore } from "../../../../store/store";
 
 export default function RoomActionButtons({
   roomInfo,
@@ -25,10 +24,9 @@ export default function RoomActionButtons({
   };
 
   const sendStartGame = () => {
-    sendMessage(`/app/room/${params.id}/event`, "SWITCHING_ROOM_TO_GAME");
-    console.log(isQuizisReady);
     if (isQuizisReady) {
-      router.push(`/game/${roomInfo.data.gameType}`);
+      sendMessage(`/app/room/${params.id}/event`, "SWITCHING_ROOM_TO_GAME");
+      router.push(`/game/${roomInfo.data.gameType}?id=${params.id}`);
     }
   };
 

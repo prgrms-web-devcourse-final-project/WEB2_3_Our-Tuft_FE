@@ -86,17 +86,6 @@ export default function Chat({
     };
   }, []);
 
-  // useEffect(() => {
-  //   const handleNewMessage = (msg: any) => {
-  //     fetchUserList();
-  //     console.log(msg);
-  //   };
-  //   subscribeToTopic(`/topic/room/${params.id}/event`, handleNewMessage);
-  //   return () => {
-  //     unsubscribeFromTopic(`/topic/room/${params.id}/event`);
-  //   };
-  // }, []);
-
   useEffect(() => {
     lastMessageRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [chatList.length]);
