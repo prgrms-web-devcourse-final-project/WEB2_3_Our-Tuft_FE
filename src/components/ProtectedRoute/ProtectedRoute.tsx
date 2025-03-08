@@ -16,7 +16,7 @@ export default function ProtectedRoute({
 
   // 초기 토큰 로딩을 위해 로컬 스토리지 확인
   useEffect(() => {
-    const storedToken = localStorage.getItem("token");
+    const storedToken = sessionStorage.getItem("token");
     if (storedToken) {
       // 상태 업데이트
       useLoginStore.getState().login(storedToken);

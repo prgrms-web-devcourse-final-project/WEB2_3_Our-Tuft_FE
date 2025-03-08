@@ -36,7 +36,7 @@ interface WebSocketRoomMessage {
 }
 
 export default function Lobby() {
-  const { token } = useLoginStore();
+  const { token, setUserId } = useLoginStore();
   const [rooms, setRooms] = useState<Room[]>([]);
   const [socketConnected, setSocketConnected] = useState(false);
 
@@ -103,6 +103,7 @@ export default function Lobby() {
     // const intervalId = setInterval(checkConnection, 3000);
 
     // API를 통해 초기 방 목록 로드 (백업)
+
     const fetchInitialRooms = async () => {
       try {
         const data = await defaultFetch<{ isSuccess: boolean; data: Room[] }>(
@@ -134,6 +135,35 @@ export default function Lobby() {
       unsubscribeFromTopic("/topic/room/lobby");
     };
   }, [token]);
+
+  useEffect(() => {
+    const storedUserId = sessionStorage.getItem("userId");
+
+    if (!storedUserId) {
+      const fetchUserId = async () => {
+        try {
+          const res = await defaultFetch<{
+            isSuccess: boolean;
+            message: string;
+            data: { userId: number | null };
+          }>("/myInfo", {
+            method: "GET",
+          });
+
+          if (res.isSuccess && res.data && res.data.userId !== null) {
+            setUserId(res.data.userId.toString());
+            console.log("유저 아이디 정보: ", res.data.userId);
+          } else {
+            console.log("유저 데이터 불러오기 실패: ", res.message);
+          }
+        } catch (error) {
+          console.log("유저 데이터 불러오기 오류: ", error);
+        }
+      };
+
+      fetchUserId();
+    }
+  });
 
   return (
     <ProtectedRoute>

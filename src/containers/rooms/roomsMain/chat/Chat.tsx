@@ -5,20 +5,20 @@ import {
   unsubscribeFromTopic,
   subscribeToTopic,
   sendMessage,
+  socketConnection,
 } from "../../../../service/api/socketConnection";
 import { useParams } from "next/navigation";
 import { roomUserListData } from "../../../../types/roomType";
 import { defaultFetch } from "../../../../service/api/defaultFetch";
+import { useLoginStore } from "../../../../store/store";
 
 export default function Chat({
-  userList,
   setUserList,
 }: {
-  userList: roomUserListData;
   setUserList: Dispatch<SetStateAction<roomUserListData | undefined>>;
 }) {
   const params = useParams();
-  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const { token } = useLoginStore();
   const inputRef = useRef<HTMLInputElement>(null);
   const lastMessageRef = useRef<HTMLInputElement>(null);
 
@@ -37,7 +37,6 @@ export default function Chat({
   };
 
   const fetchUserList = async () => {
-    setIsLoading(true);
     const response = await defaultFetch<roomUserListData>(
       `/room/${params.id}/players`,
       {
@@ -45,8 +44,7 @@ export default function Chat({
       }
     );
     setUserList(response);
-    console.log(response);
-    setIsLoading(false);
+    console.log("fetchUserList response: ", response);
   };
 
   /*
@@ -55,7 +53,7 @@ export default function Chat({
    */
   useEffect(() => {
     unsubscribeFromTopic("/topic/room/lobby");
-    const handleNewMessage = async (msg: any) => {
+    const handleNewMessage = (msg: any) => {
       if (
         typeof msg === "object" &&
         msg !== null &&
@@ -64,43 +62,44 @@ export default function Chat({
       ) {
         console.log(msg);
         setChatList((prevMessages) => [...prevMessages, msg]);
+      } else if (
+        msg.event === "PLAYER_ADDED" ||
+        msg.event === "PLAYER_DISCONNECTED" ||
+        msg.event === "PLAYER_CHANGE_READY" ||
+        msg.event === "HOST_CHANGED" ||
+        msg.event === "ROOM_CREATED"
+      ) {
+        fetchUserList();
       } else {
         console.warn("Unexpected message format:", msg);
-      }
-
-      if (msg.event) {
-        console.log("유저 리스트 업데이트 대기 중...");
-        setTimeout(() => {
-          fetchUserList();
-        }, 1000);
       }
     };
     subscribeToTopic(`/topic/room/${params.id}`, handleNewMessage);
 
-    fetchUserList();
     return () => {
       unsubscribeFromTopic(`/topic/room/${params.id}`);
     };
-  }, []);
+  }, [params.id]);
 
-  // useEffect(() => {
-  //   const handleNewMessage = (msg: any) => {
-  //     fetchUserList();
-  //     console.log(msg);
-  //   };
-  //   subscribeToTopic(`/topic/room/${params.id}/event`, handleNewMessage);
-  //   return () => {
-  //     unsubscribeFromTopic(`/topic/room/${params.id}/event`);
-  //   };
-  // }, []);
+  useEffect(() => {
+    socketConnection(token ?? undefined).catch((error) => {
+      console.error("소켓 연결 실패:", error);
+    });
+    fetchUserList();
+    // const handleNewMessage = (msg: any) => {
+    //   fetchUserList();
+    //   console.log(msg);
+    // };
+    // subscribeToTopic(`/topic/room/${params.id}/event`, handleNewMessage);
+    // return () => {
+    //   unsubscribeFromTopic(`/topic/room/${params.id}/event`);
+    // };
+  }, []);
 
   useEffect(() => {
     lastMessageRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [chatList.length]);
 
-  if (isLoading) {
-    return "로딩중";
-  }
   return (
     <div
       className="
