@@ -3,6 +3,7 @@ import Link from "next/link";
 import { useState, useEffect, useRef } from "react";
 import GameRoomItem from "./GameRoomItem";
 import CreateRoomModal from "./CreateRoomModal";
+import PasswordModal from "./PasswordModal";
 import { defaultFetch } from "../../../service/api/defaultFetch";
 import {
   socketConnection,
@@ -10,6 +11,7 @@ import {
   unsubscribeFromTopic,
 } from "../../../service/api/socketConnection";
 import { useLoginStore } from "../../../store/store";
+import { useRouter } from "next/navigation";
 
 // 방 정보 인터페이스 정의
 interface Room {
@@ -51,6 +53,12 @@ export default function GameRoomList() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
+
+  // 비밀번호 모달 상태 추가
+  const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
+  const [selectedRoomId, setSelectedRoomId] = useState<number | null>(null);
+  const router = useRouter(); // 라우터 추가
+  const [selectedRoom, setSelectedRoom] = useState<Room | null>(null);
 
   // 게임 모드와 검색 타입 배열
   const gameModes = ["전체", "그림 맞추기", "스피드 퀴즈", "OX 퀴즈"];
@@ -201,6 +209,20 @@ export default function GameRoomList() {
     return filteredRooms;
   };
 
+  // 방 클릭 핸들러 수정
+  const handleRoomClick = (room: Room, e: React.MouseEvent) => {
+    e.preventDefault(); // 기본 링크 동작 방지
+
+    if (room.disclosure) {
+      // 공개방은 바로 이동
+      router.push(`/lobby/rooms/${room.roomId}?password=true`);
+    } else {
+      // 비공개방은 비밀번호 모달 표시
+      setSelectedRoom(room);
+      setIsPasswordModalOpen(true);
+    }
+  };
+
   // 필터링된 방 목록
   const filteredRooms = getFilteredRooms();
 
@@ -340,13 +362,10 @@ export default function GameRoomList() {
           </div>
         ) : (
           filteredRooms.map((room) => (
-            <Link
-              href={{
-                pathname: `/lobby/rooms/${room.roomId}`,
-                query: { password: room.disclosure }, // query로 props 전달
-              }}
+            <div
               key={room.roomId}
-              className="h-[8em]"
+              className="h-[8em] cursor-pointer"
+              onClick={(e) => handleRoomClick(room, e)}
             >
               <GameRoomItem
                 roomId={room.roomId}
@@ -358,7 +377,7 @@ export default function GameRoomList() {
                 maxUsers={room.maxUsers}
                 currentUsers={room.currentUsers}
               />
-            </Link>
+            </div>
           ))
         )}
       </div>
@@ -368,6 +387,15 @@ export default function GameRoomList() {
         isOpen={isCreateModalOpen}
         onClose={() => setIsCreateModalOpen(false)}
       />
+
+      {/* 비밀번호 확인 모달 */}
+      {selectedRoom && (
+        <PasswordModal
+          isOpen={isPasswordModalOpen}
+          onClose={() => setIsPasswordModalOpen(false)}
+          roomId={selectedRoom.roomId}
+        />
+      )}
     </div>
   );
 }

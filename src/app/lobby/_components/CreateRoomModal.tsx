@@ -4,7 +4,6 @@ import { createPortal } from "react-dom";
 import { defaultFetch } from "../../../service/api/defaultFetch";
 import { useRouter } from "next/navigation";
 import { useLoginStore } from "../../../store/store";
-import { publishMessage } from "../../../service/api/socketConnection";
 
 interface CreateRoomModalProps {
   isOpen: boolean;
@@ -183,21 +182,18 @@ export default function CreateRoomModal({
       if (data.isSuccess) {
         console.log("방 생성 성공");
 
-        // 방 생성 알림 메시지
-        publishMessage("/app/lobby/rooms", { type: "GET_ROOMS" });
+        onClose();
 
-        // 잠시 기다린 후 방으로 이동
-        setTimeout(() => {
-          onClose();
-
-          // 생성된 방으로 이동
-          const roomId = data.data?.roomId;
-          if (roomId) {
-            router.push(`/rooms/${roomId}`);
-          } else {
-            throw new Error("방 ID를 찾을 수 없습니다.");
-          }
-        }, 300); // 300ms 기다리기
+        // 생성된 방으로 즉시 이동
+        const roomId = data.data?.roomId;
+        if (roomId) {
+          // 공개/비공개 여부에 따라 다른 URL 형식 사용
+          // 비공개방은 입력한 비밀번호를, 공개방은 "true"를 전달
+          const passwordQuery = isPrivate ? password : "true";
+          router.push(`/lobby/rooms/${roomId}?password=${passwordQuery}`);
+        } else {
+          throw new Error("방 ID를 찾을 수 없습니다.");
+        }
       } else {
         throw new Error(data.message || "방 생성에 실패했습니다.");
       }
