@@ -161,7 +161,7 @@ export default function PasswordModal({
         <div className="flex justify-center gap-4">
           <button
             onClick={onClose}
-            className="px-6 py-2 bg-[#4E4C4C] text-white text-lg rounded-lg hover:opacity-90 transition-opacity"
+            className="px-6 py-2 bg-[#4E4C4C] text-white text-lg rounded-lg hover:opacity-90 transition-opacity cursor-pointer"
             disabled={isLoading}
           >
             취소
@@ -170,7 +170,7 @@ export default function PasswordModal({
             onClick={handleSubmit}
             className={`px-6 py-2 ${
               isLoading ? "bg-gray-500" : "bg-[var(--color-secondPoint)]"
-            } text-white text-lg rounded-lg hover:opacity-90 transition-opacity`}
+            } text-white text-lg rounded-lg hover:opacity-90 transition-opacity cursor-pointer`}
             disabled={isLoading}
           >
             {isLoading ? "확인 중..." : "입장"}
