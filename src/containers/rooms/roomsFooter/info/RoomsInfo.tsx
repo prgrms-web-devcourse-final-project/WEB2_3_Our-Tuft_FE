@@ -83,7 +83,7 @@ export default function RoomsInfo({ roomInfo }: { roomInfo: roomInfoData }) {
       )}
       {isCreateRoomOpen && (
         <CreateRoomModal
-          title="설정"
+          type="설정"
           isOpen={isCreateRoomOpen}
           onClose={() => setCreateRoomOpen(false)}
         />

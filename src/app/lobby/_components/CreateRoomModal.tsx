@@ -2,14 +2,13 @@ import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import { createPortal } from "react-dom";
 import { defaultFetch } from "../../../service/api/defaultFetch";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useLoginStore } from "../../../store/store";
-import { publishMessage } from "../../../service/api/socketConnection";
 
 interface CreateRoomModalProps {
   isOpen: boolean;
   onClose: () => void;
-  title?: string;
+  type?: string;
   gameType?: string;
 }
 
@@ -36,15 +35,23 @@ interface CreateRoomResponse {
   message?: string;
   data: {
     roomId: number;
+    roomName?: string;
+    round?: number;
+    hostId?: number;
+    disclosure?: boolean;
+    gameType?: "SPEED" | "CATCHMIND" | "OX";
+    time?: number;
+    maxUsers?: number;
   };
 }
 
 export default function CreateRoomModal({
   isOpen,
   onClose,
-  title = "방 생성",
+  type = "방 생성",
   gameType,
 }: CreateRoomModalProps) {
+  const params = useParams();
   const { token } = useLoginStore();
   const modalRef = useRef<HTMLDivElement>(null);
   const [isPrivate, setIsPrivate] = useState(false);
@@ -175,40 +182,30 @@ export default function CreateRoomModal({
       };
 
       // 방 생성 API 호출
-      const data = await defaultFetch<CreateRoomResponse>("/lobbies/rooms", {
-        method: "POST",
-        body: JSON.stringify(requestData),
-      });
+
+      const data = await defaultFetch<CreateRoomResponse>(
+        `/lobbies/rooms${type === "설정" ? `/${params.id}` : ""}`,
+        {
+          method: type === "설정" ? "PUT" : "POST",
+          body: JSON.stringify(requestData),
+        }
+      );
 
       if (data.isSuccess) {
         console.log("방 생성 성공");
+
+        setRoomTitle(data.data.roomName ?? "");
+        setPlayers(data.data.maxUsers ?? 0);
+        setRounds(data.data.round ?? 0);
+        onClose();
+
+        // 생성된 방으로 즉시 이동
         const roomId = data.data?.roomId;
-
-        // 방 생성 이벤트 메시지 전송
         if (roomId) {
-          // 방 생성 이벤트 전송
-          publishMessage("/app/lobby/event", {
-            type: "ROOM_CREATED",
-            data: {
-              roomId: roomId,
-              roomName: requestData.roomName,
-              round: requestData.round,
-              hostId: null,
-              disclosure: requestData.disclosure,
-              gameType: requestData.gameType,
-              time: requestData.time,
-              maxUsers: requestData.maxUsers,
-              currentUsers: 1, // 방장이 처음 입장
-            },
-          });
-
-          // 잠시 기다린 후 방으로 이동
-          setTimeout(() => {
-            onClose();
-
-            // 생성된 방으로 이동
-            router.push(`lobby/rooms/${roomId}?password=true`);
-          }, 300); // 300ms 기다리기
+          // 공개/비공개 여부에 따라 다른 URL 형식 사용
+          // 비공개방은 입력한 비밀번호를, 공개방은 "true"를 전달
+          const passwordQuery = isPrivate ? password : "true";
+          router.push(`/lobby/rooms/${roomId}?password=${passwordQuery}`);
         } else {
           throw new Error("방 ID를 찾을 수 없습니다.");
         }
@@ -254,7 +251,7 @@ export default function CreateRoomModal({
         className="bg-[var(--color-second)]/90 w-[90%] max-w-[1100px] h-[80%] max-h-[800px] rounded-2xl drop-shadow-custom overflow-hidden flex flex-col relative z-10"
       >
         <div className="p-6 flex items-center justify-center">
-          <h2 className="text-white text-4xl md:text-3xl font-bold">{title}</h2>
+          <h2 className="text-white text-4xl md:text-3xl font-bold">{type}</h2>
         </div>
 
         {/* 공개/비공개 전환 버튼 */}
@@ -592,7 +589,7 @@ export default function CreateRoomModal({
                   >
                     {isLoading
                       ? "생성 중..."
-                      : title === "방 생성"
+                      : type === "방 생성"
                       ? "생성"
                       : "변경"}
                   </button>

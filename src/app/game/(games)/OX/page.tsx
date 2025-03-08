@@ -7,8 +7,8 @@ export const metadata = {
 
 export default function OXQuiz() {
   return (
-    // <ProtectedRoute>
-    <OXQuizeContainer />
-    // </ProtectedRoute>
+    <ProtectedRoute>
+      <OXQuizeContainer />
+    </ProtectedRoute>
   );
 }

@@ -4,7 +4,8 @@ import { useState } from "react";
 import { sendMessage } from "../../../../service/api/socketConnection";
 import { useParams, useRouter } from "next/navigation";
 import { roomInfoData } from "../../../../types/roomType";
-import { useIsHostStore } from "../../../../store/roomStore";
+import { useIsRoomStore } from "../../../../store/roomStore";
+import { useLoginStore } from "../../../../store/store";
 
 export default function RoomActionButtons({
   roomInfo,
@@ -12,10 +13,11 @@ export default function RoomActionButtons({
   roomInfo: roomInfoData;
 }) {
   const router = useRouter();
-
-  const { isHost } = useIsHostStore();
-  const [ready, setReady] = useState<boolean>(false);
   const params = useParams();
+
+  const { isHost, isQuizisReady } = useIsRoomStore();
+
+  const [ready, setReady] = useState<boolean>(false);
 
   const sendReadyState = () => {
     setReady((prev) => !prev);
@@ -24,7 +26,10 @@ export default function RoomActionButtons({
 
   const sendStartGame = () => {
     sendMessage(`/app/room/${params.id}/event`, "SWITCHING_ROOM_TO_GAME");
-    router.push(`/game/${roomInfo.data.gameType}`);
+    console.log(isQuizisReady);
+    if (isQuizisReady) {
+      router.push(`/game/${roomInfo.data.gameType}`);
+    }
   };
 
   return (

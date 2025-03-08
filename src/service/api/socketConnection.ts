@@ -32,7 +32,7 @@ export function socketConnection(token?: string): Promise<Client> {
     client = new Client({
       webSocketFactory: () =>
         new SockJS(
-          `https://hiq-lounge.duckdns.org/ws?authorization=${authToken}`
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}/ws?authorization=${authToken}`
         ),
       debug: (msg) => console.log("[STOMP Debug] " + msg),
       reconnectDelay: 5000, // 자동 재연결 (5초)
@@ -108,6 +108,13 @@ export function getClient(): Client | null {
  */
 export function isConnected(): boolean {
   return client !== null && client.connected;
+}
+
+/**
+ * 특정 토픽이 이미 구독 중인지 확인
+ */
+export function isTopicSubscribed(topic: string): boolean {
+  return !!activeSubscriptions[topic];
 }
 
 /**
