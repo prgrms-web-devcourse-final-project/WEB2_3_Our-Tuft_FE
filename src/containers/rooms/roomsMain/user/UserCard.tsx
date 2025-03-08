@@ -1,6 +1,6 @@
 import Image from "next/image";
 import dummy from "@/assets/images/dummy.svg";
-import { useIsHostStore } from "../../../../store/roomStore";
+import { useIsRoomStore } from "../../../../store/roomStore";
 import { useEffect } from "react";
 
 export default function UserCard({
@@ -14,10 +14,6 @@ export default function UserCard({
   host: boolean;
   children?: React.ReactNode;
 }) {
-  const { setIsHost } = useIsHostStore();
-  useEffect(() => {
-    setIsHost(host);
-  }, []);
   return (
     <div className="flex flex-col items-center justify-center">
       <div

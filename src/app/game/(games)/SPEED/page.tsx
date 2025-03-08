@@ -3,8 +3,8 @@ import ProtectedRoute from "../../../../components/ProtectedRoute/ProtectedRoute
 
 export default function SpeedQuiz() {
   return (
-    // <ProtectedRoute>
-    <SpeedQuizContainer />
-    // </ProtectedRoute>
+    <ProtectedRoute>
+      <SpeedQuizContainer />
+    </ProtectedRoute>
   );
 }

@@ -9,21 +9,21 @@ import {
 import { useParams } from "next/navigation";
 import { roomUserListData } from "../../../../types/roomType";
 import { defaultFetch } from "../../../../service/api/defaultFetch";
+import { useIsRoomStore } from "../../../../store/roomStore";
 
 export default function Chat({
-  userList,
   setUserList,
 }: {
-  userList: roomUserListData;
   setUserList: Dispatch<SetStateAction<roomUserListData | undefined>>;
 }) {
   const params = useParams();
-  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const { setIsQuizisReady } = useIsRoomStore();
+
   const inputRef = useRef<HTMLInputElement>(null);
   const lastMessageRef = useRef<HTMLInputElement>(null);
 
   const [chatList, setChatList] = useState<
-    { message: string; sender: string }[]
+    { message: string; sender: string; event?: string }[]
   >([]);
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -37,7 +37,6 @@ export default function Chat({
   };
 
   const fetchUserList = async () => {
-    setIsLoading(true);
     const response = await defaultFetch<roomUserListData>(
       `/room/${params.id}/players`,
       {
@@ -46,7 +45,6 @@ export default function Chat({
     );
     setUserList(response);
     console.log(response);
-    setIsLoading(false);
   };
 
   /*
@@ -57,12 +55,19 @@ export default function Chat({
     unsubscribeFromTopic("/topic/room/lobby");
     const handleNewMessage = async (msg: any) => {
       if (
-        typeof msg === "object" &&
-        msg !== null &&
-        "message" in msg &&
-        "sender" in msg
+        (typeof msg === "object" &&
+          msg !== null &&
+          "message" in msg &&
+          "sender" in msg) ||
+        msg.event === "퀴즈가 등록되지 않았습니다."
       ) {
         console.log(msg);
+        if (msg.event === "퀴즈가 등록되지 않았습니다.") {
+          setIsQuizisReady(false);
+        }
+        if (msg.message === "퀴즈 선택이 완료되었습니다") {
+          setIsQuizisReady(true);
+        }
         setChatList((prevMessages) => [...prevMessages, msg]);
       } else {
         console.warn("Unexpected message format:", msg);
@@ -70,9 +75,7 @@ export default function Chat({
 
       if (msg.event) {
         console.log("유저 리스트 업데이트 대기 중...");
-        setTimeout(() => {
-          fetchUserList();
-        }, 1000);
+        fetchUserList();
       }
     };
     subscribeToTopic(`/topic/room/${params.id}`, handleNewMessage);
@@ -98,9 +101,6 @@ export default function Chat({
     lastMessageRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [chatList.length]);
 
-  if (isLoading) {
-    return "로딩중";
-  }
   return (
     <div
       className="
@@ -108,16 +108,19 @@ export default function Chat({
         flex flex-col bg-[var(--color-point)] 
         xl:h-full md:h-full h-[180px]
         xl:rounded-[32px] rounded-[20px] 
-        xl:p-5 p-3 md:px-2 xl:pb-4 md:pb-4 "
+        xl:p-6 p-3 md:px-2 xl:pb-4 md:pb-4 "
     >
       <div className="w-full h-[700px] overflow-auto">
         {chatList.map((item, index) => (
           <p
+            className={`${item.event && "text-red-600 font-bold text-xl"} pb-1`}
             key={index}
             ref={index === chatList.length - 1 ? lastMessageRef : null}
           >
-            <span className="font-bold">{item.sender}: </span>
-            {item.message}
+            <span className="font-bold">
+              {item.sender ? `${item.sender} :` : ""}{" "}
+            </span>
+            {item.message || item.event}
           </p>
         ))}
       </div>

@@ -1,16 +1,20 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import UserCard from "./UserCard";
 import DeportModal from "../../roomsModal/DeportModal";
 import MenuModal from "../../roomsModal/MenuModal";
 import ProfileModal from "../../roomsModal/ProfileModal";
 import { roomUserList, roomUserListData } from "../../../../types/roomType";
 import { defaultFetch } from "../../../../service/api/defaultFetch";
+import { useIsRoomStore } from "../../../../store/roomStore";
+import { useLoginStore } from "../../../../store/store";
 
 export default function UserList({ userList }: { userList: roomUserListData }) {
-  const [user, setUser] = useState<roomUserList>();
+  const { setIsHost, isHost } = useIsRoomStore();
+  const { userId } = useLoginStore();
 
+  const [user, setUser] = useState<roomUserList>();
   const [isOpenDeport, setOpenDeport] = useState<boolean>(false);
   const [isOpenMenu, setOpenMenu] = useState<boolean>(false);
   const [isOpenProfile, setOpenProfile] = useState<boolean | undefined>(
@@ -29,6 +33,17 @@ export default function UserList({ userList }: { userList: roomUserListData }) {
   const deportUser = (userId: string) => {
     defaultFetch(`/rooms/${userId}/deport`, { method: "POST" });
   };
+
+  const storedUserId = sessionStorage.getItem("userId");
+  useEffect(() => {
+    setIsHost(Number(userList.data.hostId) === Number(storedUserId));
+    console.log(
+      "host",
+      isHost,
+      Number(userList.data.hostId),
+      Number(storedUserId)
+    );
+  }, []);
 
   return (
     <div
