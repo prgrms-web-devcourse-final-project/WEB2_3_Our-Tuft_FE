@@ -45,6 +45,8 @@ export default function UserList({ userList }: { userList: roomUserListData }) {
     );
   }, []);
 
+  console.log("유저 리스트: ", userList.data);
+
   return (
     <div
       className="

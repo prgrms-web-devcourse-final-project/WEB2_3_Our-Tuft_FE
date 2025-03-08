@@ -5,11 +5,11 @@ import {
   unsubscribeFromTopic,
   subscribeToTopic,
   sendMessage,
-  socketConnection,
 } from "../../../../service/api/socketConnection";
 import { useParams } from "next/navigation";
 import { roomUserListData } from "../../../../types/roomType";
 import { defaultFetch } from "../../../../service/api/defaultFetch";
+import { useIsRoomStore } from "../../../../store/roomStore";
 
 export default function Chat({
   setUserList,
@@ -19,7 +19,6 @@ export default function Chat({
   const params = useParams();
   const { setIsQuizisReady } = useIsRoomStore();
 
-  const { token } = useLoginStore();
   const inputRef = useRef<HTMLInputElement>(null);
   const lastMessageRef = useRef<HTMLInputElement>(null);
 
@@ -54,7 +53,7 @@ export default function Chat({
    */
   useEffect(() => {
     unsubscribeFromTopic("/topic/room/lobby");
-    const handleNewMessage = (msg: any) => {
+    const handleNewMessage = async (msg: any) => {
       if (
         (typeof msg === "object" &&
           msg !== null &&
@@ -70,45 +69,21 @@ export default function Chat({
           setIsQuizisReady(true);
         }
         setChatList((prevMessages) => [...prevMessages, msg]);
-      } else if (
-        msg.event === "PLAYER_ADDED" ||
-        msg.event === "PLAYER_DISCONNECTED" ||
-        msg.event === "PLAYER_CHANGE_READY" ||
-        msg.event === "HOST_CHANGED" ||
-        msg.event === "ROOM_CREATED"
-      ) {
-        fetchUserList();
       } else {
         console.warn("Unexpected message format:", msg);
       }
 
       if (msg.event) {
         console.log("유저 리스트 업데이트 대기 중...");
-        setTimeout(() => {
-          fetchUserList();
-        }, 1000);
+        fetchUserList();
       }
     };
     subscribeToTopic(`/topic/room/${params.id}`, handleNewMessage);
 
+    fetchUserList();
     return () => {
       unsubscribeFromTopic(`/topic/room/${params.id}`);
     };
-  }, [params.id]);
-
-  useEffect(() => {
-    socketConnection(token ?? undefined).catch((error) => {
-      console.error("소켓 연결 실패:", error);
-    });
-    fetchUserList();
-    // const handleNewMessage = (msg: any) => {
-    //   fetchUserList();
-    //   console.log(msg);
-    // };
-    // subscribeToTopic(`/topic/room/${params.id}/event`, handleNewMessage);
-    // return () => {
-    //   unsubscribeFromTopic(`/topic/room/${params.id}/event`);
-    // };
   }, []);
 
   useEffect(() => {
