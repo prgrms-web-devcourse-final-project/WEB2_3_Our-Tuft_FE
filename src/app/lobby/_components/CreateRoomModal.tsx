@@ -194,9 +194,6 @@ export default function CreateRoomModal({
       if (data.isSuccess) {
         console.log("방 생성 성공");
 
-        setRoomTitle(data.data.roomName ?? "");
-        setPlayers(data.data.maxUsers ?? 0);
-        setRounds(data.data.round ?? 0);
         onClose();
 
         // 생성된 방으로 즉시 이동
