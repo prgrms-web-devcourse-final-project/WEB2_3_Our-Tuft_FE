@@ -9,8 +9,8 @@ export default function QuizBoard({
   round,
   oxAnswer,
 }: {
-  quize: string;
-  round: string;
+  quize?: string;
+  round?: string;
   oxAnswer?: (val: boolean | null) => void;
 }) {
   const [showAnswer, setShowAnswer] = useState<boolean>(false);
@@ -19,7 +19,7 @@ export default function QuizBoard({
     let isActive = true;
     const timer = (ms: number) =>
       new Promise((resolve) => setTimeout(resolve, ms));
-
+    oxAnswer?.(null);
     // const quizeLoop = async () => {
     //   for (let index = 0; index < quize.length; index++) {
     //     if (!isActive) return;

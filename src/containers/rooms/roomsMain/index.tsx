@@ -17,7 +17,7 @@ export default function RoomsMain() {
           flex-1 xl:static md:static absolute 
           xl:block md:block"
       >
-        {setUserList && <Chat setUserList={setUserList} />}
+        <Chat setUserList={setUserList} />
       </div>
     </div>
   );

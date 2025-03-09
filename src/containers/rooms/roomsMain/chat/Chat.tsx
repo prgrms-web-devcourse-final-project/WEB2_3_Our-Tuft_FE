@@ -19,9 +19,11 @@ export default function Chat({
   setUserList: Dispatch<SetStateAction<roomUserListData | undefined>>;
 }) {
   const params = useParams();
+
   const { setIsQuizisReady } = useIsRoomStore();
   const { token } = useLoginStore();
 
+  const isFirstRender = useRef<boolean>(true);
   const inputRef = useRef<HTMLInputElement>(null);
   const lastMessageRef = useRef<HTMLInputElement>(null);
 
@@ -55,7 +57,6 @@ export default function Chat({
    * 채팅 받기 (/topic/room/${roomId})
    */
   useEffect(() => {
-    unsubscribeFromTopic("/topic/room/lobby");
     const handleNewMessage = async (msg: any) => {
       if (
         (typeof msg === "object" &&
@@ -71,7 +72,7 @@ export default function Chat({
         if (msg.message === "퀴즈 선택이 완료되었습니다") {
           setIsQuizisReady(true);
         }
-        setChatList((prevMessages) => [...prevMessages, msg]);
+        setChatList((prevMessages) => [...new Set([...prevMessages]), msg]);
       } else {
         console.warn("Unexpected message format:", msg);
       }
@@ -81,10 +82,16 @@ export default function Chat({
       }
     };
     subscribeToTopic(`/topic/room/${params.id}`, handleNewMessage);
-
     fetchUserList();
+
     return () => {
-      unsubscribeFromTopic(`/topic/room/${params.id}`);
+      if (isFirstRender.current) {
+        isFirstRender.current = false;
+        console.log("위", isFirstRender);
+      } else {
+        console.log("아래?", isFirstRender);
+        unsubscribeFromTopic(`/topic/room/${params.id}`);
+      }
     };
   }, []);
 

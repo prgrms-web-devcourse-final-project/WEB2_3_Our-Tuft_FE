@@ -6,8 +6,10 @@ import TopicModal from "../../roomsModal/TopicModal";
 import CreateRoomModal from "../../../../app/lobby/_components/CreateRoomModal";
 import { topic } from "../../../../types/modalType";
 import { roomInfoData } from "../../../../types/roomType";
+import { useIsRoomStore } from "../../../../store/roomStore";
 
 export default function RoomsInfo({ roomInfo }: { roomInfo: roomInfoData }) {
+  const { isHost } = useIsRoomStore();
   const [isOpen, setOpen] = useState<boolean>(false);
   const [topic, setTopic] = useState<topic>({
     quizSetId: 0,
@@ -24,10 +26,13 @@ export default function RoomsInfo({ roomInfo }: { roomInfo: roomInfoData }) {
         md:break-keep"
     >
       <button
-        className="
-          bg-[var(--color-secondPoint)] hover:bg-[var(--color-secondPoint-hover)]
+        className={`
+          bg-[var(--color-secondPoint)] ${
+            isHost && "hover:bg-[var(--color-secondPoint-hover)]"
+          }
           xl:rounded-[20px] rounded-[16px] xl:py-5 py-2 w-[40%] cursor-pointer"
-        onClick={() => setOpen(true)}
+        `}
+        onClick={() => isHost && setOpen(true)}
       >
         {topic?.quizSetName || "선택해주세요"}
       </button>
@@ -59,9 +64,10 @@ export default function RoomsInfo({ roomInfo }: { roomInfo: roomInfoData }) {
           {roomInfo.data.round}
         </div>
       </div>
-      <div
-        onClick={() => setCreateRoomOpen(true)}
-        className="
+      {isHost ? (
+        <div
+          onClick={() => isHost && setCreateRoomOpen(true)}
+          className="
           flex justify-center
           xl:gap-6 md:gap-2 
           xl:w-[15%] 
@@ -69,15 +75,17 @@ export default function RoomsInfo({ roomInfo }: { roomInfo: roomInfoData }) {
           xl:py-5 xl:px-10 md:py-2 md:px-4 p-1 
           bg-[var(--color-point)] hover:bg-[var(--color-point-hover)]
           cursor-pointer"
-      >
-        <Image
-          src={setting}
-          alt="설정 아이콘"
-          className="xl:w-8 xl:h-8 md:w-7 md:h-7 w-5 h-5"
-        />
-        <span className="xl:block hidden">설정</span>
-      </div>
-
+        >
+          <>
+            <Image
+              src={setting}
+              alt="설정 아이콘"
+              className="xl:w-8 xl:h-8 md:w-7 md:h-7 w-5 h-5"
+            />
+            <span className="xl:block hidden">설정</span>
+          </>
+        </div>
+      ) : null}
       {isOpen && (
         <TopicModal setIsClose={setOpen} setTopic={setTopic} topic={topic} />
       )}
