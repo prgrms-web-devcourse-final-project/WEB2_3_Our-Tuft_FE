@@ -4,7 +4,7 @@ import UserCard from "../../../../components/UserCard";
 import { useEffect, useState } from "react";
 import io from "socket.io-client";
 
-const socket = io("http://localhost:8080");
+// const socket = io("http://localhost:8080");
 
 export default function OXMain({
   chat,
@@ -42,17 +42,17 @@ export default function OXMain({
     setUser(initializedUser);
   }, [chat]);
 
-  useEffect(() => {
-    socket.on("answer", (msg: { id: string; answer: boolean }) => {
-      setUser((prev) => {
-        const updatedUser = prev.map((user) =>
-          user.id === msg.id ? { ...user, answer: msg.answer } : user
-        );
+  // useEffect(() => {
+  //   socket.on("answer", (msg: { id: string; answer: boolean }) => {
+  //     setUser((prev) => {
+  //       const updatedUser = prev.map((user) =>
+  //         user.id === msg.id ? { ...user, answer: msg.answer } : user
+  //       );
 
-        return updatedUser;
-      });
-    });
-  }, []);
+  //       return updatedUser;
+  //     });
+  //   });
+  // }, []);
 
   return (
     <div

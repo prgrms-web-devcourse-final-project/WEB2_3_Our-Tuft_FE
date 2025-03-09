@@ -1,4 +1,5 @@
 "use client";
+
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import QuizBoard from "../../../components/QuizBoard";
@@ -24,7 +25,7 @@ export default function OXQuizeContainer() {
     const handleNewMessage = async (msg: any) => {
       console.log(msg);
       if (msg.event === "ALL_CONNECTED") {
-        sendMessage("/topic/game/roomid/event", " GAME_STARTED");
+        sendMessage(`/app/room/${id}/event`, " GAME_STARTED");
       }
     };
     subscribeToTopic(`/topic/game/${id}`, handleNewMessage);
@@ -33,6 +34,9 @@ export default function OXQuizeContainer() {
     };
   }, []);
   return (
+    //{sender: 'SYSTEM', message: '1 라운드가 시작됩니다.'}
+    //{sender: 'SYSTEM', message: '게임이 종료되었습니다.'}
+    //{question: 'string'}
     <>
       <div
         className="flex flex-col gap-5 2xl:gap-5 w-full min-h-screen items-center justify-center bg-center bg-cover bg-repeat"

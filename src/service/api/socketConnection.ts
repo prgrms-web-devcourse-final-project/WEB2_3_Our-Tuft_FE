@@ -1,5 +1,6 @@
 import { Client } from "@stomp/stompjs";
 import SockJS from "sockjs-client";
+import { useConnectionStore } from "../../store/store";
 
 let client: Client | null = null;
 let activeSubscriptions: Record<string, { id: string }> = {}; // 활성화된 구독 추적
@@ -9,60 +10,65 @@ let pendingSubscriptions: Array<{
   callback: (message: any) => void;
 }> = []; // 대기 중인 구독
 
+export function useSocketConnection() {
+  const { setIsLoading } = useConnectionStore();
+
+  return async (token?: string) => {
+    setIsLoading(true);
+    try {
+      await socketConnection(token);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+}
+
 /**
  * 웹소켓 연결을 초기화하는 함수
  */
 export function socketConnection(token?: string): Promise<Client> {
-  // 이미 연결 중이면 해당 Promise를 반환
   if (connectionPromise) {
     return connectionPromise;
   }
 
-  // 이미 연결된 클라이언트가 있다면 그것을 반환
   if (client && client.connected) {
     console.log("이미 연결된 STOMP 클라이언트가 있습니다.");
-    return Promise.resolve(client);
+    connectionPromise ??= Promise.resolve(client);
+    return connectionPromise;
   }
 
-  // 실제 토큰 사용 (토큰이 없으면 기본값으로 대체)
-  const authToken = token || sessionStorage.getItem("token") || "guest-token";
+  const authToken = token ?? sessionStorage.getItem("token") ?? "guest-token";
+  const wsUrl = new URL(`${process.env.NEXT_PUBLIC_API_BASE_URL}/ws`);
+  wsUrl.searchParams.append("authorization", authToken);
 
-  // 연결 Promise 생성
   connectionPromise = new Promise((resolve, reject) => {
     client = new Client({
-      webSocketFactory: () =>
-        new SockJS(
-          `${process.env.NEXT_PUBLIC_API_BASE_URL}/ws?authorization=${authToken}`
-        ),
+      webSocketFactory: () => new SockJS(wsUrl.toString()),
       debug: (msg) => console.log("[STOMP Debug] " + msg),
-      reconnectDelay: 5000, // 자동 재연결 (5초)
-      heartbeatIncoming: 4000, // 서버에서 4초마다 핑을 받음
-      heartbeatOutgoing: 4000, // 클라이언트가 4초마다 핑을 보냄
+      reconnectDelay: 5000,
+      heartbeatIncoming: 4000,
+      heartbeatOutgoing: 4000,
       onConnect: (frame) => {
         console.log("STOMP 연결 성공!", frame);
-
-        // 대기 중인 구독 처리
         processPendingSubscriptions();
-
         resolve(client!);
       },
       onStompError: (error) => {
         console.error("STOMP 오류 발생:", error);
-        connectionPromise = null;
+        if (connectionPromise) {
+          connectionPromise.catch(() => {});
+          connectionPromise = null;
+        }
         reject(error);
       },
       onWebSocketClose: (event) => {
         console.warn("WebSocket 연결 종료", event);
 
-        // 현재 활성화된 구독들을 대기 목록에 추가하여 재연결 시 자동 구독되도록 함
+        const pendingSet = new Set(
+          pendingSubscriptions.map((sub) => sub.topic)
+        );
         Object.keys(activeSubscriptions).forEach((topic) => {
-          const topicExists = pendingSubscriptions.some(
-            (sub) => sub.topic === topic
-          );
-          if (!topicExists) {
-            console.log(`연결 종료됨: ${topic}을 재구독 대기 목록에 추가`);
-            // 원래 구독에 사용된 콜백을 알 수 없으므로 임시 콜백 생성
-            // 실제로는 해당 콜백 정보를 어딘가에 저장해두는 것이 좋습니다
+          if (!pendingSet.has(topic)) {
             pendingSubscriptions.push({
               topic,
               callback: (msg) => console.log(`${topic} 재구독 메시지:`, msg),
@@ -70,8 +76,11 @@ export function socketConnection(token?: string): Promise<Client> {
           }
         });
 
-        activeSubscriptions = {}; // 연결이 종료되면 구독 정보 초기화
-        connectionPromise = null;
+        activeSubscriptions = {};
+        if (connectionPromise) {
+          connectionPromise.catch(() => {});
+          connectionPromise = null;
+        }
       },
     });
 
@@ -210,7 +219,7 @@ export function unsubscribeFromTopic(topic: string) {
  */
 export function publishMessage(destination: string, message: any) {
   if (!client || !client.connected) {
-    console.error("STOMP 클라이언트가 연결되지 않았습니다.");
+    console.log("STOMP 클라이언트가 연결되지 않았습니다.");
     return;
   }
 

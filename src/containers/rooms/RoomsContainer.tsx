@@ -1,20 +1,18 @@
 "use client";
 
+import { useEffect, useState } from "react";
+import { useSearchParams, useParams } from "next/navigation";
+
 import RoomsMain from "./roomsMain";
 import RoomsFooter from "./roomsFooter";
 import RoomsHeader from "./roomsHeader";
 
-import loading from "@/assets/images/loading.gif";
 import { defaultFetch } from "../../service/api/defaultFetch";
-import { useEffect, useState } from "react";
-
-import { useSearchParams, useParams } from "next/navigation";
 import { roomInfoData } from "../../types/roomType";
-import Image from "next/image";
+import LoadingSpinner from "../../components/LoadingSpinner/LoadingSpinner";
 
 export default function RoomsContainer() {
   const params = useParams();
-
   const searchParams = useSearchParams();
   const passwordParam = searchParams.get("password");
 
@@ -25,7 +23,6 @@ export default function RoomsContainer() {
   const fetchRoomInfo = async (password?: string) => {
     try {
       setIsLoading(true);
-
       const response = await defaultFetch<roomInfoData>(
         `/lobbies/rooms/${params.id}${password ? `?password=${password}` : ""}`,
         { method: "GET" }
@@ -58,17 +55,7 @@ export default function RoomsContainer() {
 
   // 로딩 중 UI
   if (isLoading) {
-    return (
-      <div
-        className="w-full min-h-screen flex flex-col items-center justify-center bg-[var(--color-second)] bg-center bg-cover bg-repeat"
-        style={{ backgroundImage: "url('/assets/images/bg.png')" }}
-      >
-        <Image src={loading} alt="로딩 중" width={150} height={150} />
-        <p className="text-white text-xl mt-4">
-          방 정보를 불러오는 중입니다...
-        </p>
-      </div>
-    );
+    return <LoadingSpinner />;
   }
 
   // 에러 UI

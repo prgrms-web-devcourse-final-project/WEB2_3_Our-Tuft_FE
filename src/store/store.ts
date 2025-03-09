@@ -33,3 +33,15 @@ export const useLoginStore = create<LoginState>((set) => ({
     set({ isLoggedIn: false, userId: null });
   },
 }));
+
+interface connectionState {
+  isLoading: boolean;
+  setIsLoading: (state: boolean) => void;
+}
+
+export const useConnectionStore = create<connectionState>((set) => ({
+  isLoading: true,
+  setIsLoading: (state: boolean) => {
+    set({ isLoading: state });
+  },
+}));

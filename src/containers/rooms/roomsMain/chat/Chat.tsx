@@ -5,11 +5,13 @@ import {
   unsubscribeFromTopic,
   subscribeToTopic,
   sendMessage,
+  socketConnection,
 } from "../../../../service/api/socketConnection";
 import { useParams } from "next/navigation";
 import { roomUserListData } from "../../../../types/roomType";
 import { defaultFetch } from "../../../../service/api/defaultFetch";
 import { useIsRoomStore } from "../../../../store/roomStore";
+import { useLoginStore } from "../../../../store/store";
 
 export default function Chat({
   setUserList,
@@ -18,6 +20,7 @@ export default function Chat({
 }) {
   const params = useParams();
   const { setIsQuizisReady } = useIsRoomStore();
+  const { token } = useLoginStore();
 
   const inputRef = useRef<HTMLInputElement>(null);
   const lastMessageRef = useRef<HTMLInputElement>(null);
@@ -74,7 +77,6 @@ export default function Chat({
       }
 
       if (msg.event) {
-        console.log("유저 리스트 업데이트 대기 중...");
         fetchUserList();
       }
     };
@@ -84,6 +86,12 @@ export default function Chat({
     return () => {
       unsubscribeFromTopic(`/topic/room/${params.id}`);
     };
+  }, []);
+
+  useEffect(() => {
+    socketConnection(token ?? undefined).catch((error) => {
+      console.error("소켓 연결 실패:", error);
+    });
   }, []);
 
   useEffect(() => {
