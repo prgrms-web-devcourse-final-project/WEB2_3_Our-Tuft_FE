@@ -14,7 +14,7 @@ export default function ProtectedRoute({
   const token = useLoginStore((state) => state.token);
   const [isAuthChecked, setIsAuthChecked] = useState(false);
 
-  // 초기 토큰 로딩을 위해 로컬 스토리지 확인
+  // 초기 토큰 로딩을 위해 세션 스토리지 확인
   useEffect(() => {
     const storedToken = sessionStorage.getItem("token");
     if (storedToken) {
