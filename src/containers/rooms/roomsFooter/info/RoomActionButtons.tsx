@@ -20,6 +20,7 @@ export default function RoomActionButtons({
 
   const { isHost, isQuizisReady, isAllReady } = useIsRoomStore();
   const [ready, setReady] = useState<boolean>(false);
+  const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
 
   const sendReadyState = () => {
     setReady((prev) => !prev);
@@ -27,34 +28,20 @@ export default function RoomActionButtons({
   };
 
   const sendStartGame = () => {
+    sendMessage(`/app/room/${params.id}/event`, "SWITCHING_ROOM_TO_GAME");
+    console.log(isQuizisReady);
     if (isQuizisReady) {
-      sendMessage(`/app/room/${params.id}/event`, "SWITCHING_ROOM_TO_GAME");
       if (isAllReady) {
         router.push(`/game/${roomInfo.data.gameType}?id=${params.id}`);
+        setIsOpenModal(false);
+      } else {
+        setIsOpenModal(true);
       }
     }
   };
 
   return (
     <div className="flex md:text-xl xl:text-3xl text-[10px] cursor-pointer break-keep text-white">
-      {!isAllReady && (
-        <Modal
-          title={"알림창"}
-          width={"xl:w-[788px] md:w-[60%] w-[80%]"}
-          height={"h-[268px]"}
-          showCancelButton={"hhiden"}
-        >
-          <div
-            className="
-          flex items-center justify-center bg-[var(--color-point)] rounded-xl text-white 
-          xl:text-xl text-md 
-          xl:w-[707px] w-[80%] h-[96px] "
-          >
-            <Image src={info} alt="경고 아이콘" className="xl:h-32 h-16" />
-            <div> 님을 강퇴 하시겠습니까 ?</div>
-          </div>
-        </Modal>
-      )}
       {isHost ? (
         <button
           onClick={sendStartGame}
@@ -84,6 +71,26 @@ export default function RoomActionButtons({
             {ready ? "준비 완료" : "준비"}
           </button>
         </>
+      )}
+
+      {isOpenModal && (
+        <Modal
+          title={"알림창"}
+          width={"xl:w-[788px] md:w-[60%] w-[80%]"}
+          height={"h-[268px]"}
+          showCancelButton={"hidden"}
+          setIsComplete={() => setIsOpenModal(false)}
+        >
+          <div
+            className="
+          flex items-center justify-center bg-[var(--color-point)] rounded-xl text-white 
+          xl:text-xl text-md 
+          xl:w-[707px] w-[80%] h-[96px] "
+          >
+            <Image src={info} alt="경고 아이콘" className="xl:h-32 h-16" />
+            <div> 모든 사용자가 준비를 완료해야 합니다.</div>
+          </div>
+        </Modal>
       )}
     </div>
   );

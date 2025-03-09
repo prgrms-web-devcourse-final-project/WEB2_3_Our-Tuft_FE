@@ -1,76 +1,91 @@
 "use client";
 
-import { defaultFetch } from "../../service/api/defaultFetch";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useSearchParams, useParams } from "next/navigation";
 
 import RoomsMain from "./roomsMain";
 import RoomsFooter from "./roomsFooter";
 import RoomsHeader from "./roomsHeader";
+
+import { defaultFetch } from "../../service/api/defaultFetch";
 import { roomInfoData } from "../../types/roomType";
-import { useConnectionStore } from "../../store/store";
-import { socketConnection } from "../../service/api/socketConnection";
+import LoadingSpinner from "../../components/LoadingSpinner/LoadingSpinner";
 
 export default function RoomsContainer() {
-  const { isLoading } = useConnectionStore();
-
   const params = useParams();
   const searchParams = useSearchParams();
-  const Param = searchParams.get("password");
+  const passwordParam = searchParams.get("password");
 
-  const password = useRef<HTMLInputElement>(null);
   const [roomInfo, setRoomInfo] = useState<roomInfoData>();
-  const [disclosure, setDisclosure] = useState<boolean>(false);
-  const [loading, setLoading] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
 
-  const fetchRoomInfo = async (val?: string) => {
-    const response = await defaultFetch<roomInfoData>(
-      `/lobbies/rooms/${params.id}${val ? `?password=${val}` : ""}`,
-      {
-        method: "GET",
-      }
-    );
+  const fetchRoomInfo = async (password?: string) => {
+    try {
+      setIsLoading(true);
+      const response = await defaultFetch<roomInfoData>(
+        `/lobbies/rooms/${params.id}${password ? `?password=${password}` : ""}`,
+        { method: "GET" }
+      );
 
-    setRoomInfo(response);
-    setDisclosure(true);
+      setRoomInfo(response);
+      setIsLoading(false);
+    } catch (err) {
+      console.error("방 정보 로딩 실패:", err);
+      setError("방 정보를 불러오는데 실패했습니다.");
+      setIsLoading(false);
+    }
   };
 
-  function useSocketConnection() {
-    return async (token?: string) => {
-      setLoading(true);
-      try {
-        await socketConnection(token);
-      } finally {
-        setTimeout(() => {
-          setLoading(false);
-        }, 50000);
+  useEffect(() => {
+    // URL에서 전달된 비밀번호 사용
+    if (passwordParam) {
+      // "true"는 공개방을 의미, 비밀번호 없이 요청
+      if (passwordParam === "true") {
+        fetchRoomInfo();
+      } else {
+        // "true"가 아닌 경우 입력된 비밀번호로 요청
+        fetchRoomInfo(passwordParam);
       }
-    };
+    } else {
+      setError("접근 권한이 없습니다.");
+      setIsLoading(false);
+    }
+  }, [params.id, passwordParam]);
+
+  // 로딩 중 UI
+  if (isLoading) {
+    return <LoadingSpinner />;
   }
 
-  useEffect(() => {
-    if (Param === "true") {
-      fetchRoomInfo();
-    }
-    useSocketConnection();
-  }, []);
-  return (
-    <>
+  // 에러 UI
+  if (error || !roomInfo) {
+    return (
       <div
-        className="w-full 2xl:pt-5 md:pt-5 min-h-screen flex justify-center bg-center bg-cover bg-repeat"
+        className="w-full min-h-screen flex flex-col items-center justify-center bg-[var(--color-second)] bg-center bg-cover bg-repeat"
         style={{ backgroundImage: "url('/assets/images/bg.png')" }}
       >
-        {/* {loading && <LoadingSpinner />} */}
-        <div className="w-[90vw]">
-          {roomInfo && (
-            <>
-              <RoomsHeader roomInfo={roomInfo} />
-              <RoomsMain />
-              <RoomsFooter roomInfo={roomInfo} />
-            </>
-          )}
+        <div className="p-8 bg-white/10 backdrop-blur-sm rounded-2xl">
+          <h2 className="text-white text-2xl mb-4">오류 발생</h2>
+          <p className="text-white text-lg">
+            {error || "방 정보를 불러오는데 실패했습니다."}
+          </p>
         </div>
       </div>
-    </>
+    );
+  }
+
+  // 방 정보 표시
+  return (
+    <div
+      className="w-full 2xl:pt-5 md:pt-5 min-h-screen flex justify-center bg-center bg-cover bg-repeat"
+      style={{ backgroundImage: "url('/assets/images/bg.png')" }}
+    >
+      <div className="w-[90vw]">
+        <RoomsHeader roomInfo={roomInfo} />
+        <RoomsMain />
+        <RoomsFooter roomInfo={roomInfo} />
+      </div>
+    </div>
   );
 }
