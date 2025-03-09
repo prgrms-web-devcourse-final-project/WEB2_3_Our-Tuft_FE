@@ -27,7 +27,9 @@ export default function ProtectedRoute({
     if (!token) {
       router.replace("/login-required"); // 토큰이 없으면 로그인 페이지로 리디렉트
     } else {
-      setIsAuthChecked(true);
+      setTimeout(() => {
+        setIsAuthChecked(true);
+      }, 2000);
     }
   }, [token, router]);
 

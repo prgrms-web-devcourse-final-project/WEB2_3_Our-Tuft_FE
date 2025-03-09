@@ -5,16 +5,18 @@ import DesktopLayout from "./_components/DesktopLayout";
 import TabletLayout from "./_components/TabletLayout";
 import {
   socketConnection,
-  getClient,
   subscribeToTopic,
   unsubscribeFromTopic,
   publishMessage,
-  isConnected,
+  useSocketConnection,
 } from "../../service/api/socketConnection";
 
 import ProtectedRoute from "../../components/ProtectedRoute/ProtectedRoute";
-import { useLoginStore } from "../../store/store";
+import { useConnectionStore, useLoginStore } from "../../store/store";
 import { defaultFetch } from "../../service/api/defaultFetch";
+import Image from "next/image";
+import loadingImg from "@/assets/images/loading.gif";
+import LoadingSpinner from "../../components/LoadingSpinner/LoadingSpinner";
 
 // Room 인터페이스 정의
 interface Room {
@@ -36,6 +38,7 @@ interface WebSocketRoomMessage {
 }
 
 export default function Lobby() {
+  const { isLoading } = useConnectionStore();
   const { token, setUserId } = useLoginStore();
   const [rooms, setRooms] = useState<Room[]>([]);
   const [socketConnected, setSocketConnected] = useState(false);
@@ -163,6 +166,11 @@ export default function Lobby() {
       fetchUserId();
     }
   });
+
+  const connect = useSocketConnection();
+  useEffect(() => {
+    connect();
+  }, []);
   return (
     <ProtectedRoute>
       <div
@@ -173,12 +181,8 @@ export default function Lobby() {
           backgroundSize: "auto",
         }}
       >
-        {/* 소켓 연결 상태 표시 */}
-        {!socketConnected && (
-          <div className="fixed top-5 right-5 bg-red-500 text-white p-2 rounded-lg z-50">
-            서버 연결 중...
-          </div>
-        )}
+        {isLoading && <LoadingSpinner />}
+
         {/* roomsData를 props로 전달 */}
         <MobileLayout roomsData={rooms} />
         <TabletLayout roomsData={rooms} />
