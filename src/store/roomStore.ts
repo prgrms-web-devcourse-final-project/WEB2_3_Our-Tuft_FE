@@ -11,7 +11,7 @@ interface booleanState {
 export const useIsRoomStore = create<booleanState>((set) => ({
   isHost: false,
   isQuizisReady: false,
-  isAllReady: false,
+  isAllReady: true,
   setIsHost: (val) => set({ isHost: val }),
   setIsQuizisReady: (val) => set({ isQuizisReady: val }),
   setAsAllReady: (val) => set({ isAllReady: val }),
