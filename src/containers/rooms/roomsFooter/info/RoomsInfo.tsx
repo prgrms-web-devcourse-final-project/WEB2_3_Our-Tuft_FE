@@ -4,8 +4,8 @@ import setting from "@/assets/icons/setting.svg";
 import { useState } from "react";
 import TopicModal from "../../roomsModal/TopicModal";
 import CreateRoomModal from "../../../../app/lobby/_components/CreateRoomModal";
-import { topic } from "../../../../types/modalType";
-import { roomInfoData } from "../../../../types/roomType";
+import { topic } from "../../../../types/modal";
+import { roomInfoData } from "../../../../types/room";
 import { useIsRoomStore } from "../../../../store/roomStore";
 
 export default function RoomsInfo({ roomInfo }: { roomInfo: roomInfoData }) {

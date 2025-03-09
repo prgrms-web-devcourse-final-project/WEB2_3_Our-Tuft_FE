@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Modal from "../../../components/Modal/index";
-import { topic, topicModal } from "../../../types/modalType";
+import { topic, topicModal } from "../../../types/modal";
 import { defaultFetch } from "../../../service/api/defaultFetch";
 import { useParams } from "next/navigation";
 

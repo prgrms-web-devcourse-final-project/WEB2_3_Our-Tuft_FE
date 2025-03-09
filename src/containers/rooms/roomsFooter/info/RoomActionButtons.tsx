@@ -6,7 +6,7 @@ import { useState } from "react";
 
 import { sendMessage } from "../../../../service/api/socketConnection";
 import { useParams, useRouter } from "next/navigation";
-import { roomInfoData } from "../../../../types/roomType";
+import { roomInfoData } from "../../../../types/room";
 import { useIsRoomStore } from "../../../../store/roomStore";
 import Modal from "../../../../components/Modal";
 

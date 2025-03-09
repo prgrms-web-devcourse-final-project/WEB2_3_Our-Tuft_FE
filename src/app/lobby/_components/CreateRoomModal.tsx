@@ -192,6 +192,10 @@ export default function CreateRoomModal({
       );
 
       if (data.isSuccess) {
+        if (type === "설정") {
+          onClose();
+        }
+
         console.log("방 생성 성공");
 
         onClose();

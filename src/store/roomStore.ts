@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import { Room, roomInfo } from "../types/room";
 
 interface booleanState {
   isHost: boolean;
@@ -15,4 +16,43 @@ export const useIsRoomStore = create<booleanState>((set) => ({
   setIsHost: (val) => set({ isHost: val }),
   setIsQuizisReady: (val) => set({ isQuizisReady: val }),
   setAsAllReady: (val) => set({ isAllReady: val }),
+}));
+
+interface roomInfoState {
+  roomInfo: {
+    roomId: number;
+    roomName?: string;
+    round?: number;
+    hostId?: number;
+    disclosure?: boolean;
+    gameType?: "SPEED" | "CATCHMIND" | "OX";
+    time?: number;
+    maxUsers?: number;
+  };
+  setRoomInfo: (newInfo: {
+    roomId: number;
+    roomName?: string;
+    round?: number;
+    hostId?: number;
+    disclosure?: boolean;
+    gameType?: "SPEED" | "CATCHMIND" | "OX";
+    time?: number;
+    maxUsers?: number;
+  }) => void;
+}
+export const useRoomInfoStore = create<roomInfoState>((set) => ({
+  roomInfo: {
+    disclosure: true,
+    gameType: "SPEED",
+    hostId: 0,
+    maxUsers: 0,
+    roomId: 0,
+    roomName: "",
+    round: 0,
+    time: 0,
+  },
+  setRoomInfo: (val) =>
+    set((state) => ({
+      roomInfo: { ...state.roomInfo, ...val },
+    })),
 }));

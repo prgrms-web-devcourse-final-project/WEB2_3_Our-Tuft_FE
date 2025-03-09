@@ -35,11 +35,14 @@ export default function SpeedQuizContainer() {
         setRound(msg.message.slice(0, 2));
       }
     };
+
     subscribeToTopic(`/topic/game/${id}`, handleNewMessage);
     return () => {
       unsubscribeFromTopic(`/topic/game/${id}`);
     };
   }, []);
+
+  useEffect(() => {});
   return (
     <>
       <div
