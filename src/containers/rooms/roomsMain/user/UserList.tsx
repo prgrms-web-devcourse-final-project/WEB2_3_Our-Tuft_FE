@@ -8,11 +8,9 @@ import ProfileModal from "../../roomsModal/ProfileModal";
 import { roomUserList, roomUserListData } from "../../../../types/roomType";
 import { defaultFetch } from "../../../../service/api/defaultFetch";
 import { useIsRoomStore } from "../../../../store/roomStore";
-import { useLoginStore } from "../../../../store/store";
 
 export default function UserList({ userList }: { userList: roomUserListData }) {
-  const { setIsHost, isHost } = useIsRoomStore();
-  const { userId } = useLoginStore();
+  const { setIsHost, isHost, setAsAllReady, isAllReady } = useIsRoomStore();
 
   const [user, setUser] = useState<roomUserList>();
   const [isOpenDeport, setOpenDeport] = useState<boolean>(false);
@@ -31,7 +29,14 @@ export default function UserList({ userList }: { userList: roomUserListData }) {
   };
 
   const deportUser = (userId: string) => {
-    defaultFetch(`/rooms/${userId}/deport`, { method: "POST" });
+    defaultFetch(`/rooms/${userId}/deport`, { method: "PUT" });
+  };
+
+  const handleHostModal = (userInfo: roomUserList) => {
+    setUser(userInfo);
+    if (isHost && userInfo.userId !== userList?.data.hostId + "") {
+      setOpenDeport(true);
+    }
   };
 
   const storedUserId = sessionStorage.getItem("userId");
@@ -45,6 +50,12 @@ export default function UserList({ userList }: { userList: roomUserListData }) {
     );
   }, []);
 
+  useEffect(() => {
+    const hasNoReadyUsers = userList?.data.dto.some(
+      (user) => user.isReady === "false"
+    );
+    setAsAllReady(!hasNoReadyUsers);
+  }, [userList]);
   return (
     <div
       className="
@@ -60,10 +71,7 @@ export default function UserList({ userList }: { userList: roomUserListData }) {
       {userList?.data.dto.map((i, index) => (
         <div
           className="h-auto max-h-fit"
-          onClick={() => {
-            setOpenDeport(true);
-            setUser(i);
-          }}
+          onClick={() => handleHostModal(i)}
           onContextMenu={handleContextMenu}
           key={index}
         >

@@ -3,7 +3,7 @@ import RoundButton from "../RoundButton";
 export default function ModalButton({
   setIsClose,
   setIsComplete,
-  isVisible,
+  isVisible = "hidden",
 }: {
   setIsClose?: (val: boolean) => void;
   setIsComplete?: <T>(val?: T) => void;
