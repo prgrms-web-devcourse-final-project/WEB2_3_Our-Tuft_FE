@@ -42,7 +42,7 @@ export async function defaultFetch<T>(
     throw new Error("잘못된 요청입니다. 비밀번호를 확인해주세요.");
   }
 
-  // 401 Unauthorized 발생한 경우, refreshToken을 사용하여 accessToken 갱신 시도
+  // // 401 Unauthorized 발생한 경우, refreshToken을 사용하여 accessToken 갱신 시도
   // if (res.status === 401) {
   //   console.log("401 오류 발생, 액세스 토큰 갱신 시도...");
   //   const refreshToken = document.cookie

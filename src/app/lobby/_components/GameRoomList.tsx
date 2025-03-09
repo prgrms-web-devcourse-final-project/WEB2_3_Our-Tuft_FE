@@ -1,8 +1,9 @@
 import Image from "next/image";
-import Link from "next/link";
+
 import { useState, useEffect, useRef } from "react";
 import GameRoomItem from "./GameRoomItem";
 import CreateRoomModal from "./CreateRoomModal";
+import PasswordModal from "./PasswordModal";
 import { defaultFetch } from "../../../service/api/defaultFetch";
 import {
   socketConnection,
@@ -10,6 +11,7 @@ import {
   unsubscribeFromTopic,
 } from "../../../service/api/socketConnection";
 import { useLoginStore } from "../../../store/store";
+import { useRouter } from "next/navigation";
 
 // 방 정보 인터페이스 정의
 interface Room {
@@ -51,6 +53,11 @@ export default function GameRoomList() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
+
+  // 비밀번호 모달 상태 추가
+  const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
+  const router = useRouter(); // 라우터 추가
+  const [selectedRoom, setSelectedRoom] = useState<Room | null>(null);
 
   // 게임 모드와 검색 타입 배열
   const gameModes = ["전체", "그림 맞추기", "스피드 퀴즈", "OX 퀴즈"];
@@ -169,6 +176,27 @@ export default function GameRoomList() {
     };
   }, []);
 
+  // 방 목록 새로고침 함수
+  const refreshRooms = async () => {
+    setLoading(true);
+    try {
+      const data = await defaultFetch<ApiResponse>("/lobbies/rooms");
+      if (data.isSuccess) {
+        setRooms(data.data);
+        setError(null);
+      } else {
+        throw new Error(data.message || "데이터를 불러오는데 실패했습니다");
+      }
+    } catch (err) {
+      console.error("방 목록 새로고침 실패:", err);
+      setError(
+        err instanceof Error ? err.message : "방 목록을 불러오는데 실패했습니다"
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
+
   // 게임 모드에 따라 필터링된 방 목록 구하기
   const getFilteredRooms = () => {
     let filteredRooms = [...rooms];
@@ -199,6 +227,20 @@ export default function GameRoomList() {
     }
 
     return filteredRooms;
+  };
+
+  // 방 클릭 핸들러 수정
+  const handleRoomClick = (room: Room, e: React.MouseEvent) => {
+    e.preventDefault(); // 기본 링크 동작 방지
+
+    if (room.disclosure) {
+      // 공개방은 바로 이동
+      router.push(`/lobby/rooms/${room.roomId}?password=true`);
+    } else {
+      // 비공개방은 비밀번호 모달 표시
+      setSelectedRoom(room);
+      setIsPasswordModalOpen(true);
+    }
   };
 
   // 필터링된 방 목록
@@ -325,42 +367,55 @@ export default function GameRoomList() {
       </div>
 
       {/* 방 목록 */}
-      <div className="grid grid-cols-2 gap-x-3 gap-y-3 overflow-y-auto h-[calc(100%-6.25rem)] pr-2 xl:pr-4 grid-flow-row-dense content-start">
-        {loading ? (
-          <div className="col-span-2 flex items-center justify-center h-32 text-white text-xl">
-            방 목록을 불러오는 중...
-          </div>
-        ) : error ? (
-          <div className="col-span-2 flex items-center justify-center h-32 text-white text-xl">
-            {error}
-          </div>
-        ) : filteredRooms.length === 0 ? (
-          <div className="col-span-2 flex items-center justify-center h-32 text-white text-xl">
-            검색 결과가 없습니다
-          </div>
-        ) : (
-          filteredRooms.map((room) => (
-            <Link
-              href={{
-                pathname: `/lobby/rooms/${room.roomId}`,
-                query: { password: room.disclosure }, // query로 props 전달
-              }}
-              key={room.roomId}
-              className="h-[8em]"
-            >
-              <GameRoomItem
-                roomId={room.roomId}
-                roomName={room.roomName}
-                round={room.round}
-                disclosure={room.disclosure}
-                gameType={room.gameType}
-                time={room.time}
-                maxUsers={room.maxUsers}
-                currentUsers={room.currentUsers}
-              />
-            </Link>
-          ))
-        )}
+      <div className="relative h-[calc(100%-6.25rem)]">
+        <div className="grid grid-cols-2 gap-x-3 gap-y-3 overflow-y-auto h-full pr-2 xl:pr-4 grid-flow-row-dense content-start">
+          {loading ? (
+            <div className="col-span-2 flex items-center justify-center h-32 text-white text-xl">
+              방 목록을 불러오는 중...
+            </div>
+          ) : error ? (
+            <div className="col-span-2 flex items-center justify-center h-32 text-white text-xl">
+              {error}
+            </div>
+          ) : filteredRooms.length === 0 ? (
+            <div className="col-span-2 flex items-center justify-center h-32 text-white text-xl">
+              검색 결과가 없습니다
+            </div>
+          ) : (
+            filteredRooms.map((room) => (
+              <div
+                key={room.roomId}
+                className="h-[8em] cursor-pointer"
+                onClick={(e) => handleRoomClick(room, e)}
+              >
+                <GameRoomItem
+                  roomId={room.roomId}
+                  roomName={room.roomName}
+                  round={room.round}
+                  disclosure={room.disclosure}
+                  gameType={room.gameType}
+                  time={room.time}
+                  maxUsers={room.maxUsers}
+                  currentUsers={room.currentUsers}
+                />
+              </div>
+            ))
+          )}
+        </div>
+
+        {/* 새로고침 버튼 (우측 하단에 고정) */}
+        <button
+          onClick={refreshRooms}
+          className="absolute bottom-4 right-4 bg-[var(--color-secondPoint)] hover:bg-[var(--color-secondPoint-hover)] w-16 h-16 rounded-full flex items-center justify-center border border-black drop-shadow-custom transition-all cursor-pointer"
+          aria-label="새로고침"
+        >
+          <Image
+            src="/assets/images/refresh.png"
+            alt="새로고침"
+            width={30}
+            height={30}
+          />
+        </button>
       </div>
 
       {/* 방 생성 모달 */}
@@ -368,6 +423,15 @@ export default function GameRoomList() {
         isOpen={isCreateModalOpen}
         onClose={() => setIsCreateModalOpen(false)}
       />
+
+      {/* 비밀번호 확인 모달 */}
+      {selectedRoom && (
+        <PasswordModal
+          isOpen={isPasswordModalOpen}
+          onClose={() => setIsPasswordModalOpen(false)}
+          roomId={selectedRoom.roomId}
+        />
+      )}
     </div>
   );
 }

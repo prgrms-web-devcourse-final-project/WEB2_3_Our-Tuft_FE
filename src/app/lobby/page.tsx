@@ -106,6 +106,7 @@ export default function Lobby() {
     // const intervalId = setInterval(checkConnection, 3000);
 
     // API를 통해 초기 방 목록 로드 (백업)
+
     const fetchInitialRooms = async () => {
       try {
         const data = await defaultFetch<{ isSuccess: boolean; data: Room[] }>(
@@ -171,6 +172,7 @@ export default function Lobby() {
   useEffect(() => {
     connect();
   }, []);
+
   return (
     <ProtectedRoute>
       <div

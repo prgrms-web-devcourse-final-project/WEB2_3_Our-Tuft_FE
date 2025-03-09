@@ -5,7 +5,7 @@ import { topicModal } from "../../types/modalType";
 export const fetchTopicData = async (): Promise<topicModal> => {
   const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
   const token =
-    typeof window !== "undefined" ? localStorage.getItem("token") : null;
+    typeof window !== "undefined" ? sessionStorage.getItem("token") : null;
 
   const response = await fetch(`${API_BASE_URL}/api/v1/quizzes/OX`, {
     method: "GET",
