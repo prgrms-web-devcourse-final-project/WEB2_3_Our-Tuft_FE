@@ -66,9 +66,9 @@ export default function RoomActionButtons({
     }
     xl:rounded-[20px] md:rounded-[12px] rounded-[8px]
     xl:py-8 py-2
-    cursor-pointer p-2 mr-3 2xl:relative group`} // 상대 위치 추가
+    cursor-pointer p-2 mr-3 2xl:relative group`}
           >
-            <div className="group w-[300px] h-[10px] absolute left-[68%] transform -translate-x-1/2 -top-3 2xl:block hidden">
+            <div className="group w-[300px] h-[10px] absolute left-[73%] transform -translate-x-1/2 -top-3 2xl:block hidden">
               <img
                 src="/assets/profile/eyes/default-eye.png"
                 alt="Initial Image"
@@ -81,8 +81,6 @@ export default function RoomActionButtons({
               />
             </div>
             <span className="relative z-10">
-              {" "}
-              {/* 텍스트가 이미지 위에 오게 하기 위해 z-index 설정 */}
               {ready ? "준비 완료" : "준비"}
             </span>
           </button>

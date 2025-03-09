@@ -10,7 +10,6 @@ import {
   subscribeToTopic,
   unsubscribeFromTopic,
 } from "../../../service/api/socketConnection";
-import { sendMsg, sendQuiz } from "../../../types/quizType";
 
 export default function SpeedQuizContainer() {
   const searchParams = useSearchParams();
@@ -33,7 +32,7 @@ export default function SpeedQuizContainer() {
         setQuize(msg.question);
       }
       if (msg.message) {
-        setRound(msg.message.slice(2));
+        setRound(msg.message.slice(0, 2));
       }
     };
     subscribeToTopic(`/topic/game/${id}`, handleNewMessage);
