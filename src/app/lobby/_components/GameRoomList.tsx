@@ -56,7 +56,6 @@ export default function GameRoomList() {
 
   // 비밀번호 모달 상태 추가
   const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
-
   const router = useRouter(); // 라우터 추가
   const [selectedRoom, setSelectedRoom] = useState<Room | null>(null);
 

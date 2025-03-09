@@ -2,13 +2,13 @@ import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import { createPortal } from "react-dom";
 import { defaultFetch } from "../../../service/api/defaultFetch";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useLoginStore } from "../../../store/store";
 
 interface CreateRoomModalProps {
   isOpen: boolean;
   onClose: () => void;
-  title?: string;
+  type?: string;
   gameType?: string;
 }
 
@@ -35,15 +35,23 @@ interface CreateRoomResponse {
   message?: string;
   data: {
     roomId: number;
+    roomName?: string;
+    round?: number;
+    hostId?: number;
+    disclosure?: boolean;
+    gameType?: "SPEED" | "CATCHMIND" | "OX";
+    time?: number;
+    maxUsers?: number;
   };
 }
 
 export default function CreateRoomModal({
   isOpen,
   onClose,
-  title = "방 생성",
+  type = "방 생성",
   gameType,
 }: CreateRoomModalProps) {
+  const params = useParams();
   const { token } = useLoginStore();
   const modalRef = useRef<HTMLDivElement>(null);
   const [isPrivate, setIsPrivate] = useState(false);
@@ -174,10 +182,14 @@ export default function CreateRoomModal({
       };
 
       // 방 생성 API 호출
-      const data = await defaultFetch<CreateRoomResponse>("/lobbies/rooms", {
-        method: "POST",
-        body: JSON.stringify(requestData),
-      });
+
+      const data = await defaultFetch<CreateRoomResponse>(
+        `/lobbies/rooms${type === "설정" ? `/${params.id}` : ""}`,
+        {
+          method: type === "설정" ? "PUT" : "POST",
+          body: JSON.stringify(requestData),
+        }
+      );
 
       if (data.isSuccess) {
         console.log("방 생성 성공");
@@ -236,7 +248,7 @@ export default function CreateRoomModal({
         className="bg-[var(--color-second)]/90 w-[90%] max-w-[1100px] h-[80%] max-h-[800px] rounded-2xl drop-shadow-custom overflow-hidden flex flex-col relative z-10"
       >
         <div className="p-6 flex items-center justify-center">
-          <h2 className="text-white text-4xl md:text-3xl font-bold">{title}</h2>
+          <h2 className="text-white text-4xl md:text-3xl font-bold">{type}</h2>
         </div>
 
         {/* 공개/비공개 전환 버튼 */}
@@ -574,7 +586,7 @@ export default function CreateRoomModal({
                   >
                     {isLoading
                       ? "생성 중..."
-                      : title === "방 생성"
+                      : type === "방 생성"
                       ? "생성"
                       : "변경"}
                   </button>

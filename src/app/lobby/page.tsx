@@ -89,20 +89,21 @@ export default function Lobby() {
     subscribeToTopic("/topic/room/lobby", handleLobbyMessage);
 
     // 소켓 연결 상태 확인
-    const checkConnection = () => {
-      if (isConnected()) {
-        setSocketConnected(true);
-        console.log("소켓 연결됨");
-      } else {
-        setSocketConnected(false);
-        console.log("소켓 연결 안됨");
-      }
-    };
+    // const checkConnection = () => {
+    //   if (isConnected()) {
+    //     setSocketConnected(true);
+    //     console.log("소켓 연결됨");
+    //   } else {
+    //     setSocketConnected(false);
+    //     console.log("소켓 연결 안됨");
+    //   }
+    // };
 
-    // 초기 및 주기적 상태 확인
-    const intervalId = setInterval(checkConnection, 3000);
+    // // 초기 및 주기적 상태 확인
+    // const intervalId = setInterval(checkConnection, 3000);
 
     // API를 통해 초기 방 목록 로드 (백업)
+
     const fetchInitialRooms = async () => {
       try {
         const data = await defaultFetch<{ isSuccess: boolean; data: Room[] }>(
@@ -130,7 +131,7 @@ export default function Lobby() {
     }, 1000);
 
     return () => {
-      clearInterval(intervalId);
+      // clearInterval(intervalId);
       unsubscribeFromTopic("/topic/room/lobby");
     };
   }, [token]);

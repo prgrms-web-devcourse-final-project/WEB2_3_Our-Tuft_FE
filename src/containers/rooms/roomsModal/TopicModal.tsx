@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Modal from "../../../components/Modal/index";
 import { topic, topicModal } from "../../../types/modalType";
 import { defaultFetch } from "../../../service/api/defaultFetch";
+import { useParams } from "next/navigation";
 
 export default function TopicModal({
   setIsClose,
@@ -14,9 +15,11 @@ export default function TopicModal({
   setTopic: (topic: topic) => void;
   topic: topic;
 }) {
+  const params = useParams();
+
   const [quizCategories, setQuizCategories] = useState<topicModal>();
   const topicData = async () => {
-    const response = await defaultFetch<topicModal>("/quizzes/OX", {
+    const response = await defaultFetch<topicModal>("/quizzes/SPEED", {
       method: "GET",
     });
     setQuizCategories(response);
@@ -24,14 +27,14 @@ export default function TopicModal({
 
   const quizsetData = async () => {
     setIsClose(false);
-    // const response = await defaultFetch<{
-    //   isSuccess: true;
-    //   code: "string";
-    //   message: "string";
-    //   data: "string";
-    // }>(`/lobbies/rooms/${params}/quizzes/${selectedTopic?.quizSetId}`, {
-    //   method: "PUT",
-    // });
+    const response = await defaultFetch<{
+      isSuccess: true;
+      code: "string";
+      message: "string";
+      data: "string";
+    }>(`/room/${params.id}/quizzes/${topic?.quizSetId}`, {
+      method: "PUT",
+    });
   };
 
   useEffect(() => {

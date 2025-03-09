@@ -5,25 +5,25 @@ import {
   unsubscribeFromTopic,
   subscribeToTopic,
   sendMessage,
-  socketConnection,
 } from "../../../../service/api/socketConnection";
 import { useParams } from "next/navigation";
-import { roomUserList } from "../../../../types/roomType";
+import { roomUserListData } from "../../../../types/roomType";
 import { defaultFetch } from "../../../../service/api/defaultFetch";
-import { useLoginStore } from "../../../../store/store";
+import { useIsRoomStore } from "../../../../store/roomStore";
 
 export default function Chat({
   setUserList,
 }: {
-  setUserList: Dispatch<SetStateAction<roomUserList | undefined>>;
+  setUserList: Dispatch<SetStateAction<roomUserListData | undefined>>;
 }) {
   const params = useParams();
-  const { token } = useLoginStore();
+  const { setIsQuizisReady } = useIsRoomStore();
+
   const inputRef = useRef<HTMLInputElement>(null);
   const lastMessageRef = useRef<HTMLInputElement>(null);
 
   const [chatList, setChatList] = useState<
-    { message: string; sender: string }[]
+    { message: string; sender: string; event?: string }[]
   >([]);
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -37,7 +37,7 @@ export default function Chat({
   };
 
   const fetchUserList = async () => {
-    const response = await defaultFetch<roomUserList>(
+    const response = await defaultFetch<roomUserListData>(
       `/room/${params.id}/players`,
       {
         method: "GET",
@@ -53,47 +53,37 @@ export default function Chat({
    */
   useEffect(() => {
     unsubscribeFromTopic("/topic/room/lobby");
-    const handleNewMessage = (msg: any) => {
+    const handleNewMessage = async (msg: any) => {
       if (
-        typeof msg === "object" &&
-        msg !== null &&
-        "message" in msg &&
-        "sender" in msg
+        (typeof msg === "object" &&
+          msg !== null &&
+          "message" in msg &&
+          "sender" in msg) ||
+        msg.event === "퀴즈가 등록되지 않았습니다."
       ) {
         console.log(msg);
+        if (msg.event === "퀴즈가 등록되지 않았습니다.") {
+          setIsQuizisReady(false);
+        }
+        if (msg.message === "퀴즈 선택이 완료되었습니다") {
+          setIsQuizisReady(true);
+        }
         setChatList((prevMessages) => [...prevMessages, msg]);
-      } else if (
-        msg.event === "PLAYER_ADDED" ||
-        msg.event === "PLAYER_DISCONNECTED" ||
-        msg.event === "PLAYER_CHANGE_READY" ||
-        msg.event === "HOST_CHANGED" ||
-        msg.event === "ROOM_CREATED"
-      ) {
-        fetchUserList();
       } else {
         console.warn("Unexpected message format:", msg);
+      }
+
+      if (msg.event) {
+        console.log("유저 리스트 업데이트 대기 중...");
+        fetchUserList();
       }
     };
     subscribeToTopic(`/topic/room/${params.id}`, handleNewMessage);
 
+    fetchUserList();
     return () => {
       unsubscribeFromTopic(`/topic/room/${params.id}`);
     };
-  }, [params.id]);
-
-  useEffect(() => {
-    socketConnection(token ?? undefined).catch((error) => {
-      console.error("소켓 연결 실패:", error);
-    });
-    fetchUserList();
-    // const handleNewMessage = (msg: any) => {
-    //   fetchUserList();
-    //   console.log(msg);
-    // };
-    // subscribeToTopic(`/topic/room/${params.id}/event`, handleNewMessage);
-    // return () => {
-    //   unsubscribeFromTopic(`/topic/room/${params.id}/event`);
-    // };
   }, []);
 
   useEffect(() => {
@@ -107,16 +97,19 @@ export default function Chat({
         flex flex-col bg-[var(--color-point)] 
         xl:h-full md:h-full h-[180px]
         xl:rounded-[32px] rounded-[20px] 
-        xl:p-5 p-3 md:px-2 xl:pb-4 md:pb-4 "
+        xl:p-6 p-3 md:px-2 xl:pb-4 md:pb-4 "
     >
       <div className="w-full h-[700px] overflow-auto">
         {chatList.map((item, index) => (
           <p
+            className={`${item.event && "text-red-600 font-bold text-xl"} pb-1`}
             key={index}
             ref={index === chatList.length - 1 ? lastMessageRef : null}
           >
-            <span className="font-bold">{item.sender}: </span>
-            {item.message}
+            <span className="font-bold">
+              {item.sender ? `${item.sender} :` : ""}{" "}
+            </span>
+            {item.message || item.event}
           </p>
         ))}
       </div>
