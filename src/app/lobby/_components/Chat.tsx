@@ -10,6 +10,7 @@ import {
 export default function Chat() {
   const inputRef = useRef<HTMLInputElement>(null);
   const lastMessageRef = useRef<HTMLDivElement>(null);
+  const subscribedRef = useRef<boolean>(false); // 구독 상태 추적용 ref
 
   const [chatList, setChatList] = useState<
     { message: string; sender: string }[]
@@ -17,7 +18,7 @@ export default function Chat() {
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
-      if (inputRef.current) {
+      if (inputRef.current && inputRef.current.value.trim() !== "") {
         console.log("전송");
         sendMessage("/topic/room/lobby", inputRef.current.value);
         inputRef.current.value = "";
@@ -30,7 +31,11 @@ export default function Chat() {
   }, [chatList.length]);
 
   useEffect(() => {
-    unsubscribeFromTopic("/topic/room/lobby");
+    // 이미 구독 중인 경우 재구독하지 않음
+    if (subscribedRef.current) {
+      return;
+    }
+
     const handleNewMessage = (msg: any) => {
       if (
         typeof msg === "object" &&
@@ -38,16 +43,31 @@ export default function Chat() {
         "message" in msg &&
         "sender" in msg
       ) {
-        console.log(msg);
-        setChatList((prevMessages) => [...prevMessages, msg]);
+        console.log("새 메시지 수신:", msg);
+
+        // 시스템 메시지 필터링 (sender가 "SYSTEM"인 경우)
+        if (msg.sender !== "SYSTEM") {
+          setChatList((prevMessages) => [...prevMessages, msg]);
+        } else {
+          console.log("시스템 메시지:", msg.message);
+        }
       } else {
         console.warn("Unexpected message format:", msg);
       }
     };
-    subscribeToTopic("/topic/room/lobby", handleNewMessage);
 
+    // 구독 전에 먼저 구독 상태 확인
+    unsubscribeFromTopic("/topic/room/lobby");
+
+    // 구독 및 상태 업데이트
+    subscribeToTopic("/topic/room/lobby", handleNewMessage);
+    subscribedRef.current = true;
+
+    // 컴포넌트 언마운트 시 구독 해제
     return () => {
+      console.log("Chat 컴포넌트 언마운트: 구독 해제");
       unsubscribeFromTopic("/topic/room/lobby");
+      subscribedRef.current = false;
     };
   }, []);
 

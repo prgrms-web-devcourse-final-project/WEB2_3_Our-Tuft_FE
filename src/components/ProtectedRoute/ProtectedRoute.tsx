@@ -14,9 +14,9 @@ export default function ProtectedRoute({
   const token = useLoginStore((state) => state.token);
   const [isAuthChecked, setIsAuthChecked] = useState(false);
 
-  // 초기 토큰 로딩을 위해 로컬 스토리지 확인
+  // 초기 토큰 로딩을 위해 세션 스토리지 확인
   useEffect(() => {
-    const storedToken = localStorage.getItem("token");
+    const storedToken = sessionStorage.getItem("token");
     if (storedToken) {
       // 상태 업데이트
       useLoginStore.getState().login(storedToken);
@@ -27,7 +27,9 @@ export default function ProtectedRoute({
     if (!token) {
       router.replace("/login-required"); // 토큰이 없으면 로그인 페이지로 리디렉트
     } else {
-      setIsAuthChecked(true);
+      setTimeout(() => {
+        setIsAuthChecked(true);
+      }, 2000);
     }
   }, [token, router]);
 

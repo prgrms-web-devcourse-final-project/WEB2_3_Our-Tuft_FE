@@ -1,16 +1,18 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import UserCard from "./UserCard";
 import DeportModal from "../../roomsModal/DeportModal";
 import MenuModal from "../../roomsModal/MenuModal";
 import ProfileModal from "../../roomsModal/ProfileModal";
-import UserCard from "./UserCard";
 import { roomUserList, roomUserListData } from "../../../../types/roomType";
 import { defaultFetch } from "../../../../service/api/defaultFetch";
+import { useIsRoomStore } from "../../../../store/roomStore";
 
 export default function UserList({ userList }: { userList: roomUserListData }) {
-  const [user, setUser] = useState<roomUserList>();
+  const { setIsHost, isHost, setAsAllReady, isAllReady } = useIsRoomStore();
 
+  const [user, setUser] = useState<roomUserList>();
   const [isOpenDeport, setOpenDeport] = useState<boolean>(false);
   const [isOpenMenu, setOpenMenu] = useState<boolean>(false);
   const [isOpenProfile, setOpenProfile] = useState<boolean | undefined>(
@@ -27,9 +29,35 @@ export default function UserList({ userList }: { userList: roomUserListData }) {
   };
 
   const deportUser = (userId: string) => {
-    defaultFetch(`/rooms/${userId}/deport`, { method: "POST" });
+    defaultFetch(`/rooms/${userId}/deport`, { method: "PUT" });
   };
 
+  const handleHostModal = (userInfo: roomUserList) => {
+    setUser(userInfo);
+    if (isHost && userInfo.userId !== userList?.data.hostId + "") {
+      setOpenDeport(true);
+    }
+  };
+
+  const storedUserId = sessionStorage.getItem("userId");
+  useEffect(() => {
+    setIsHost(Number(userList.data.hostId) === Number(storedUserId));
+    console.log(
+      "host",
+      isHost,
+      Number(userList.data.hostId),
+      Number(storedUserId)
+    );
+  }, []);
+
+  console.log("유저 리스트: ", userList.data);
+
+  useEffect(() => {
+    const hasNoReadyUsers = userList?.data.dto.some(
+      (user) => user.isReady === "false"
+    );
+    setAsAllReady(!hasNoReadyUsers);
+  }, [userList]);
   return (
     <div
       className="
@@ -42,27 +70,37 @@ export default function UserList({ userList }: { userList: roomUserListData }) {
         xl:rounded-[32px] rounded-[20px] 
         "
     >
-      {userList?.data.map((i, index) => (
+      {userList?.data.dto.map((i, index) => (
         <div
           className="h-auto max-h-fit"
-          onClick={() => {
-            setOpenDeport(true);
-            setUser(i);
-          }}
+          onClick={() => handleHostModal(i)}
           onContextMenu={handleContextMenu}
           key={index}
         >
-          <UserCard nickName={i.username}>
+          <UserCard
+            nickName={i.username}
+            isReady={i.isReady}
+            host={Number(i.userId) === Number(userList?.data.hostId)}
+          >
             <div
-              className="
-                absolute xl:static md:static 
-                text-[#993000] 
-                bg-[var(--color-amberOrange)]  
+              className={`absolute xl:static md:static
+                ${i.isReady === "true" ? "text-[#993000]" : "text-white"}  
+                ${
+                  Number(i.userId) === Number(userList?.data.hostId)
+                    ? "bg-[var(--color-main)]"
+                    : i.isReady === "true"
+                    ? "bg-[var(--color-amberOrange)]"
+                    : "bg-[var(--color-point)]"
+                }  
                 xl:text-2xl md:text-xl 
                 xl:py-5 md:py-3 py-0 
-                md:w-full md:text-center"
+                md:w-full md:text-center`}
             >
-              준비완료
+              {i.userId === userList?.data.hostId + ""
+                ? "방장"
+                : i.isReady === "true"
+                ? "준비완료"
+                : "대기중"}
             </div>
           </UserCard>
         </div>

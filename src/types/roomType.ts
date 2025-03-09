@@ -14,7 +14,7 @@ export type roomInfo = {
 };
 
 export type roomUserListData = {
-  data: roomUserList[];
+  data: { hostId: number; dto: roomUserList[] };
 };
 
 export type roomUserList = {

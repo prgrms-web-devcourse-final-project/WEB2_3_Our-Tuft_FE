@@ -2,61 +2,39 @@
 
 import { useEffect, useState } from "react";
 import Timer from "./Timer";
-import io from "socket.io-client";
-
-const socket = io("http://localhost:8080");
+import { sendMsg, sendQuiz } from "../../types/quizType";
 
 export default function QuizBoard({
+  quize,
+  round,
   oxAnswer,
 }: {
-  oxAnswer: (val: boolean | null) => void;
+  quize?: string;
+  round?: string;
+  oxAnswer?: (val: boolean | null) => void;
 }) {
-  const [quize, setQuize] = useState<
-    { question: string; hint: string; answer: boolean }[]
-  >([]);
   const [showAnswer, setShowAnswer] = useState<boolean>(false);
-  const [currentIndex, setCurrentIndex] = useState(0);
-
-  useEffect(() => {
-    socket.on("connect", () => {
-      console.log("Socket connected:", socket.id);
-    });
-
-    socket.on(
-      "quize",
-      (msg: { question: string; hint: string; answer: boolean }[]) => {
-        console.log("Received quize data:", msg);
-        setQuize(msg);
-        setCurrentIndex(0);
-      }
-    );
-
-    return () => {
-      socket.off("quize");
-      socket.off("connect");
-    };
-  }, []);
 
   useEffect(() => {
     let isActive = true;
     const timer = (ms: number) =>
       new Promise((resolve) => setTimeout(resolve, ms));
+    oxAnswer?.(null);
+    // const quizeLoop = async () => {
+    //   for (let index = 0; index < quize.length; index++) {
+    //     if (!isActive) return;
+    //     setCurrentIndex(index);
+    //     setShowAnswer(false);
+    //     await timer(10000);
 
-    const quizeLoop = async () => {
-      for (let index = 0; index < quize.length; index++) {
-        if (!isActive) return;
-        setCurrentIndex(index);
-        setShowAnswer(false);
-        await timer(10000); // 5초 동안 퀴즈 표시
+    //     setShowAnswer(true);
+    //     oxAnswer?.(quize[currentIndex].answer);
+    //     await timer(5000);
+    //     oxAnswer?.(null);
+    //   }
+    // };
 
-        setShowAnswer(true);
-        oxAnswer(quize[currentIndex].answer);
-        await timer(5000); // 3초 동안 정답 표시
-        oxAnswer(null);
-      }
-    };
-
-    quizeLoop();
+    // quizeLoop();
 
     return () => {
       isActive = false;
@@ -83,17 +61,18 @@ export default function QuizBoard({
           "
       >
         <div className="text-xl md:text-2xl 2xl:text-3xl whitespace-normal">
-          {quize.length > 0 && currentIndex < quize.length && (
+          {quize && (
             <div>
               <div className="text-2xl md:text-3xl 2xl:text-4xl mb-5">
-                문제 {currentIndex + 1}
+                {round} 라운드
               </div>
               <p>
-                {showAnswer
+                {quize}
+                {/* {showAnswer
                   ? quize[currentIndex].answer
                     ? "O"
                     : "X"
-                  : quize[currentIndex].question}
+                  : quize[currentIndex].question} */}
               </p>
             </div>
           )}

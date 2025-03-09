@@ -6,12 +6,10 @@ import Image from "next/image";
 import io from "socket.io-client";
 // import { useUser } from "../../store/testuser";
 
-const socket = io("http://localhost:8080");
-
 export default function SpeedOXFooter({
   chat,
 }: {
-  chat: Dispatch<
+  chat?: Dispatch<
     SetStateAction<{ id: string; chat: string; chatId: string }[]>
   >;
 }) {
@@ -26,7 +24,7 @@ export default function SpeedOXFooter({
   const onkeydown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
       setNum((prevNum) => prevNum + 1);
-      sendMessage();
+      // sendMessage();
     }
   };
 
@@ -34,40 +32,40 @@ export default function SpeedOXFooter({
     lastMessageRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [chatList.length, isOpen]);
 
-  useEffect(() => {
-    socket.on(
-      "chat_message",
-      (msg: { id: string; chat: string; chatId: string }) => {
-        setChatList((prevMessages) => [
-          ...prevMessages,
-          { chat: msg.chat, id: msg.id },
-        ]);
-        chat((prevMessages) => [
-          ...prevMessages,
-          { chat: msg.chat, id: msg.id, chatId: msg.chatId },
-        ]);
-      }
-    );
+  // useEffect(() => {
+  //   socket.on(
+  //     "chat_message",
+  //     (msg: { id: string; chat: string; chatId: string }) => {
+  //       setChatList((prevMessages) => [
+  //         ...prevMessages,
+  //         { chat: msg.chat, id: msg.id },
+  //       ]);
+  //       chat?.((prevMessages) => [
+  //         ...prevMessages,
+  //         { chat: msg.chat, id: msg.id, chatId: msg.chatId },
+  //       ]);
+  //     }
+  //   );
 
-    return () => {
-      socket.off("chat_message");
-    };
-  }, []);
+  //   return () => {
+  //     socket.off("chat_message");
+  //   };
+  // }, []);
 
-  const sendMessage = () => {
-    const userId = socket.id;
-    // setUserList(userId!);
-    // console.log("userList", userList);
-    if (inputRef.current) {
-      const newMessage: { id: string; chat: string; chatId: string } = {
-        id: userId!,
-        chat: inputRef.current?.value,
-        chatId: socket.id! + num,
-      };
-      socket.emit("chat_message", newMessage);
-      inputRef.current.value = "";
-    }
-  };
+  // const sendMessage = () => {
+  //   const userId = socket.id;
+  //   // setUserList(userId!);
+  //   // console.log("userList", userList);
+  //   if (inputRef.current) {
+  //     const newMessage: { id: string; chat: string; chatId: string } = {
+  //       id: userId!,
+  //       chat: inputRef.current?.value,
+  //       chatId: socket.id! + num,
+  //     };
+  //     socket.emit("chat_message", newMessage);
+  //     inputRef.current.value = "";
+  //   }
+  // };
   return (
     <>
       <div
@@ -102,7 +100,7 @@ export default function SpeedOXFooter({
                 >
                   <span className="font-bold">
                     {item.id}
-                    {socket.id!} :{" "}
+                    {/* {socket.id!} :{" "} */}
                   </span>
                   {item.chat}
                 </p>

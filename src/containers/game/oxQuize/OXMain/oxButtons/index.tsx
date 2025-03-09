@@ -3,10 +3,6 @@ import Image from "next/image";
 import OImg from "@/assets/images/O-img.png";
 import XImg from "@/assets/images/X-img.svg";
 import { useEffect, useState } from "react";
-import io from "socket.io-client";
-// import { useUser } from "../../../../../store/testuser";
-
-const socket = io("http://localhost:8080");
 
 export default function OXButtons({ oxAnswer }: { oxAnswer: boolean | null }) {
   const [answers, setAnswer] = useState<boolean | null>(null);

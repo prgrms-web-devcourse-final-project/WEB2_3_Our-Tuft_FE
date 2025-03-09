@@ -1,5 +1,5 @@
 import Image from "next/image";
-import Link from "next/link";
+
 import { useState, useEffect, useRef } from "react";
 import GameRoomItem from "./GameRoomItem";
 import CreateRoomModal from "./CreateRoomModal";
@@ -56,7 +56,6 @@ export default function GameRoomList() {
 
   // 비밀번호 모달 상태 추가
   const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
-  const [selectedRoomId, setSelectedRoomId] = useState<number | null>(null);
   const router = useRouter(); // 라우터 추가
   const [selectedRoom, setSelectedRoom] = useState<Room | null>(null);
 
@@ -176,6 +175,27 @@ export default function GameRoomList() {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
+
+  // 방 목록 새로고침 함수
+  const refreshRooms = async () => {
+    setLoading(true);
+    try {
+      const data = await defaultFetch<ApiResponse>("/lobbies/rooms");
+      if (data.isSuccess) {
+        setRooms(data.data);
+        setError(null);
+      } else {
+        throw new Error(data.message || "데이터를 불러오는데 실패했습니다");
+      }
+    } catch (err) {
+      console.error("방 목록 새로고침 실패:", err);
+      setError(
+        err instanceof Error ? err.message : "방 목록을 불러오는데 실패했습니다"
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
 
   // 게임 모드에 따라 필터링된 방 목록 구하기
   const getFilteredRooms = () => {
@@ -347,39 +367,55 @@ export default function GameRoomList() {
       </div>
 
       {/* 방 목록 */}
-      <div className="grid grid-cols-2 gap-x-3 gap-y-3 overflow-y-auto h-[calc(100%-6.25rem)] pr-2 xl:pr-4 grid-flow-row-dense content-start">
-        {loading ? (
-          <div className="col-span-2 flex items-center justify-center h-32 text-white text-xl">
-            방 목록을 불러오는 중...
-          </div>
-        ) : error ? (
-          <div className="col-span-2 flex items-center justify-center h-32 text-white text-xl">
-            {error}
-          </div>
-        ) : filteredRooms.length === 0 ? (
-          <div className="col-span-2 flex items-center justify-center h-32 text-white text-xl">
-            검색 결과가 없습니다
-          </div>
-        ) : (
-          filteredRooms.map((room) => (
-            <div
-              key={room.roomId}
-              className="h-[8em] cursor-pointer"
-              onClick={(e) => handleRoomClick(room, e)}
-            >
-              <GameRoomItem
-                roomId={room.roomId}
-                roomName={room.roomName}
-                round={room.round}
-                disclosure={room.disclosure}
-                gameType={room.gameType}
-                time={room.time}
-                maxUsers={room.maxUsers}
-                currentUsers={room.currentUsers}
-              />
+      <div className="relative h-[calc(100%-6.25rem)]">
+        <div className="grid grid-cols-2 gap-x-3 gap-y-3 overflow-y-auto h-full pr-2 xl:pr-4 grid-flow-row-dense content-start">
+          {loading ? (
+            <div className="col-span-2 flex items-center justify-center h-32 text-white text-xl">
+              방 목록을 불러오는 중...
             </div>
-          ))
-        )}
+          ) : error ? (
+            <div className="col-span-2 flex items-center justify-center h-32 text-white text-xl">
+              {error}
+            </div>
+          ) : filteredRooms.length === 0 ? (
+            <div className="col-span-2 flex items-center justify-center h-32 text-white text-xl">
+              검색 결과가 없습니다
+            </div>
+          ) : (
+            filteredRooms.map((room) => (
+              <div
+                key={room.roomId}
+                className="h-[8em] cursor-pointer"
+                onClick={(e) => handleRoomClick(room, e)}
+              >
+                <GameRoomItem
+                  roomId={room.roomId}
+                  roomName={room.roomName}
+                  round={room.round}
+                  disclosure={room.disclosure}
+                  gameType={room.gameType}
+                  time={room.time}
+                  maxUsers={room.maxUsers}
+                  currentUsers={room.currentUsers}
+                />
+              </div>
+            ))
+          )}
+        </div>
+
+        {/* 새로고침 버튼 (우측 하단에 고정) */}
+        <button
+          onClick={refreshRooms}
+          className="absolute bottom-4 right-4 bg-[var(--color-secondPoint)] hover:bg-[var(--color-secondPoint-hover)] w-16 h-16 rounded-full flex items-center justify-center border border-black drop-shadow-custom transition-all cursor-pointer"
+          aria-label="새로고침"
+        >
+          <Image
+            src="/assets/images/refresh.png"
+            alt="새로고침"
+            width={30}
+            height={30}
+          />
+        </button>
       </div>
 
       {/* 방 생성 모달 */}

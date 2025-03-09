@@ -22,7 +22,7 @@ export default function UserCard({
   textSize2?: string;
   className?: string;
   children?: React.ReactNode;
-  oxAnswer: boolean | null;
+  oxAnswer?: boolean | null;
 }) {
   return (
     <div>

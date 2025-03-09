@@ -5,16 +5,18 @@ import DesktopLayout from "./_components/DesktopLayout";
 import TabletLayout from "./_components/TabletLayout";
 import {
   socketConnection,
-  getClient,
   subscribeToTopic,
   unsubscribeFromTopic,
   publishMessage,
-  isConnected,
+  useSocketConnection,
 } from "../../service/api/socketConnection";
 
 import ProtectedRoute from "../../components/ProtectedRoute/ProtectedRoute";
-import { useLoginStore } from "../../store/store";
+import { useConnectionStore, useLoginStore } from "../../store/store";
 import { defaultFetch } from "../../service/api/defaultFetch";
+import Image from "next/image";
+import loadingImg from "@/assets/images/loading.gif";
+import LoadingSpinner from "../../components/LoadingSpinner/LoadingSpinner";
 
 // Room 인터페이스 정의
 interface Room {
@@ -36,7 +38,8 @@ interface WebSocketRoomMessage {
 }
 
 export default function Lobby() {
-  const { token } = useLoginStore();
+  const { isLoading } = useConnectionStore();
+  const { token, setUserId } = useLoginStore();
   const [rooms, setRooms] = useState<Room[]>([]);
   const [socketConnected, setSocketConnected] = useState(false);
 
@@ -89,20 +92,21 @@ export default function Lobby() {
     subscribeToTopic("/topic/room/lobby", handleLobbyMessage);
 
     // 소켓 연결 상태 확인
-    const checkConnection = () => {
-      if (isConnected()) {
-        setSocketConnected(true);
-        console.log("소켓 연결됨");
-      } else {
-        setSocketConnected(false);
-        console.log("소켓 연결 안됨");
-      }
-    };
+    // const checkConnection = () => {
+    //   if (isConnected()) {
+    //     setSocketConnected(true);
+    //     console.log("소켓 연결됨");
+    //   } else {
+    //     setSocketConnected(false);
+    //     console.log("소켓 연결 안됨");
+    //   }
+    // };
 
-    // 초기 및 주기적 상태 확인
-    const intervalId = setInterval(checkConnection, 3000);
+    // // 초기 및 주기적 상태 확인
+    // const intervalId = setInterval(checkConnection, 3000);
 
     // API를 통해 초기 방 목록 로드 (백업)
+
     const fetchInitialRooms = async () => {
       try {
         const data = await defaultFetch<{ isSuccess: boolean; data: Room[] }>(
@@ -130,10 +134,44 @@ export default function Lobby() {
     }, 1000);
 
     return () => {
-      clearInterval(intervalId);
+      // clearInterval(intervalId);
       unsubscribeFromTopic("/topic/room/lobby");
     };
   }, [token]);
+
+  useEffect(() => {
+    const storedUserId = sessionStorage.getItem("userId");
+
+    if (!storedUserId) {
+      const fetchUserId = async () => {
+        try {
+          const res = await defaultFetch<{
+            isSuccess: boolean;
+            message: string;
+            data: { userId: number | null };
+          }>("/myInfo", {
+            method: "GET",
+          });
+
+          if (res.isSuccess && res.data && res.data.userId !== null) {
+            setUserId(res.data.userId.toString());
+            console.log("유저 아이디 정보: ", res.data.userId);
+          } else {
+            console.log("유저 데이터 불러오기 실패: ", res.message);
+          }
+        } catch (error) {
+          console.log("유저 데이터 불러오기 오류: ", error);
+        }
+      };
+
+      fetchUserId();
+    }
+  });
+
+  const connect = useSocketConnection();
+  useEffect(() => {
+    connect();
+  }, []);
 
   return (
     <ProtectedRoute>
@@ -145,12 +183,8 @@ export default function Lobby() {
           backgroundSize: "auto",
         }}
       >
-        {/* 소켓 연결 상태 표시 */}
-        {!socketConnected && (
-          <div className="fixed top-5 right-5 bg-red-500 text-white p-2 rounded-lg z-50">
-            서버 연결 중...
-          </div>
-        )}
+        {isLoading && <LoadingSpinner />}
+
         {/* roomsData를 props로 전달 */}
         <MobileLayout roomsData={rooms} />
         <TabletLayout roomsData={rooms} />
