@@ -1,5 +1,5 @@
 import Image from "next/image";
-import Link from "next/link";
+
 import { useState, useEffect, useRef } from "react";
 import GameRoomItem from "./GameRoomItem";
 import CreateRoomModal from "./CreateRoomModal";
@@ -56,7 +56,7 @@ export default function GameRoomList() {
 
   // 비밀번호 모달 상태 추가
   const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
-  const [selectedRoomId, setSelectedRoomId] = useState<number | null>(null);
+
   const router = useRouter(); // 라우터 추가
   const [selectedRoom, setSelectedRoom] = useState<Room | null>(null);
 
@@ -67,8 +67,6 @@ export default function GameRoomList() {
   // 드롭다운과 필터 드롭다운을 위한 ref
   const dropdownRef = useRef<HTMLDivElement>(null);
   const filterDropdownRef = useRef<HTMLDivElement>(null);
-
-  const [isRefreshing, setIsRefreshing] = useState(false);
 
   useEffect(() => {
     // 초기 로딩 상태 설정
@@ -181,10 +179,7 @@ export default function GameRoomList() {
 
   // 방 목록 새로고침 함수
   const refreshRooms = async () => {
-    // 애니메이션 시작
-    setIsRefreshing(true);
     setLoading(true);
-
     try {
       const data = await defaultFetch<ApiResponse>("/lobbies/rooms");
       if (data.isSuccess) {
@@ -200,11 +195,6 @@ export default function GameRoomList() {
       );
     } finally {
       setLoading(false);
-
-      // 애니메이션이 완료될 때까지 대기 (1초)
-      setTimeout(() => {
-        setIsRefreshing(false);
-      }, 1000);
     }
   };
 
