@@ -6,9 +6,9 @@ import { useState } from "react";
 
 import { sendMessage } from "../../../../service/api/socketConnection";
 import { useParams, useRouter } from "next/navigation";
-import { roomInfoData } from "../../../../types/room";
 import { useIsRoomStore } from "../../../../store/roomStore";
 import Modal from "../../../../components/Modal";
+import { roomInfoData } from "../../../../types/Room";
 
 export default function RoomActionButtons({
   roomInfo,
@@ -18,10 +18,11 @@ export default function RoomActionButtons({
   const router = useRouter();
   const params = useParams();
 
-  const { isHost, isQuizisReady, isAllReady } = useIsRoomStore();
+  const { isHost, isQuizisReady, isAllReady, infoRoom } = useIsRoomStore();
   const [ready, setReady] = useState<boolean>(false);
   const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
 
+  console.log(infoRoom);
   const sendReadyState = () => {
     setReady((prev) => !prev);
     sendMessage(`/app/room/${params.id}/event`, "PLAYER_CHANGE_READY");
@@ -33,7 +34,8 @@ export default function RoomActionButtons({
     if (isQuizisReady) {
       if (isAllReady) {
         setIsOpenModal(false);
-        router.push(`/game/${roomInfo.data.gameType}?id=${params.id}`);
+        console.log("37", infoRoom);
+        // router.push(`/game/${infoRoom}?id=${params.id}`);
       } else {
         setIsOpenModal(true);
       }
