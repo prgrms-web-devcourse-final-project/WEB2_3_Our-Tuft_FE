@@ -1,6 +1,6 @@
 "use client";
 
-import { modalProp } from "../../types/modalType";
+import { modalProp } from "../../types/modal";
 import { createPortal } from "react-dom";
 import ModalContainer from "./ModalContainer";
 import ModalButton from "./ModalButton";

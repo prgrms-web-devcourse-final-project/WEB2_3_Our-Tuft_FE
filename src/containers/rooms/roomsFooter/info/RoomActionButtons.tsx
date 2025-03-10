@@ -6,7 +6,7 @@ import { useState } from "react";
 
 import { sendMessage } from "../../../../service/api/socketConnection";
 import { useParams, useRouter } from "next/navigation";
-import { roomInfoData } from "../../../../types/roomType";
+import { roomInfoData } from "../../../../types/room";
 import { useIsRoomStore } from "../../../../store/roomStore";
 import Modal from "../../../../components/Modal";
 
@@ -32,8 +32,8 @@ export default function RoomActionButtons({
     console.log(isQuizisReady);
     if (isQuizisReady) {
       if (isAllReady) {
-        router.push(`/game/${roomInfo.data.gameType}?id=${params.id}`);
         setIsOpenModal(false);
+        router.push(`/game/${roomInfo.data.gameType}?id=${params.id}`);
       } else {
         setIsOpenModal(true);
       }

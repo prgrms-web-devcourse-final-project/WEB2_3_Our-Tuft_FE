@@ -1,6 +1,6 @@
 "use server";
 
-import { topicModal } from "../../types/modalType";
+import { topicModal } from "../../types/modal";
 
 export const fetchTopicData = async (): Promise<topicModal> => {
   const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;

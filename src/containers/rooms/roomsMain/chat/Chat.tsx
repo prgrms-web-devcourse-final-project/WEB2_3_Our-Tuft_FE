@@ -1,16 +1,16 @@
 "use client";
 
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
+import { useParams, useRouter } from "next/navigation";
 import {
   unsubscribeFromTopic,
   subscribeToTopic,
   sendMessage,
   socketConnection,
 } from "../../../../service/api/socketConnection";
-import { useParams } from "next/navigation";
-import { roomUserListData } from "../../../../types/roomType";
+import { roomUserListData } from "../../../../types/room";
 import { defaultFetch } from "../../../../service/api/defaultFetch";
-import { useIsRoomStore } from "../../../../store/roomStore";
+import { useIsRoomStore, useRoomInfoStore } from "../../../../store/roomStore";
 import { useLoginStore } from "../../../../store/store";
 
 export default function Chat({
@@ -19,9 +19,11 @@ export default function Chat({
   setUserList: Dispatch<SetStateAction<roomUserListData | undefined>>;
 }) {
   const params = useParams();
+  const router = useRouter();
 
   const { setIsQuizisReady } = useIsRoomStore();
   const { token } = useLoginStore();
+  const { roomInfo } = useRoomInfoStore();
 
   const isFirstRender = useRef<boolean>(true);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -34,8 +36,7 @@ export default function Chat({
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
       if (inputRef.current) {
-        console.log("전송");
-        sendMessage(`/topic/room/${params.id}`, inputRef.current.value);
+        sendMessage(`/app/room/${params.id}`, inputRef.current.value);
         inputRef.current.value = "";
       }
     }
@@ -49,7 +50,6 @@ export default function Chat({
       }
     );
     setUserList(response);
-    console.log(response);
   };
 
   /*
@@ -63,16 +63,19 @@ export default function Chat({
           msg !== null &&
           "message" in msg &&
           "sender" in msg) ||
-        msg.event === "퀴즈가 등록되지 않았습니다."
+        msg.event === "퀴즈가 등록되지 않았습니다." ||
+        msg.event === "SWITCHING_ROOM_TO_GAME"
       ) {
-        console.log(msg);
+        if (msg.event === "SWITCHING_ROOM_TO_GAME") {
+          router.push(`/game/${roomInfo.gameType}?id=${params.id}`);
+        }
         if (msg.event === "퀴즈가 등록되지 않았습니다.") {
           setIsQuizisReady(false);
         }
         if (msg.message === "퀴즈 선택이 완료되었습니다") {
           setIsQuizisReady(true);
         }
-        setChatList((prevMessages) => [...new Set([...prevMessages]), msg]);
+        setChatList((prevMessages) => [...prevMessages, msg]);
       } else {
         console.warn("Unexpected message format:", msg);
       }
@@ -87,9 +90,7 @@ export default function Chat({
     return () => {
       if (isFirstRender.current) {
         isFirstRender.current = false;
-        console.log("위", isFirstRender);
       } else {
-        console.log("아래?", isFirstRender);
         unsubscribeFromTopic(`/topic/room/${params.id}`);
       }
     };
@@ -131,7 +132,7 @@ export default function Chat({
       <input
         ref={inputRef}
         className="
-          w-full text-black bg-[#d9d9d9]  
+          w-full text-white bg-[#d9d9d9]  
           xl:rounded-[20px] rounded-[16px]  
           xl:pl-6 pl-3 xl:pb-0 md:pb-2 xl:h-14 h-11  
           xl:placeholder:text-[20px] placeholder:text-[14px] placeholder:text-gray-500  
