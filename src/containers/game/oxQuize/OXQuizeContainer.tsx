@@ -24,7 +24,6 @@ export default function OXQuizeContainer() {
   const [chatList, setChatList] = useState<
     { message: string; sender: string; event?: string }[]
   >([]);
-  const [oxAnswer, setoxAnswer] = useState<boolean | null>(null);
   const [quize, setQuize] = useState<string>("");
   const [user, setUserList] = useState<quizeUserList | null>(null);
   const [correctUser, setCorrectUser] = useState<number[]>([]);
@@ -142,14 +141,14 @@ export default function OXQuizeContainer() {
         style={{ backgroundImage: "url('/assets/images/bg.png')" }}
       >
         <div className="relative w-[90vw]">
-          <QuizBoard quize={quize} oxAnswer={setoxAnswer} chat={chatList} />
+          <QuizBoard quize={quize} chat={chatList} />
           <OXMain
             chat={chatList}
             userList={user!}
             correctUser={correctUser}
             userCount={userCount}
           />
-          <OXButtons oxAnswer={oxAnswer} />
+          <OXButtons />
           <OXFooter chat={chatList} />
         </div>
       </div>
@@ -173,7 +172,7 @@ export default function OXQuizeContainer() {
                 .sort((a, b) => Number(b.score) - Number(a.score))
                 .map((item, key) => (
                   <p key={key}>
-                    {item.username} : {parseInt(item.score)}점
+                    {item.username} : {parseInt(item.score || "0")}점
                   </p>
                 ))}
             </div>

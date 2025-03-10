@@ -7,7 +7,7 @@ import { sendMessage } from "../../../../../service/api/socketConnection";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 
-export default function OXButtons({ oxAnswer }: { oxAnswer: boolean | null }) {
+export default function OXButtons() {
   const searchParams = useSearchParams();
   const id = searchParams.get("id");
 
@@ -36,7 +36,6 @@ export default function OXButtons({ oxAnswer }: { oxAnswer: boolean | null }) {
     <div className="2xl:fixed md:absolute absolute left-1/2 transform -translate-x-1/2 top-[30%] md:top-[15%] 2xl:top-[30%] flex gap-3 z-10 cursor-pointer">
       <div
         onClick={() => {
-          if (oxAnswer !== null) return;
           sendMessage(`/app/game/${id}/ox`, "O");
         }}
         className={`relative flex items-center justify-center 
@@ -56,7 +55,6 @@ export default function OXButtons({ oxAnswer }: { oxAnswer: boolean | null }) {
 
       <div
         onClick={() => {
-          if (oxAnswer !== null) return;
           sendMessage(`/app/game/${id}/ox`, "X");
         }}
         className={`relative flex items-center justify-center 
