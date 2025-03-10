@@ -8,6 +8,7 @@ import OXMain from "./OXMain";
 import OXButtons from "./OXMain/oxButtons";
 import {
   sendMessage,
+  socketConnection,
   subscribeToTopic,
   unsubscribeFromTopic,
 } from "../../../service/api/socketConnection";
@@ -15,12 +16,13 @@ import { quizeUserList } from "../../../types/quize";
 import { UserScoreList } from "../../../store/quizeStore";
 import { defaultFetch } from "../../../service/api/defaultFetch";
 import Modal from "../../../components/Modal";
+import { useLoginStore } from "../../../store/store";
 
 export default function OXQuizeContainer() {
   const searchParams = useSearchParams();
   const id = searchParams.get("id");
   const isFirstRender = useRef<boolean>(true);
-
+  const { token } = useLoginStore();
   const [chatList, setChatList] = useState<
     { message: string; sender: string; event?: string }[]
   >([]);
@@ -126,6 +128,7 @@ export default function OXQuizeContainer() {
     };
 
     subscribeToTopic(`/topic/game/${id}`, handleNewMessage);
+
     return () => {
       if (isFirstRender.current) {
         isFirstRender.current = false;
@@ -134,6 +137,13 @@ export default function OXQuizeContainer() {
       }
     };
   }, []);
+
+  useEffect(() => {
+    socketConnection(token ?? undefined).catch((error) => {
+      console.error("소켓 연결 실패:", error);
+    });
+  }, []);
+
   return (
     <>
       <div

@@ -29,7 +29,6 @@ export default function SpeedQuizContainer() {
     { message: string; sender: string; event?: string }[]
   >([]);
   const [quize, setQuize] = useState<string>("");
-  const [count, setCount] = useState(10);
 
   const {
     user,
@@ -89,7 +88,7 @@ export default function SpeedQuizContainer() {
         fetchUserList();
       }
     };
-      
+
     subscribeToTopic(`/topic/game/${id}`, handleNewMessage);
 
     return () => {
