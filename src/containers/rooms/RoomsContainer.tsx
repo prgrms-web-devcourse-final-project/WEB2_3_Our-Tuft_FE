@@ -8,8 +8,8 @@ import RoomsFooter from "./roomsFooter";
 import RoomsHeader from "./roomsHeader";
 
 import { defaultFetch } from "../../service/api/defaultFetch";
-import { roomInfoData } from "../../types/room";
 import LoadingSpinner from "../../components/LoadingSpinner/LoadingSpinner";
+import { roomInfoData } from "../../types/Room";
 
 export default function RoomsContainer() {
   const params = useParams();

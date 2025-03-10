@@ -5,6 +5,7 @@ import Modal from "../../../components/Modal/index";
 import { topic, topicModal } from "../../../types/modal";
 import { defaultFetch } from "../../../service/api/defaultFetch";
 import { useParams } from "next/navigation";
+import { useIsRoomStore, useRoomInfoStore } from "../../../store/roomStore";
 
 export default function TopicModal({
   setIsClose,
@@ -16,10 +17,12 @@ export default function TopicModal({
   topic: topic;
 }) {
   const params = useParams();
+  const { infoRoom } = useIsRoomStore();
 
   const [quizCategories, setQuizCategories] = useState<topicModal>();
+  console.log("roomInfo.gameType", infoRoom);
   const topicData = async () => {
-    const response = await defaultFetch<topicModal>("/quizzes/SPEED", {
+    const response = await defaultFetch<topicModal>(`/quizzes/${infoRoom}`, {
       method: "GET",
     });
     setQuizCategories(response);
