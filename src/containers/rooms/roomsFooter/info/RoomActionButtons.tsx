@@ -21,7 +21,6 @@ export default function RoomActionButtons({
   const [ready, setReady] = useState<boolean>(false);
   const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
 
-  console.log(infoRoom);
   const sendReadyState = () => {
     setReady((prev) => !prev);
     sendMessage(`/app/room/${params.id}/event`, "PLAYER_CHANGE_READY");
@@ -35,6 +34,7 @@ export default function RoomActionButtons({
       setIsOpenModal(true);
     }
   };
+  
   const storedUserId = sessionStorage.getItem("userId");
   console.log("storedUserId", isHost, storedUserId, hostNum);
 

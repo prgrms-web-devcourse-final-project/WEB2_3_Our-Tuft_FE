@@ -7,6 +7,7 @@ import { defaultFetch } from "../../../service/api/defaultFetch";
 import { useParams } from "next/navigation";
 import { useIsRoomStore, useRoomInfoStore } from "../../../store/roomStore";
 
+
 export default function TopicModal({
   setIsClose,
   setTopic,

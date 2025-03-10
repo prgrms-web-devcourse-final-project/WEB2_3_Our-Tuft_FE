@@ -30,6 +30,7 @@ export default function SpeedQuizContainer() {
   >([]);
   const [quize, setQuize] = useState<string>("");
   const [count, setCount] = useState(10);
+
   const {
     user,
     scoreList,
@@ -88,6 +89,7 @@ export default function SpeedQuizContainer() {
         fetchUserList();
       }
     };
+      
     subscribeToTopic(`/topic/game/${id}`, handleNewMessage);
 
     return () => {
@@ -112,8 +114,6 @@ export default function SpeedQuizContainer() {
       console.error("소켓 연결 실패:", error);
     });
   }, []);
-
-  console.log(scoreList);
 
   return (
     <>

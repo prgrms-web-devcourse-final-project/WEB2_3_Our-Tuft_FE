@@ -54,6 +54,7 @@ export default function UserList({ userList }: { userList: roomUserListData }) {
     setAsAllReady(!hasNoReadyUsers);
   }, [userList.data.dto]);
 
+  console.log("방 유저 리스트: ", userList?.data);
   return (
     <div
       className="

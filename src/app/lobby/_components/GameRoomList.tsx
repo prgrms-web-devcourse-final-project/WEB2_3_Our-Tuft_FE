@@ -13,6 +13,10 @@ import {
 import { useLoginStore } from "../../../store/store";
 import { useRouter } from "next/navigation";
 
+interface GameRoomListProps {
+  roomsData?: Room[];
+}
+
 // 방 정보 인터페이스 정의
 interface Room {
   roomId: number;
@@ -39,7 +43,7 @@ interface WebSocketRoomMessage {
   data: Room | Room[] | number; // 메시지 타입에 따라 다른 데이터 형식
 }
 
-export default function GameRoomList() {
+export default function GameRoomList({ roomsData }: GameRoomListProps) {
   // 토큰 가져오기
   const { token } = useLoginStore();
 
@@ -69,6 +73,11 @@ export default function GameRoomList() {
 
   useEffect(() => {
     // 초기 로딩 상태 설정
+    if (roomsData) {
+      setRooms(roomsData);
+      setLoading(false);
+      return;
+    }
     setLoading(true);
 
     // 소켓 연결 초기화
@@ -151,6 +160,13 @@ export default function GameRoomList() {
       unsubscribeFromTopic("/topic/room/lobby");
     };
   }, [token]);
+
+  useEffect(() => {
+    if (roomsData) {
+      setRooms(roomsData);
+      setLoading(false);
+    }
+  }, [roomsData]);
 
   // 클릭 시 드롭다운을 닫기 위한 이벤트 핸들러
   useEffect(() => {

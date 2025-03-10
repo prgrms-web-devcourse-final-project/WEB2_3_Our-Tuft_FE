@@ -4,32 +4,24 @@ import { useState, useEffect } from "react";
 import { defaultFetch } from "../../../service/api/defaultFetch";
 import { useLoginStore } from "../../../store/store";
 
-// 기본 이미지 경로 정의
+// 기본 이미지 경로 정의 (API 응답이 없을 경우 폴백용)
 const DEFAULT_EYE_URL =
-  "https://team09-bucket.s3.ap-northeast-2.amazonaws.com/eye/default-eye.png";
+  "https://team09-bucket.s3.ap-northeast-2.amazonaws.com/eye/eye1.png";
 const DEFAULT_MOUTH_URL =
-  "https://team09-bucket.s3.ap-northeast-2.amazonaws.com/mouth/default-mouth.png";
+  "https://team09-bucket.s3.ap-northeast-2.amazonaws.com/mouth/mouth1.png";
 const DEFAULT_SKIN_URL =
-  "https://team09-bucket.s3.ap-northeast-2.amazonaws.com/skin/default-skin.png";
+  "https://team09-bucket.s3.ap-northeast-2.amazonaws.com/skin/skin1.png";
 
-// 아이템 ID에서 이미지 URL을 가져오는 함수
-const getImageUrl = (
-  type: "eye" | "mouth" | "skin",
-  itemId: number
-): string => {
-  // 아이템 ID가 1이면 기본 이미지 반환
-  if (itemId === 1) {
-    if (type === "eye") return DEFAULT_EYE_URL;
-    if (type === "mouth") return DEFAULT_MOUTH_URL;
-    if (type === "skin") return DEFAULT_SKIN_URL;
-    return DEFAULT_SKIN_URL;
-  }
-
-  // 그 외의 경우 해당 ID의 이미지 URL 생성
-  return `https://team09-bucket.s3.ap-northeast-2.amazonaws.com/${type}/${type}${itemId}.png`;
-};
+// 타입 정의 추가
+interface ApiResponse<T> {
+  isSuccess: boolean;
+  code: string;
+  message: string;
+  data: T;
+}
 
 interface UserProfile {
+  userId: number;
   nickname: string;
   introduction: string;
   level: number;
@@ -40,15 +32,15 @@ interface UserProfile {
   winRate: number;
   eye: {
     itemId: number;
-    imageUrl?: string;
+    imageUrl: string;
   };
   mouth: {
     itemId: number;
-    imageUrl?: string;
+    imageUrl: string;
   };
   skin: {
     itemId: number;
-    imageUrl?: string;
+    imageUrl: string;
   };
   nickColor: {
     itemId: number;
@@ -74,24 +66,16 @@ export default function UserProfile() {
           return;
         }
 
-        const data = await defaultFetch<UserProfile>("/myInfo");
+        const response = await defaultFetch<ApiResponse<UserProfile>>(
+          "/myInfo"
+        );
 
-        // API 응답에 imageUrl이 없는 경우 사용할 이미지 URL을 설정
-        if (data) {
-          if (data.eye && !data.eye.imageUrl) {
-            data.eye.imageUrl = getImageUrl("eye", data.eye.itemId);
-          }
-
-          if (data.mouth && !data.mouth.imageUrl) {
-            data.mouth.imageUrl = getImageUrl("mouth", data.mouth.itemId);
-          }
-
-          if (data.skin && !data.skin.imageUrl) {
-            data.skin.imageUrl = getImageUrl("skin", data.skin.itemId);
-          }
+        // 응답 성공 확인
+        if (response.isSuccess && response.data) {
+          setUserProfile(response.data);
+        } else {
+          setError(response.message || "사용자 정보를 불러올 수 없습니다.");
         }
-
-        setUserProfile(data);
       } catch (err) {
         setError(
           err instanceof Error ? err.message : "알 수 없는 오류가 발생했습니다."
@@ -117,7 +101,17 @@ export default function UserProfile() {
     );
   }
 
+  const formatNickname = (nickname: string): string => {
+    if (nickname && nickname.includes("@")) {
+      return nickname.split("@")[0];
+    }
+    return nickname;
+  };
+
   const losses = userProfile.totalGames - userProfile.wins;
+
+  // 닉네임 색상 가져오기
+  const nickColor = userProfile.nickColor?.value || "#FFFFFF";
 
   return (
     <div className="w-full h-full bg-[var(--color-point)] rounded-xl p-[0.7em] text-[0.85vw] md:text-[0.75vw] xl:text-[0.55vw] flex flex-col justify-between">
@@ -145,7 +139,7 @@ export default function UserProfile() {
             {/* 스킨 */}
             <div className="absolute inset-0 z-5">
               <Image
-                src={userProfile?.skin?.imageUrl || DEFAULT_SKIN_URL}
+                src={userProfile.skin?.imageUrl || DEFAULT_SKIN_URL}
                 alt="스킨"
                 fill
                 sizes="(max-width: 768px) 30vw, (max-width: 1200px) 25vw, 15vw"
@@ -162,7 +156,7 @@ export default function UserProfile() {
             >
               <div className="relative w-[80%] h-full mx-auto">
                 <Image
-                  src={userProfile?.eye?.imageUrl || DEFAULT_EYE_URL}
+                  src={userProfile.eye?.imageUrl || DEFAULT_EYE_URL}
                   alt="눈"
                   fill
                   sizes="(max-width: 768px) 20vw, (max-width: 1200px) 15vw, 10vw"
@@ -172,14 +166,14 @@ export default function UserProfile() {
               </div>
             </div>
 
-            {/* 입(최상층)  */}
+            {/* 입(최상층) */}
             <div
               className="absolute inset-x-0 z-20"
               style={{ top: "45%", height: "30%" }}
             >
               <div className="relative w-[70%] h-full mx-auto">
                 <Image
-                  src={userProfile?.mouth?.imageUrl || DEFAULT_MOUTH_URL}
+                  src={userProfile.mouth?.imageUrl || DEFAULT_MOUTH_URL}
                   alt="입"
                   fill
                   sizes="(max-width: 768px) 15vw, (max-width: 1200px) 12vw, 8vw"
@@ -195,11 +189,10 @@ export default function UserProfile() {
         <div className="flex flex-col w-[60%] pl-[1.7em] mt-[0.9em]">
           <div className="flex flex-col">
             {/* 닉네임 */}
-            <h2
-              className="text-[2.5em] font-bold text-white mb-[0.4em] truncate"
-              style={{ color: userProfile?.nickColor?.value || "#FFFFFF" }}
-            >
-              {userProfile?.nickname || "사용자"}
+            <h2 className="text-[2.5em] font-bold mb-[0.4em] truncate text-white">
+              {userProfile.nickname
+                ? formatNickname(userProfile.nickname)
+                : "사용자"}
             </h2>
 
             {/* 태블릿 모드*/}
@@ -207,7 +200,7 @@ export default function UserProfile() {
               {/* 승률 정보 (태블릿 모드) */}
               <div className="flex items-center gap-[0.4em] text-[1.7em] text-white">
                 <span>승률</span>
-                <span>{userProfile?.winRate || 0}%</span>
+                <span>{userProfile.winRate || 0}%</span>
               </div>
 
               <Link
@@ -222,19 +215,19 @@ export default function UserProfile() {
             <div className="hidden xl:flex xl:flex-col gap-[0.15em] text-[1.7em] text-white mb-[0.4em]">
               {/* 승패 정보 */}
               <div className="items-center gap-[0.4em] flex">
-                <span>{userProfile?.wins || 0}승</span>
+                <span>{userProfile.wins || 0}승</span>
                 <span>{losses || 0}패</span>
               </div>
               {/* 승률 정보 */}
               <div className="flex items-center gap-[0.4em]">
                 <span>승률</span>
-                <span>{userProfile?.winRate || 0}%</span>
+                <span>{userProfile.winRate || 0}%</span>
               </div>
             </div>
 
             {/* 자기소개 */}
             <p className="text-[1.5em] text-white break-words line-clamp-2 hidden xl:block">
-              {userProfile?.introduction || "자기소개가 없습니다."}
+              {userProfile.introduction || "자기소개가 없습니다."}
             </p>
           </div>
         </div>
