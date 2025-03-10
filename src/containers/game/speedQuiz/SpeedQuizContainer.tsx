@@ -90,7 +90,7 @@ export default function SpeedQuizContainer() {
   useEffect(() => {
     const handleNewMessage = async (msg: any) => {
       if (msg.event === "ALL_CONNECTED") {
-        sendMessage(`/app/room/${id}/event`, " GAME_STARTED");
+        sendMessage(`/app/room/${id}/event`, "GAME_STARTED");
       }
 
       if (

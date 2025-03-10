@@ -168,6 +168,7 @@ export function subscribeToTopic(
       ) {
         parsedMessage.message = JSON.parse(parsedMessage.message);
       }
+      console.log("message.body", message.body);
       callback(parsedMessage);
     } catch (error) {
       console.error("메시지 파싱 오류:", error);

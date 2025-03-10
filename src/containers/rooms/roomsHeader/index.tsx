@@ -2,9 +2,15 @@ import Image from "next/image";
 import lock from "@/assets/icons/rock.png";
 import unlock from "@/assets/images/public.png";
 import CloseButton from "../../../components/CloseButton/CloseButton";
-import { roomInfoData } from "../../../types/roomType";
+import { roomInfoData } from "../../../types/Room";
+import { useIsRoomStore } from "../../../store/roomStore";
+import { useEffect } from "react";
 
 export default function RoomsHeader({ roomInfo }: { roomInfo: roomInfoData }) {
+  const { setInfoRoom } = useIsRoomStore();
+  useEffect(() => {
+    setInfoRoom(roomInfo.data.gameType);
+  }, [roomInfo.data.gameType]);
   return (
     <div className="flex w-full">
       <div
