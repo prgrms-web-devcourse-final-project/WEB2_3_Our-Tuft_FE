@@ -1,23 +1,22 @@
 "use client";
-import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
-import GameControlButtons from "../GameControlButtons";
-import close from "@/assets/icons/close.svg";
+
 import Image from "next/image";
+import { useEffect, useRef, useState } from "react";
+
 import { sendMessage } from "../../service/api/socketConnection";
 import { useSearchParams } from "next/navigation";
 import { quizeMsg } from "../../types/quize";
+import GameControlButtons from "../GameControlButtons";
+import close from "@/assets/icons/close.svg";
 
 export default function SpeedOXFooter({ chat }: { chat: quizeMsg[] }) {
+  const searchParams = useSearchParams();
+  const id = searchParams.get("id");
+
   const inputRef = useRef<HTMLInputElement>(null);
   const lastMessageRef = useRef<HTMLInputElement>(null);
 
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  // const [chatList, setChatList] = useState<
-  //   { id: string; chat: string; chatId: string }[]
-  // >([]);
-
-  const searchParams = useSearchParams();
-  const id = searchParams.get("id");
 
   const onkeydown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
@@ -32,40 +31,6 @@ export default function SpeedOXFooter({ chat }: { chat: quizeMsg[] }) {
     lastMessageRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [chat.length, isOpen]);
 
-  // useEffect(() => {
-  //   socket.on(
-  //     "chat_message",
-  //     (msg: { id: string; chat: string; chatId: string }) => {
-  //       setChatList((prevMessages) => [
-  //         ...prevMessages,
-  //         { chat: msg.chat, id: msg.id },
-  //       ]);
-  //       chat?.((prevMessages) => [
-  //         ...prevMessages,
-  //         { chat: msg.chat, id: msg.id, chatId: msg.chatId },
-  //       ]);
-  //     }
-  //   );
-
-  //   return () => {
-  //     socket.off("chat_message");
-  //   };
-  // }, []);
-
-  // const sendMessage = () => {
-  //   const userId = socket.id;
-  //   // setUserList(userId!);
-  //   // console.log("userList", userList);
-  //   if (inputRef.current) {
-  //     const newMessage: { id: string; chat: string; chatId: string } = {
-  //       id: userId!,
-  //       chat: inputRef.current?.value,
-  //       chatId: socket.id! + num,
-  //     };
-  //     socket.emit("chat_message", newMessage);
-  //     inputRef.current.value = "";
-  //   }
-  // };
   return (
     <>
       <div

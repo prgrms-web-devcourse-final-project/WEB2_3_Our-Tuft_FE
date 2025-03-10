@@ -2,6 +2,7 @@
 
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
+import { useTimer } from "react-timer-hook";
 import {
   sendMessage,
   socketConnection,
@@ -29,8 +30,23 @@ export default function SpeedQuizContainer() {
   >([]);
   const [quize, setQuize] = useState<string>("");
   const [count, setCount] = useState(10);
-  const { user, scoreList, isOpen, setIsOpen, fetchUserList, fetchScoreList } =
-    useInitializeGame(id);
+
+  const {
+    user,
+    scoreList,
+    isOpen,
+    setIsOpen,
+    fetchUserList,
+    fetchScoreList,
+    fetchCreateRoom,
+  } = useInitializeGame(id);
+
+  const time = new Date();
+  const { seconds, restart } = useTimer({
+    expiryTimestamp: time,
+    autoStart: false,
+    onExpire: () => {},
+  });
 
   useEffect(() => {
     const handleNewMessage = async (msg: any) => {
@@ -55,7 +71,7 @@ export default function SpeedQuizContainer() {
         if (msg.message === "게임이 종료되었습니다.") {
           setTimeout(async () => {
             await fetchScoreList();
-          }, 5000);
+          }, 3000);
         }
       } else {
         console.warn("Unexpected message format:", msg);
@@ -63,21 +79,19 @@ export default function SpeedQuizContainer() {
 
       if (msg.event?.includes("NEW_ROOM_CREATED_")) {
         const match = msg.event.match(/\d+$/);
-        const interval = setInterval(() => {
-          setCount((prev) => prev - 1);
-        }, 1000);
+        time.setSeconds(time.getSeconds() + 10);
 
         setTimeout(() => {
           router.push(`/lobby/rooms/${match}?password=true`);
-        }, 10000);
+        }, 60000);
       }
       if (msg.event === "PLAYER_ADDED") {
         fetchUserList();
       }
     };
-    if (isFirstRender.current) {
-      subscribeToTopic(`/topic/game/${id}`, handleNewMessage);
-    }
+      
+    subscribeToTopic(`/topic/game/${id}`, handleNewMessage);
+
     return () => {
       if (isFirstRender.current) {
         isFirstRender.current = false;
@@ -86,6 +100,14 @@ export default function SpeedQuizContainer() {
       }
     };
   }, []);
+
+  useEffect(() => {
+    if (scoreList) {
+      const newTime = new Date();
+      newTime.setSeconds(newTime.getSeconds() + 60);
+      restart(newTime);
+    }
+  }, [scoreList]);
 
   useEffect(() => {
     socketConnection(token ?? undefined).catch((error) => {
@@ -134,7 +156,7 @@ export default function SpeedQuizContainer() {
             </div>
           </div>
           <div className="text-red-600 text-2xl font-bold py-5">
-            {count}초 후 방으로 이동합니다.
+            {seconds}초 후 방으로 이동합니다.
           </div>
         </Modal>
       )}

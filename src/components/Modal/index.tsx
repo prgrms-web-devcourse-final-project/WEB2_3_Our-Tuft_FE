@@ -14,6 +14,7 @@ export default function Modal({
   children,
   className,
   showCancelButton,
+  showCompleteButton,
 }: modalProp & {
   setIsClose?: (val: boolean) => void;
   setIsComplete?: <T>(val?: T) => void;
@@ -29,6 +30,7 @@ export default function Modal({
       {children}
       <ModalButton
         isVisible={showCancelButton}
+        isVisible2={showCompleteButton}
         setIsClose={setIsClose}
         setIsComplete={setIsComplete}
       />

@@ -4,6 +4,7 @@ export interface modalProp {
   height: string;
   className?: string;
   showCancelButton?: string;
+  showCompleteButton?: string;
   children: React.ReactNode;
 }
 
