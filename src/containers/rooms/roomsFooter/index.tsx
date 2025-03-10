@@ -1,4 +1,4 @@
-import { roomInfoData } from "../../../types/room";
+import { roomInfoData } from "../../../types/Room";
 import RoomActionButtons from "./info/RoomActionButtons";
 import RoomsInfo from "./info/RoomsInfo";
 
