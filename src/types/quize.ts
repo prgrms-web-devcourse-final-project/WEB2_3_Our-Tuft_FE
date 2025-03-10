@@ -6,8 +6,8 @@ export interface quizeUserList {
 }
 
 export interface User {
-  userId: string;
-  username: string;
+  userId?: string;
+  username?: string;
 }
 
 export interface quizeMsg {

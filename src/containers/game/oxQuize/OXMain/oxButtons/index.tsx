@@ -2,40 +2,42 @@
 import Image from "next/image";
 import OImg from "@/assets/images/O-img.png";
 import XImg from "@/assets/images/X-img.svg";
+import { sendMessage } from "../../../../../service/api/socketConnection";
+
 import { useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
 
 export default function OXButtons({ oxAnswer }: { oxAnswer: boolean | null }) {
-  const [answers, setAnswer] = useState<boolean | null>(null);
-  // const { userList } = useUser();
-  // F1 = O 버튼 F2 = X버튼
+  const searchParams = useSearchParams();
+  const id = searchParams.get("id");
+
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
+      if (!id) return;
+
       if (event.key === "F1") {
         event.preventDefault();
-        socketAnswer(true);
+        sendMessage(`/app/game/${id}/ox`, "O");
+        console.log("O");
       }
 
       if (event.key === "F2") {
         event.preventDefault();
-        socketAnswer(false);
+        sendMessage(`/app/game/${id}/ox`, "X");
+        console.log("X");
       }
     };
+
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [oxAnswer]);
-
-  const socketAnswer = (val: boolean) => {
-    setAnswer(val);
-    // socket.emit("answer", { user: userList, answer: val });
-    // console.log("userList", userList, val);
-  };
+  });
 
   return (
     <div className="2xl:fixed md:absolute absolute left-1/2 transform -translate-x-1/2 top-[30%] md:top-[15%] 2xl:top-[30%] flex gap-3 z-10 cursor-pointer">
       <div
         onClick={() => {
           if (oxAnswer !== null) return;
-          socketAnswer(true);
+          sendMessage(`/app/game/${id}/ox`, "O");
         }}
         className={`relative flex items-center justify-center 
         bg-white rounded-xl opacity-90 drop-shadow-custom 
@@ -44,11 +46,6 @@ export default function OXButtons({ oxAnswer }: { oxAnswer: boolean | null }) {
           md:hover:scale-115 
           2xl:hover:scale-110
           hover:opacity-70
-          ${
-            answers === true
-              ? "border-8 border-[var(--color-secondPoint)]"
-              : null
-          }
           `}
       >
         <div className="absolute top-2 right-2 text-black text-xl font-bold hidden 2xl:block">
@@ -60,7 +57,7 @@ export default function OXButtons({ oxAnswer }: { oxAnswer: boolean | null }) {
       <div
         onClick={() => {
           if (oxAnswer !== null) return;
-          socketAnswer(false);
+          sendMessage(`/app/game/${id}/ox`, "X");
         }}
         className={`relative flex items-center justify-center 
           bg-white rounded-xl opacity-90 drop-shadow-custom 
@@ -69,11 +66,6 @@ export default function OXButtons({ oxAnswer }: { oxAnswer: boolean | null }) {
             md:hover:scale-115 
             2xl:hover:scale-110
             hover:opacity-70
-            ${
-              answers === false
-                ? "border-8 border-[var(--color-lightRed)]"
-                : null
-            }
             `}
       >
         <div className="absolute top-2 right-2 text-black text-xl font-bold hidden 2xl:block">

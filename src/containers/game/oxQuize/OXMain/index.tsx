@@ -1,24 +1,19 @@
-import OXList from "./oxList";
 import ChatBubble from "../../../../components/ChatBubble";
 import UserCard from "../../../../components/UserCard";
-import { useEffect, useState } from "react";
-import io from "socket.io-client";
 import { quizeMessage } from "../../../../store/quizeStore";
-
-// const socket = io("http://localhost:8080");
+import { quizeUserList } from "../../../../types/quize";
 
 export default function OXMain({
   chat,
-  oxAnswer,
+  userList,
+  correctUser,
+  userCount,
 }: {
   chat: quizeMessage[];
-  oxAnswer: boolean | null;
+  userList: quizeUserList;
+  correctUser: number[];
+  userCount: { userId: number; count: number }[];
 }) {
-  const [user, setUser] = useState<{ id: string; answer?: boolean | null }[]>(
-    []
-  );
-  // const [answer, setAnswer] = useState<{ user: string; answer: boolean }[]>([]);
-  const [userox, setUserox] = useState<{ id: string; answer?: boolean }[]>([]);
   type GroupedData = { [key: string]: (typeof chat)[0][] };
   const groupedById = chat.reduce((acc: GroupedData, item) => {
     if (!acc[item.sender]) {
@@ -27,18 +22,6 @@ export default function OXMain({
     acc[item.sender].push(item);
     return acc;
   }, {});
-
-  // useEffect(() => {
-  //   socket.on("answer", (msg: { id: string; answer: boolean }) => {
-  //     setUser((prev) => {
-  //       const updatedUser = prev.map((user) =>
-  //         user.id === msg.id ? { ...user, answer: msg.answer } : user
-  //       );
-
-  //       return updatedUser;
-  //     });
-  //   });
-  // }, []);
 
   return (
     <div
@@ -51,47 +34,53 @@ export default function OXMain({
         xl:overflow-visible
       "
     >
-      {user.map((i, index) => (
-        <div key={index}>
-          <div className="flex flex-col">
-            <div className="hidden 2xl:flex flex-col justify-end h-[200px]">
-              {Object.entries(groupedById)
-                .filter(([id]) => id === i.id)
-                .flatMap(([_, messages]) =>
-                  messages.map((msg, index) => (
-                    <ChatBubble msg={msg} key={index} />
-                  ))
-                )}
-            </div>
-            <UserCard
-              bgColor={"bg-[#ffd377]"}
-              imageSize={"h-40"}
-              textSize2={"2xl:text-[18px] md:text-[28px] sm:text-[20px]"}
-              padding={"p-3"}
-              nickname={i.id}
-              key={index}
-              oxAnswer={oxAnswer === i.answer ? true : false}
-            >
-              <OXList answer={i.answer!} key={index} />
+      {userList &&
+        userList.data.map((i, index) => {
+          const isCorrectUser = correctUser.includes(Number(i.userId));
 
-              {/* {oxAnswer
-                .filter((g) => g.user === i)
-                .map((item, index) => (
-                  <OXList answer={item.answer} key={index} />
-                ))} */}
-              <div
-                className="absolute 2xl:static justify-center 2xl:pt-2 md:text-3xl sm:text-xl"
-                style={{
-                  fontFamily: "PressStart2P, sans-serif",
-                  color: "white",
-                }}
-              >
-                <span className="2xl:[-webkit-text-stroke:1px_black]">250</span>
+          const userScore =
+            userCount.find((user) => user.userId === Number(i.userId))?.count ||
+            0;
+          return (
+            <div key={index}>
+              <div className="flex flex-col">
+                <div className="hidden 2xl:flex flex-col justify-end h-[200px]">
+                  {Object.entries(groupedById)
+                    .filter(([id]) => id === i.username)
+                    .flatMap(([_, messages]) =>
+                      messages.map((msg, index) => (
+                        <ChatBubble msg={msg} key={index} />
+                      ))
+                    )}
+                </div>
+                <UserCard
+                  bgColor={`${
+                    isCorrectUser
+                      ? "bg-[var(--color-amberOrange)]"
+                      : "bg-[#ffd377]"
+                  }`}
+                  imageSize={"h-40"}
+                  textSize2={"2xl:text-[18px] md:text-[28px] sm:text-[20px]"}
+                  padding={"p-3"}
+                  nickname={i.username}
+                  key={index}
+                >
+                  <div
+                    className="absolute 2xl:static justify-center 2xl:pt-2 md:text-3xl sm:text-xl"
+                    style={{
+                      fontFamily: "PressStart2P, sans-serif",
+                      color: "white",
+                    }}
+                  >
+                    <span className="2xl:[-webkit-text-stroke:1px_black]">
+                      {userScore}
+                    </span>
+                  </div>
+                </UserCard>
               </div>
-            </UserCard>
-          </div>
-        </div>
-      ))}
+            </div>
+          );
+        })}
     </div>
   );
 }

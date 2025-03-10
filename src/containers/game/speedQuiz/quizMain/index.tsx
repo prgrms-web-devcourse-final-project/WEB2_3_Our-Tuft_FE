@@ -1,20 +1,20 @@
-import ChatBubble from "../../../../components/ChatBubble";
+import { useEffect, useState } from "react";
 import UserCard from "../../../../components/UserCard";
-import { useState } from "react";
+import ChatBubble from "../../../../components/ChatBubble";
 import { quizeMsg, quizeUserList } from "../../../../types/quize";
+
 export default function quizMain({
   chat,
   userList,
-  answer,
 }: {
   chat: quizeMsg[];
   userList: quizeUserList;
-  answer: string;
 }) {
-  // const [answer, setAnswer] = useState<{ user: string; answer: boolean }[]>([]);
-  const [userox, setUserox] = useState<{ id: string; answer?: boolean }[]>([]);
-
   type GroupedData = { [key: string]: (typeof chat)[0][] };
+
+  let answerUser = "";
+  const [userAnswer, setUserAnswer] = useState<string>("");
+
   const groupedById = [...chat].reduce((acc: GroupedData, item) => {
     if (!acc[item.sender]) {
       acc[item.sender] = [];
@@ -23,33 +23,16 @@ export default function quizMain({
     return acc;
   }, {});
 
-  // useEffect(() => {
+  useEffect(() => {
+    answerUser =
+      chat
+        .filter((i) => i.message.includes("정답"))
+        .pop()
+        ?.message.split("님")[0] || "빈값";
+    setUserAnswer(answerUser);
+    console.log(answerUser);
+  }, [chat]);
 
-  //   // 기존에 있는 값들은 그대로 두고 answer만 null로 초기화
-  //   const initializedUser = uniqueIds.map((chat) => ({
-  //     id: chat.id,
-  //     answer: null,
-  //   }));
-
-  //   setUser(initializedUser);
-  // }, [chat]);
-
-  // useEffect(() => {
-  //   socket.on("answer", (msg: { id: string; answer: boolean }) => {
-  //     setUser((prev) => {
-  //       const updatedUser = prev.map((user) =>
-  //         user.id === msg.id ? { ...user, answer: msg.answer } : user
-  //       );
-
-  //       return updatedUser;
-  //     });
-  //   });
-  // }, []);
-  const answerUser = chat
-    .filter((i) => i.message.includes("정답"))
-    .pop()
-    ?.message.split("님")[0];
-  console.log(answerUser);
   return (
     <div
       className="
@@ -76,7 +59,7 @@ export default function quizMain({
               </div>
               <UserCard
                 bgColor={`${
-                  answerUser === i.username
+                  userAnswer === i.username
                     ? "bg-[var(--color-amberOrange)]"
                     : "bg-[#ffd377]"
                 }`}
