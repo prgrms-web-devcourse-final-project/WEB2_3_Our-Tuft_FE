@@ -3,12 +3,12 @@
 import { useEffect, useState } from "react";
 import { useIsRoomStore } from "../../../../store/roomStore";
 import { defaultFetch } from "../../../../service/api/defaultFetch";
-import { roomUserList, roomUserListData } from "../../../../types/room";
 
 import UserCard from "./UserCard";
 import DeportModal from "../../roomsModal/DeportModal";
 import MenuModal from "../../roomsModal/MenuModal";
 import ProfileModal from "../../roomsModal/ProfileModal";
+import { roomUserList, roomUserListData } from "../../../../types/Room";
 
 export default function UserList({ userList }: { userList: roomUserListData }) {
   const { setIsHost, isHost, setAsAllReady } = useIsRoomStore();
@@ -23,6 +23,7 @@ export default function UserList({ userList }: { userList: roomUserListData }) {
   const [position, setPosition] = useState<{ x: number; y: number } | null>(
     null
   );
+  const { setHostNum } = useIsRoomStore();
 
   const handleContextMenu = (event: React.MouseEvent) => {
     event.preventDefault();
@@ -42,15 +43,16 @@ export default function UserList({ userList }: { userList: roomUserListData }) {
   };
 
   useEffect(() => {
+    setHostNum(userList.data.hostId + "");
     setIsHost(Number(userList.data.hostId) === Number(storedUserId));
-  }, []);
+  }, [userList.data.hostId]);
 
   useEffect(() => {
     const hasNoReadyUsers = userList?.data.dto.some(
       (user) => user.isReady === "false"
     );
     setAsAllReady(!hasNoReadyUsers);
-  }, [userList]);
+  }, [userList.data.dto]);
 
   return (
     <div

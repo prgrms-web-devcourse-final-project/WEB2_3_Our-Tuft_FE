@@ -44,7 +44,7 @@ export default function OXQuizeContainer() {
         style={{ backgroundImage: "url('/assets/images/bg.png')" }}
       >
         <div className="relative w-[90vw]">
-          <QuizBoard oxAnswer={setoxAnswer} chat={chatList} />
+          <QuizBoard chat={chatList} />
           <OXMain chat={chatList} oxAnswer={oxAnswer} />
           <OXButtons oxAnswer={oxAnswer} />
           <SpeedOXFooter chat={chatList} />

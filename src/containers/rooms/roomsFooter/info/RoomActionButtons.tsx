@@ -5,7 +5,7 @@ import info from "@/assets/icons/info.svg";
 import { useState } from "react";
 
 import { sendMessage } from "../../../../service/api/socketConnection";
-import { useParams, useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
 import { useIsRoomStore } from "../../../../store/roomStore";
 import Modal from "../../../../components/Modal";
 import { roomInfoData } from "../../../../types/Room";
@@ -15,10 +15,9 @@ export default function RoomActionButtons({
 }: {
   roomInfo: roomInfoData;
 }) {
-  const router = useRouter();
   const params = useParams();
 
-  const { isHost, isQuizisReady, isAllReady, infoRoom } = useIsRoomStore();
+  const { hostNum, isHost, isAllReady, infoRoom } = useIsRoomStore();
   const [ready, setReady] = useState<boolean>(false);
   const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
 
@@ -29,18 +28,15 @@ export default function RoomActionButtons({
   };
 
   const sendStartGame = () => {
-    sendMessage(`/app/room/${params.id}/event`, "SWITCHING_ROOM_TO_GAME");
-    console.log(isQuizisReady);
-    if (isQuizisReady) {
-      if (isAllReady) {
-        setIsOpenModal(false);
-        console.log("37", infoRoom);
-        // router.push(`/game/${infoRoom}?id=${params.id}`);
-      } else {
-        setIsOpenModal(true);
-      }
+    if (isAllReady) {
+      setIsOpenModal(false);
+      sendMessage(`/app/room/${params.id}/event`, "SWITCHING_ROOM_TO_GAME");
+    } else {
+      setIsOpenModal(true);
     }
   };
+  const storedUserId = sessionStorage.getItem("userId");
+  console.log("storedUserId", isHost, storedUserId, hostNum);
 
   return (
     <div className="flex md:text-xl xl:text-3xl text-[10px] cursor-pointer break-keep text-white">

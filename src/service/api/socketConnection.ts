@@ -133,6 +133,8 @@ export function subscribeToTopic(
   topic: string,
   callback: (message: any) => void
 ) {
+  let lastMessage: string | null = null; // 직전 메시지를 저장할 변수
+
   // 클라이언트가 없거나 연결되지 않았으면 대기 목록에 추가
   if (!client || !client.connected) {
     console.log(
@@ -156,23 +158,21 @@ export function subscribeToTopic(
 
   const subscription = client.subscribe(topic, (message) => {
     try {
-      const parsedMessage =
-        typeof message.body === "string" && message.body.startsWith("{")
-          ? JSON.parse(message.body)
-          : message.body;
+      const parsedMessage = JSON.parse(message.body);
 
-      // 2차 파싱: message 필드가 JSON 문자열이면 다시 파싱
       if (
-        typeof parsedMessage.message === "string" &&
-        parsedMessage.message.startsWith('"')
+        topic.includes("/topic/game") &&
+        JSON.stringify(parsedMessage) === JSON.stringify(lastMessage)
       ) {
-        parsedMessage.message = JSON.parse(parsedMessage.message);
+        console.log("직전 메시지와 동일한 값이어서 처리하지 않음.");
+        return;
       }
-      console.log("message.body", message.body);
+
       callback(parsedMessage);
+      lastMessage = parsedMessage;
     } catch (error) {
       console.error("메시지 파싱 오류:", error);
-      callback(message.body); // 파싱 실패 시 원본 메시지 전달
+      callback(message.body);
     }
   });
 

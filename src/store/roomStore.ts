@@ -2,19 +2,23 @@ import { create } from "zustand";
 
 interface booleanState {
   isHost: boolean;
+  hostNum: string;
   isQuizisReady: boolean;
   isAllReady: boolean;
   infoRoom: string;
   setIsHost: (val: boolean) => void;
+  setHostNum: (val: string) => void;
   setIsQuizisReady: (val: boolean) => void;
   setAsAllReady: (val: boolean) => void;
   setInfoRoom: (val: string) => void;
 }
 export const useIsRoomStore = create<booleanState>((set) => ({
   isHost: false,
+  hostNum: "",
   isQuizisReady: false,
   isAllReady: true,
   infoRoom: "",
+  setHostNum: (val) => set({ hostNum: val }),
   setIsHost: (val) => set({ isHost: val }),
   setIsQuizisReady: (val) => set({ isQuizisReady: val }),
   setAsAllReady: (val) => set({ isAllReady: val }),
