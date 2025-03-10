@@ -14,3 +14,8 @@ export type UserScore = {
   username: string;
   score: string;
 };
+
+export type OXUserScore = {
+  userId: number;
+  score: number;
+};

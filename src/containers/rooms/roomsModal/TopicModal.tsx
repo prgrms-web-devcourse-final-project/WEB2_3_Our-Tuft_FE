@@ -5,6 +5,7 @@ import Modal from "../../../components/Modal/index";
 import { defaultFetch } from "../../../service/api/defaultFetch";
 import { useParams } from "next/navigation";
 import { topic, topicModal } from "../../../types/modal";
+import { useIsRoomStore } from "../../../store/roomStore";
 
 export default function TopicModal({
   setIsClose,
@@ -16,10 +17,11 @@ export default function TopicModal({
   topic: topic;
 }) {
   const params = useParams();
+  const { infoRoom } = useIsRoomStore();
 
   const [quizCategories, setQuizCategories] = useState<topicModal>();
   const topicData = async () => {
-    const response = await defaultFetch<topicModal>("/quizzes/SPEED", {
+    const response = await defaultFetch<topicModal>(`/quizzes/${infoRoom}`, {
       method: "GET",
     });
     setQuizCategories(response);

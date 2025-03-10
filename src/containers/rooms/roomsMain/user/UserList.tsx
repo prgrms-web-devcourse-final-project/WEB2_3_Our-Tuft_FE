@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useIsRoomStore } from "../../../../store/roomStore";
 import { defaultFetch } from "../../../../service/api/defaultFetch";
-import { roomUserList, roomUserListData } from "../../../../types/room";
+import { roomUserList, roomUserListData } from "../../../../types/Room";
 
 import UserCard from "./UserCard";
 import DeportModal from "../../roomsModal/DeportModal";
@@ -52,6 +52,7 @@ export default function UserList({ userList }: { userList: roomUserListData }) {
     setAsAllReady(!hasNoReadyUsers);
   }, [userList]);
 
+  console.log("방 유저 리스트: ", userList?.data);
   return (
     <div
       className="

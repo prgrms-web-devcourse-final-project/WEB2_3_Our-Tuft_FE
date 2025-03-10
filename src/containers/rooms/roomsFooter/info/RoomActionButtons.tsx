@@ -22,7 +22,6 @@ export default function RoomActionButtons({
   const [ready, setReady] = useState<boolean>(false);
   const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
 
-  console.log(infoRoom);
   const sendReadyState = () => {
     setReady((prev) => !prev);
     sendMessage(`/app/room/${params.id}/event`, "PLAYER_CHANGE_READY");
@@ -34,8 +33,7 @@ export default function RoomActionButtons({
     if (isQuizisReady) {
       if (isAllReady) {
         setIsOpenModal(false);
-        console.log("37", infoRoom);
-        // router.push(`/game/${infoRoom}?id=${params.id}`);
+        router.push(`/game/${infoRoom}?id=${params.id}`);
       } else {
         setIsOpenModal(true);
       }
