@@ -3,34 +3,34 @@ import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 import GameControlButtons from "../GameControlButtons";
 import close from "@/assets/icons/close.svg";
 import Image from "next/image";
-import io from "socket.io-client";
-// import { useUser } from "../../store/testuser";
+import { sendMessage } from "../../service/api/socketConnection";
+import { useSearchParams } from "next/navigation";
+import { quizeMsg } from "../../types/quize";
 
-export default function SpeedOXFooter({
-  chat,
-}: {
-  chat?: Dispatch<
-    SetStateAction<{ id: string; chat: string; chatId: string }[]>
-  >;
-}) {
+export default function SpeedOXFooter({ chat }: { chat: quizeMsg[] }) {
   const inputRef = useRef<HTMLInputElement>(null);
   const lastMessageRef = useRef<HTMLInputElement>(null);
 
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const [chatList, setChatList] = useState<{ id: string; chat: string }[]>([]);
-  const [num, setNum] = useState(0);
-  // const { userList, setUserList } = useUser();
+  // const [chatList, setChatList] = useState<
+  //   { id: string; chat: string; chatId: string }[]
+  // >([]);
+
+  const searchParams = useSearchParams();
+  const id = searchParams.get("id");
 
   const onkeydown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
-      setNum((prevNum) => prevNum + 1);
-      // sendMessage();
+      if (inputRef.current) {
+        sendMessage(`/app/game/${id}/speed`, inputRef.current.value);
+        inputRef.current.value = "";
+      }
     }
   };
 
   useEffect(() => {
     lastMessageRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [chatList.length, isOpen]);
+  }, [chat.length, isOpen]);
 
   // useEffect(() => {
   //   socket.on(
@@ -89,20 +89,15 @@ export default function SpeedOXFooter({
               onClick={() => setIsOpen(false)}
             />
             <div>
-              {chatList.map((item, index) => (
+              {chat.map((item, index) => (
                 <p
                   key={index}
                   ref={
-                    index === chatList.length - 1 || isOpen
-                      ? lastMessageRef
-                      : null
+                    index === chat.length - 1 || isOpen ? lastMessageRef : null
                   }
                 >
-                  <span className="font-bold">
-                    {item.id}
-                    {/* {socket.id!} :{" "} */}
-                  </span>
-                  {item.chat}
+                  <span className="font-bold">{item.sender} : </span>
+                  {item.message}
                 </p>
               ))}
             </div>

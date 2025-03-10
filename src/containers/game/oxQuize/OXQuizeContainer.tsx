@@ -11,14 +11,13 @@ import {
   subscribeToTopic,
   unsubscribeFromTopic,
 } from "../../../service/api/socketConnection";
+import { quizeMessage } from "../../../store/quizeStore";
 
 export default function OXQuizeContainer() {
   const searchParams = useSearchParams();
   const id = searchParams.get("id");
 
-  const [chatList, setChatList] = useState<
-    { id: string; chat: string; chatId: string }[]
-  >([]);
+  const [chatList, setChatList] = useState<quizeMessage[]>([]);
   const [oxAnswer, setoxAnswer] = useState<boolean | null>(null);
 
   useEffect(() => {
@@ -46,7 +45,7 @@ export default function OXQuizeContainer() {
           <QuizBoard oxAnswer={setoxAnswer} />
           <OXMain chat={chatList} oxAnswer={oxAnswer} />
           <OXButtons oxAnswer={oxAnswer} />
-          <SpeedOXFooter chat={setChatList} />
+          <SpeedOXFooter chat={chatList} />
         </div>
       </div>
     </>

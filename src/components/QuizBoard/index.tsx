@@ -2,44 +2,46 @@
 
 import { useEffect, useState } from "react";
 import Timer from "./Timer";
-import { sendMsg, sendQuiz } from "../../types/quizType";
+import { quizeMsg } from "../../types/quize";
 
 export default function QuizBoard({
   quize,
   round,
   oxAnswer,
+  chat,
 }: {
   quize?: string;
   round?: string;
   oxAnswer?: (val: boolean | null) => void;
+  chat: quizeMsg[];
 }) {
   const [showAnswer, setShowAnswer] = useState<boolean>(false);
 
-  useEffect(() => {
-    let isActive = true;
-    const timer = (ms: number) =>
-      new Promise((resolve) => setTimeout(resolve, ms));
-    oxAnswer?.(null);
-    // const quizeLoop = async () => {
-    //   for (let index = 0; index < quize.length; index++) {
-    //     if (!isActive) return;
-    //     setCurrentIndex(index);
-    //     setShowAnswer(false);
-    //     await timer(10000);
+  // useEffect(() => {
+  //   let isActive = true;
+  //   const timer = (ms: number) =>
+  //     new Promise((resolve) => setTimeout(resolve, ms));
+  //   oxAnswer?.(null);
+  //   // const quizeLoop = async () => {
+  //   //   for (let index = 0; index < quize.length; index++) {
+  //   //     if (!isActive) return;
+  //   //     setCurrentIndex(index);
+  //   //     setShowAnswer(false);
+  //   //     await timer(10000);
 
-    //     setShowAnswer(true);
-    //     oxAnswer?.(quize[currentIndex].answer);
-    //     await timer(5000);
-    //     oxAnswer?.(null);
-    //   }
-    // };
+  //   //     setShowAnswer(true);
+  //   //     oxAnswer?.(quize[currentIndex].answer);
+  //   //     await timer(5000);
+  //   //     oxAnswer?.(null);
+  //   //   }
+  //   // };
 
-    // quizeLoop();
+  //   // quizeLoop();
 
-    return () => {
-      isActive = false;
-    };
-  }, [quize]);
+  //   return () => {
+  //     isActive = false;
+  //   };
+  // }, [quize]);
 
   return (
     <div
@@ -63,9 +65,7 @@ export default function QuizBoard({
         <div className="text-xl md:text-2xl 2xl:text-3xl whitespace-normal">
           {quize && (
             <div>
-              <div className="text-2xl md:text-3xl 2xl:text-4xl mb-5">
-                {round} 라운드
-              </div>
+              <div className="text-2xl md:text-3xl 2xl:text-4xl mb-5"></div>
               <p>
                 {quize}
                 {/* {showAnswer

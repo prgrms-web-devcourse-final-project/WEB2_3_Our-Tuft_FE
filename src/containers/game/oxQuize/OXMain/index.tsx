@@ -3,6 +3,7 @@ import ChatBubble from "../../../../components/ChatBubble";
 import UserCard from "../../../../components/UserCard";
 import { useEffect, useState } from "react";
 import io from "socket.io-client";
+import { quizeMessage } from "../../../../store/quizeStore";
 
 // const socket = io("http://localhost:8080");
 
@@ -10,7 +11,7 @@ export default function OXMain({
   chat,
   oxAnswer,
 }: {
-  chat: { id: string; chat: string; chatId: string }[];
+  chat: quizeMessage[];
   oxAnswer: boolean | null;
 }) {
   const [user, setUser] = useState<{ id: string; answer?: boolean | null }[]>(
@@ -20,27 +21,12 @@ export default function OXMain({
   const [userox, setUserox] = useState<{ id: string; answer?: boolean }[]>([]);
   type GroupedData = { [key: string]: (typeof chat)[0][] };
   const groupedById = chat.reduce((acc: GroupedData, item) => {
-    if (!acc[item.id]) {
-      acc[item.id] = [];
+    if (!acc[item.sender]) {
+      acc[item.sender] = [];
     }
-    acc[item.id].push(item);
+    acc[item.sender].push(item);
     return acc;
   }, {});
-
-  useEffect(() => {
-    // chat 배열을 통해 uniqueIds 생성 (id 기준으로 중복 제거)
-    const uniqueIds = Array.from(
-      new Map(chat.map((chat) => [chat.id, chat])).values()
-    );
-
-    // 기존에 있는 값들은 그대로 두고 answer만 null로 초기화
-    const initializedUser = uniqueIds.map((chat) => ({
-      id: chat.id,
-      answer: null,
-    }));
-
-    setUser(initializedUser);
-  }, [chat]);
 
   // useEffect(() => {
   //   socket.on("answer", (msg: { id: string; answer: boolean }) => {
@@ -73,7 +59,7 @@ export default function OXMain({
                 .filter(([id]) => id === i.id)
                 .flatMap(([_, messages]) =>
                   messages.map((msg, index) => (
-                    <ChatBubble msg={msg} key={msg.chatId} />
+                    <ChatBubble msg={msg} key={index} />
                   ))
                 )}
             </div>

@@ -20,7 +20,7 @@ export default function Chat() {
     if (e.key === "Enter") {
       if (inputRef.current && inputRef.current.value.trim() !== "") {
         console.log("전송");
-        sendMessage("/topic/room/lobby", inputRef.current.value);
+        sendMessage("/app/room/lobby", inputRef.current.value);
         inputRef.current.value = "";
       }
     }

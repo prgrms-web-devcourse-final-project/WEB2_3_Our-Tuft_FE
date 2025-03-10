@@ -32,8 +32,8 @@ export default function RoomActionButtons({
     console.log(isQuizisReady);
     if (isQuizisReady) {
       if (isAllReady) {
-        router.push(`/game/${roomInfo.data.gameType}?id=${params.id}`);
         setIsOpenModal(false);
+        router.push(`/game/${roomInfo.data.gameType}?id=${params.id}`);
       } else {
         setIsOpenModal(true);
       }

@@ -226,7 +226,7 @@ export function publishMessage(destination: string, message: any) {
   // 메시지를 destination으로 전송
   client.publish({
     destination: destination,
-    body: JSON.stringify(message),
+    body: message,
   });
 
   console.log(`${destination}로 메시지 전송:`, message);

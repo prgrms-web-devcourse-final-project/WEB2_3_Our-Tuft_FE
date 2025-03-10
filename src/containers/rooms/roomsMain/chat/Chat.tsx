@@ -1,13 +1,13 @@
 "use client";
 
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
+import { useParams, useRouter } from "next/navigation";
 import {
   unsubscribeFromTopic,
   subscribeToTopic,
   sendMessage,
   socketConnection,
 } from "../../../../service/api/socketConnection";
-import { useParams, useRouter } from "next/navigation";
 import { roomUserListData } from "../../../../types/room";
 import { defaultFetch } from "../../../../service/api/defaultFetch";
 import { useIsRoomStore, useRoomInfoStore } from "../../../../store/roomStore";
@@ -36,7 +36,7 @@ export default function Chat({
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
       if (inputRef.current) {
-        sendMessage(`/topic/room/${params.id}`, inputRef.current.value);
+        sendMessage(`/app/room/${params.id}`, inputRef.current.value);
         inputRef.current.value = "";
       }
     }
@@ -67,7 +67,6 @@ export default function Chat({
         msg.event === "SWITCHING_ROOM_TO_GAME"
       ) {
         if (msg.event === "SWITCHING_ROOM_TO_GAME") {
-          console.log("수신 SWITCHING_ROOM_TO_GAME");
           router.push(`/game/${roomInfo.gameType}?id=${params.id}`);
         }
         if (msg.event === "퀴즈가 등록되지 않았습니다.") {
@@ -76,7 +75,7 @@ export default function Chat({
         if (msg.message === "퀴즈 선택이 완료되었습니다") {
           setIsQuizisReady(true);
         }
-        setChatList((prevMessages) => [...new Set([...prevMessages]), msg]);
+        setChatList((prevMessages) => [...prevMessages, msg]);
       } else {
         console.warn("Unexpected message format:", msg);
       }
@@ -133,7 +132,7 @@ export default function Chat({
       <input
         ref={inputRef}
         className="
-          w-full text-black bg-[#d9d9d9]  
+          w-full text-white bg-[#d9d9d9]  
           xl:rounded-[20px] rounded-[16px]  
           xl:pl-6 pl-3 xl:pb-0 md:pb-2 xl:h-14 h-11  
           xl:placeholder:text-[20px] placeholder:text-[14px] placeholder:text-gray-500  
