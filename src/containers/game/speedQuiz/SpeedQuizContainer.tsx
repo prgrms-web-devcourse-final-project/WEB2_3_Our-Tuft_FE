@@ -14,6 +14,7 @@ import { quizeUserList } from "../../../types/quize";
 import { defaultFetch } from "../../../service/api/defaultFetch";
 import { UserScoreList } from "../../../store/quizeStore";
 import Modal from "../../../components/Modal";
+import { useIsRoomStore } from "../../../store/roomStore";
 
 export default function SpeedQuizContainer() {
   const router = useRouter();
@@ -30,6 +31,7 @@ export default function SpeedQuizContainer() {
   const [user, setUserList] = useState<quizeUserList | null>(null);
   const [answerUser, setAnswerUser] = useState<string>("");
   const [scoreList, setScoreList] = useState<UserScoreList | null>(null);
+  const { isHost } = useIsRoomStore();
 
   interface CreateRoomResponse {
     isSuccess: boolean;
@@ -89,7 +91,7 @@ export default function SpeedQuizContainer() {
 
   useEffect(() => {
     const handleNewMessage = async (msg: any) => {
-      if (msg.event === "ALL_CONNECTED") {
+      if (msg.event === "ALL_CONNECTED" && isHost) {
         sendMessage(`/app/room/${id}/event`, "GAME_STARTED");
       }
 
@@ -183,7 +185,7 @@ export default function SpeedQuizContainer() {
         style={{ backgroundImage: "url('/assets/images/bg.png')" }}
       >
         <div className="w-[90vw]">
-          <QuizBoard quize={quize} chat={chatList} />
+          <QuizBoard quize={quize} chat={chatList} round={round} />
           <QuizMain chat={chatList} userList={user!} answer={answerUser} />
           <SpeedOXFooter chat={chatList} />
         </div>

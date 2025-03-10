@@ -11,11 +11,13 @@ import {
 import { defaultFetch } from "../../../../service/api/defaultFetch";
 import { useIsRoomStore } from "../../../../store/roomStore";
 import { useLoginStore } from "../../../../store/store";
-import { roomUserListData } from "../../../../types/Room";
+import { roomInfoData, roomUserListData } from "../../../../types/Room";
 
 export default function Chat({
+  roomInfo,
   setUserList,
 }: {
+  roomInfo: string;
   setUserList: Dispatch<SetStateAction<roomUserListData | undefined>>;
 }) {
   const params = useParams();
@@ -66,7 +68,7 @@ export default function Chat({
         msg.event === "SWITCHING_ROOM_TO_GAME"
       ) {
         if (msg.event === "SWITCHING_ROOM_TO_GAME") {
-          router.push(`/game/${infoRoom}?id=${params.id}`);
+          router.push(`/game/${roomInfo}?id=${params.id}`);
         }
         if (msg.event === "퀴즈가 등록되지 않았습니다.") {
           setIsQuizisReady(false);
