@@ -17,7 +17,9 @@ export default function OXQuizeContainer() {
   const searchParams = useSearchParams();
   const id = searchParams.get("id");
 
-  const [chatList, setChatList] = useState<quizeMessage[]>([]);
+  const [chatList, setChatList] = useState<
+    { message: string; sender: string; event?: string }[]
+  >([]);
   const [oxAnswer, setoxAnswer] = useState<boolean | null>(null);
 
   useEffect(() => {
@@ -42,7 +44,7 @@ export default function OXQuizeContainer() {
         style={{ backgroundImage: "url('/assets/images/bg.png')" }}
       >
         <div className="relative w-[90vw]">
-          <QuizBoard oxAnswer={setoxAnswer} />
+          <QuizBoard oxAnswer={setoxAnswer} chat={chatList} />
           <OXMain chat={chatList} oxAnswer={oxAnswer} />
           <OXButtons oxAnswer={oxAnswer} />
           <SpeedOXFooter chat={chatList} />
