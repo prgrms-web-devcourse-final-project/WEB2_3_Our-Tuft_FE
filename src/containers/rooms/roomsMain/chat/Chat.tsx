@@ -8,10 +8,10 @@ import {
   sendMessage,
   socketConnection,
 } from "../../../../service/api/socketConnection";
-import { roomUserListData } from "../../../../types/room";
 import { defaultFetch } from "../../../../service/api/defaultFetch";
-import { useIsRoomStore, useRoomInfoStore } from "../../../../store/roomStore";
+import { useIsRoomStore } from "../../../../store/roomStore";
 import { useLoginStore } from "../../../../store/store";
+import { roomUserListData } from "../../../../types/Room";
 
 export default function Chat({
   setUserList,
@@ -21,9 +21,8 @@ export default function Chat({
   const params = useParams();
   const router = useRouter();
 
-  const { setIsQuizisReady } = useIsRoomStore();
+  const { setIsQuizisReady, infoRoom } = useIsRoomStore();
   const { token } = useLoginStore();
-  const { roomInfo } = useRoomInfoStore();
 
   const isFirstRender = useRef<boolean>(true);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -67,7 +66,7 @@ export default function Chat({
         msg.event === "SWITCHING_ROOM_TO_GAME"
       ) {
         if (msg.event === "SWITCHING_ROOM_TO_GAME") {
-          router.push(`/game/${roomInfo.gameType}?id=${params.id}`);
+          router.push(`/game/${infoRoom}?id=${params.id}`);
         }
         if (msg.event === "퀴즈가 등록되지 않았습니다.") {
           setIsQuizisReady(false);
