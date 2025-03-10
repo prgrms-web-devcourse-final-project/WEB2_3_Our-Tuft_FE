@@ -83,7 +83,7 @@ export default function RoomsContainer() {
     >
       <div className="w-[90vw]">
         <RoomsHeader roomInfo={roomInfo} />
-        <RoomsMain />
+        <RoomsMain roomInfo={roomInfo} />
         <RoomsFooter roomInfo={roomInfo} />
       </div>
     </div>

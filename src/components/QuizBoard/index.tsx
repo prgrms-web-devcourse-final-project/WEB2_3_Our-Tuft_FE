@@ -65,7 +65,13 @@ export default function QuizBoard({
         <div className="text-xl md:text-2xl 2xl:text-3xl whitespace-normal">
           {quize && (
             <div>
-              <div className="text-2xl md:text-3xl 2xl:text-4xl mb-5"></div>
+              <div className="text-2xl md:text-3xl 2xl:text-4xl mb-5">
+                {chat
+                  .filter((i) => i.message.includes("라운드"))
+                  .pop()
+                  ?.message.slice(0, 2)}{" "}
+                라운드
+              </div>
               <p>
                 {quize}
                 {/* {showAnswer

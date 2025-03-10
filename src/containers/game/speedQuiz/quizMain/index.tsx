@@ -45,7 +45,11 @@ export default function quizMain({
   //     });
   //   });
   // }, []);
-
+  const answerUser = chat
+    .filter((i) => i.message.includes("정답"))
+    .pop()
+    ?.message.split("님")[0];
+  console.log(answerUser);
   return (
     <div
       className="
@@ -72,7 +76,7 @@ export default function quizMain({
               </div>
               <UserCard
                 bgColor={`${
-                  answer === i.username
+                  answerUser === i.username
                     ? "bg-[var(--color-amberOrange)]"
                     : "bg-[#ffd377]"
                 }`}
