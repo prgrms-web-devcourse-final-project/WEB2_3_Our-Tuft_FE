@@ -70,7 +70,7 @@ export default function SpeedQuizContainer() {
         if (msg.message === "게임이 종료되었습니다.") {
           setTimeout(async () => {
             await fetchScoreList();
-          }, 3000);
+          }, 1000);
         }
       } else {
         console.warn("Unexpected message format:", msg);
@@ -82,7 +82,7 @@ export default function SpeedQuizContainer() {
 
         setTimeout(() => {
           router.push(`/lobby/rooms/${match}?password=true`);
-        }, 60000);
+        }, 5000);
       }
       if (msg.event === "PLAYER_ADDED") {
         fetchUserList();
@@ -103,7 +103,7 @@ export default function SpeedQuizContainer() {
   useEffect(() => {
     if (scoreList) {
       const newTime = new Date();
-      newTime.setSeconds(newTime.getSeconds() + 60);
+      newTime.setSeconds(newTime.getSeconds() + 5);
       restart(newTime);
     }
   }, [scoreList]);
