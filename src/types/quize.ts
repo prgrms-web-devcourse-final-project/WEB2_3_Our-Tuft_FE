@@ -8,6 +8,7 @@ export interface quizeUserList {
 export interface User {
   userId: string;
   username: string;
+  score?: number;
 }
 
 export interface quizeMsg {

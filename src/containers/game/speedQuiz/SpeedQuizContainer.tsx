@@ -17,7 +17,7 @@ import SpeedOXFooter from "../../../components/SpeedOXFooter";
 import { useIsRoomStore } from "../../../store/roomStore";
 import { useInitializeGame } from "../../../service/hooks/useInitializeGame";
 import { useLoginStore } from "../../../store/store";
-import { QuizeMsgType } from "../../../types/quize";
+import { QuizeMsgType, quizeUserList } from "../../../types/quize";
 
 export default function SpeedQuizContainer() {
   const router = useRouter();
@@ -30,6 +30,8 @@ export default function SpeedQuizContainer() {
     { message: string; sender: string; event?: string }[]
   >([]);
   const [quize, setQuize] = useState<string>("");
+  const [midAnswer, setMidAnswer] = useState<string>("");
+  const [showAnswer, setShowAnswer] = useState<boolean>(false);
 
   const { user, scoreList, isOpen, setIsOpen, fetchUserList, fetchScoreList } =
     useInitializeGame(id);
@@ -41,7 +43,6 @@ export default function SpeedQuizContainer() {
     onExpire: () => {},
   });
 
-  /* eslint-disable react-hooks/exhaustive-deps */
   useEffect(() => {
     const handleNewMessage = async (msg: QuizeMsgType) => {
       if (msg.event === "ALL_CONNECTED" && isHost) {
@@ -59,13 +60,22 @@ export default function SpeedQuizContainer() {
         }
 
         if ("message" in msg && "sender" in msg) {
-          setChatList((prevMessages) => [...prevMessages, msg]);
+          if (msg.message?.includes("정답")) {
+            setMidAnswer(chatList.pop()?.message ?? "");
+          } else {
+            setChatList((prevMessages) => [...prevMessages, msg]);
+          }
         }
 
         if (msg.message === "게임이 종료되었습니다.") {
           setTimeout(async () => {
             await fetchScoreList();
           }, 1000);
+        }
+
+        if (msg.message?.includes("라운드")) {
+          await fetchScoreList();
+          console.log("scoreList", scoreList);
         }
       } else {
         console.warn("Unexpected message format:", msg);
@@ -77,7 +87,7 @@ export default function SpeedQuizContainer() {
 
         setTimeout(() => {
           router.push(`/lobby/rooms/${match}?password=true`);
-        }, 5000);
+        }, 9000);
       }
       if (msg.event === "PLAYER_ADDED") {
         fetchUserList();
@@ -94,12 +104,11 @@ export default function SpeedQuizContainer() {
       }
     };
   }, []);
-  /* eslint-disable react-hooks/exhaustive-deps */
 
   useEffect(() => {
     if (scoreList) {
       const newTime = new Date();
-      newTime.setSeconds(newTime.getSeconds() + 5);
+      newTime.setSeconds(newTime.getSeconds() + 10);
       restart(newTime);
     }
   }, [scoreList, restart]);
@@ -117,8 +126,8 @@ export default function SpeedQuizContainer() {
         style={{ backgroundImage: "url('/assets/images/bg.png')" }}
       >
         <div className="w-[90vw]">
-          <QuizBoard quize={quize} chat={chatList} />
-          <QuizMain chat={chatList} userList={user!} />
+          <QuizBoard quize={quize} chat={chatList} midAnswer={midAnswer} />
+          <QuizMain chat={chatList} userList={user!} scoreList={scoreList!} />
           <SpeedOXFooter chat={chatList} />
         </div>
       </div>

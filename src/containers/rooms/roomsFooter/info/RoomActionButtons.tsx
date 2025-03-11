@@ -12,7 +12,7 @@ import Modal from "../../../../components/Modal";
 export default function RoomActionButtons() {
   const params = useParams();
 
-  const { hostNum, isHost, isAllReady } = useIsRoomStore();
+  const { isHost, isAllReady } = useIsRoomStore();
   const [ready, setReady] = useState<boolean>(false);
   const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
 
@@ -29,9 +29,6 @@ export default function RoomActionButtons() {
       setIsOpenModal(true);
     }
   };
-
-  const storedUserId = sessionStorage.getItem("userId");
-  console.log("storedUserId", isHost, storedUserId, hostNum);
 
   return (
     <div className="flex md:text-xl xl:text-3xl text-[10px] cursor-pointer break-keep text-white">

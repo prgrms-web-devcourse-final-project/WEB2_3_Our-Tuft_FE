@@ -44,9 +44,7 @@ export function useInitializeGame(id: string) {
     );
     if (response) {
       setScoreList(response);
-      setIsOpen(true);
     }
-    console.log(response);
   };
 
   const fetchCreateRoom = async () => {
@@ -61,7 +59,6 @@ export function useInitializeGame(id: string) {
         maxUsers: 8,
       }),
     });
-    console.log(response);
   };
 
   return {
