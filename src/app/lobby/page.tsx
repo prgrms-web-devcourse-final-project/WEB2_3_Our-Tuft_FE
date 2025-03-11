@@ -14,8 +14,6 @@ import {
 import ProtectedRoute from "../../components/ProtectedRoute/ProtectedRoute";
 import { useConnectionStore, useLoginStore } from "../../store/store";
 import { defaultFetch } from "../../service/api/defaultFetch";
-import Image from "next/image";
-import loadingImg from "@/assets/images/loading.gif";
 import LoadingSpinner from "../../components/LoadingSpinner/LoadingSpinner";
 
 // Room 인터페이스 정의

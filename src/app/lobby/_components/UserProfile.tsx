@@ -152,7 +152,7 @@ export default function UserProfile() {
             {/* 눈(중간층) */}
             <div
               className="absolute inset-x-0 z-10"
-              style={{ top: "30%", height: "35%" }}
+              style={{ top: "27%", height: "35%" }}
             >
               <div className="relative w-[80%] h-full mx-auto">
                 <Image

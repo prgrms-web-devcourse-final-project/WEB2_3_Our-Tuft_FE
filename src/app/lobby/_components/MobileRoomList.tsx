@@ -262,6 +262,7 @@ export default function MobileRoomList({ roomsData }: MobileRoomListProps) {
                 time={room.time}
                 maxUsers={room.maxUsers}
                 currentUsers={room.currentUsers}
+                gameRunning={room.gameRunning} // gameRunning 속성 추가
               />
             </Link>
           ))

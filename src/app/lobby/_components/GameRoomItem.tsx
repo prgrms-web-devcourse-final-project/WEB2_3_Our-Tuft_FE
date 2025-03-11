@@ -9,6 +9,7 @@ interface GameRoomItemProps {
   time?: number;
   maxUsers?: number;
   currentUsers?: number;
+  gameRunning?: boolean;
 }
 
 export default function GameRoomItem({
@@ -20,6 +21,7 @@ export default function GameRoomItem({
   time = 60, // 기본값 설정
   maxUsers = 8, // 기본값 설정
   currentUsers = 1, // 기본값 설정
+  gameRunning = false, // 기본값 설정
 }: GameRoomItemProps) {
   // 게임 타입에 맞는 한글 이름으로 변환
   const gameTypeToKorean = {
@@ -29,7 +31,20 @@ export default function GameRoomItem({
   };
 
   return (
-    <div className="w-full h-full bg-white border border-black rounded-xl flex items-center justify-center relative text-[1vw] md:text-[0.8vw] xl:text-[0.55vw]">
+    <div
+      className={`w-full h-full bg-white border border-black rounded-xl flex items-center justify-center relative text-[1vw] md:text-[0.8vw] xl:text-[0.55vw] ${
+        gameRunning ? "bg-opacity-70 relative" : ""
+      }`}
+    >
+      {/* 게임 진행 중 표시 */}
+      {gameRunning && (
+        <div className="absolute inset-0 bg-black/30 rounded-xl z-10 flex items-center justify-center">
+          <div className="bg-[var(--color-point)] text-white px-4 py-2 rounded-md text-[1.4em] font-bold">
+            게임 진행 중
+          </div>
+        </div>
+      )}
+
       <div className="absolute left-[20%] top-[5%] bottom-[5%] w-[1px] bg-black"></div>
 
       {/* 방 번호 영역 */}

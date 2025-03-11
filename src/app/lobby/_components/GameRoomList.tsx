@@ -28,6 +28,7 @@ interface Room {
   time?: number; // 시간 제한
   maxUsers?: number; // 최대 인원수
   currentUsers?: number; // 현재 인원수
+  gameRunning?: boolean; // 게임 진행 중 여부
 }
 
 // API 응답 인터페이스 정의
@@ -413,6 +414,7 @@ export default function GameRoomList({ roomsData }: GameRoomListProps) {
                   time={room.time}
                   maxUsers={room.maxUsers}
                   currentUsers={room.currentUsers}
+                  gameRunning={room.gameRunning}
                 />
               </div>
             ))
