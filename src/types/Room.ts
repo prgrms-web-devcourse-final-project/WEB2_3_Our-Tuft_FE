@@ -8,6 +8,7 @@ export interface Room {
   time?: number;
   maxUsers?: number;
   currentUsers?: number;
+  gameRunning?: boolean;
 }
 
 export interface ApiResponse {

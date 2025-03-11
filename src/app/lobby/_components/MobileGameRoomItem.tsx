@@ -10,6 +10,7 @@ interface MobileGameRoomItemProps {
   time?: number;
   maxUsers?: number;
   currentUsers?: number;
+  gameRunning?: boolean; // gameRunning 속성 추가
 }
 
 export default function MobileGameRoomItem({
@@ -21,6 +22,7 @@ export default function MobileGameRoomItem({
   time = 60, // 기본값 설정
   maxUsers = 8, // 기본값 설정
   currentUsers = 1, // 기본값 설정
+  gameRunning = false, // 기본값 설정
 }: MobileGameRoomItemProps) {
   // 게임 타입에 맞는 한글 이름으로 변환
   const gameTypeToKorean = {
@@ -30,7 +32,20 @@ export default function MobileGameRoomItem({
   };
 
   return (
-    <div className="w-full h-[70px] bg-white border border-black rounded-xl flex items-center justify-center text-sm relative p-2">
+    <div
+      className={`w-full h-[70px] bg-white border border-black rounded-xl flex items-center justify-center text-sm relative p-2 ${
+        gameRunning ? "bg-opacity-70" : ""
+      }`}
+    >
+      {/* 게임 진행 중 표시 */}
+      {gameRunning && (
+        <div className="absolute inset-0 bg-black/30 rounded-xl z-10 flex items-center justify-center">
+          <div className="bg-[var(--color-point)] text-white px-3 py-1 rounded-md text-xs font-bold">
+            게임 진행 중
+          </div>
+        </div>
+      )}
+
       <div className="absolute left-[20%] top-[5px] bottom-[5px] w-[1px] bg-black"></div>
       <div className="absolute left-[6%] top-1/2 transform -translate-y-1/2 flex flex-col items-center">
         {disclosure ? (
