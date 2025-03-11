@@ -8,7 +8,7 @@ import exitIcon from "@/assets/icons/exit.svg";
 import { ShopUserData } from "../../types/shopUser";
 
 export default function ShopProfile({
-  exp,
+  points,
   nickname,
   eye,
   mouth,
@@ -16,7 +16,7 @@ export default function ShopProfile({
   nickColor,
 }: ShopUserData) {
   const [avatarProfile, setAvatarProfile] = useState<ShopUserData>({
-    exp: 0,
+    points: 0,
     nickname: "사용자",
     eye: {
       itemId: 1,
@@ -40,7 +40,7 @@ export default function ShopProfile({
 
   useEffect(() => {
     setAvatarProfile({
-      exp: exp || 0,
+      points: points || 0,
       nickname: nickname || "사용자",
       eye: {
         itemId: eye?.itemId ?? 1,
@@ -49,30 +49,30 @@ export default function ShopProfile({
           `${process.env.NEXT_PUBLIC_S3_BUCKET_URL}/eye/eye1.png`,
       },
       mouth: {
-        itemId: mouth?.itemId ?? 4,
+        itemId: mouth?.itemId ?? 11,
         imageUrl:
           mouth?.imageUrl ??
           `${process.env.NEXT_PUBLIC_S3_BUCKET_URL}/mouth/mouth1.png`,
       },
       skin: {
-        itemId: skin?.itemId ?? 7,
+        itemId: skin?.itemId ?? 21,
         imageUrl:
           skin?.imageUrl ??
           `${process.env.NEXT_PUBLIC_S3_BUCKET_URL}/skin/skin1.png`,
       },
       nickColor: {
-        itemId: nickColor?.itemId ?? 10,
+        itemId: nickColor?.itemId ?? 31,
         value: nickColor?.value ?? "#000000",
       },
     });
-  }, [exp, nickname, eye, mouth, skin, nickColor]);
+  }, [nickname, eye, mouth, skin, nickColor]);
 
   return (
     <div className="grid grid-rows-9 grid-cols-2 w-full h-full">
       <div className="flex row-span-1 col-span-2 gap-x-2 sm:gap-x-4 lg:gap-x-6 pb-6">
         <div className="flex flex-7 sm:flex-6 items-center justify-evenly sm:justify-end bg-[var(--color-main)]/90 drop-shadow-custom rounded-xl sm:rounded-2xl">
           <span className="text-white text-base md:text-lg lg:text-2xl xl:text-3xl 2xl:text-4xl lg:mr-1.5 xl:mr-3">
-            {exp}
+            {points}
           </span>
           <Image
             src={coinIcon}
