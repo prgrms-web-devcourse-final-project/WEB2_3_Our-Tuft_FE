@@ -73,16 +73,11 @@ export default function GameRoomList({ roomsData }: GameRoomListProps) {
   const filterDropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    // 초기 로딩 상태 설정
-    if (roomsData) {
-      setRooms(roomsData);
-      setLoading(false);
-      return;
-    }
+    // roomsData 체크 로직 제거
     setLoading(true);
 
     // 소켓 연결 초기화
-    const client = socketConnection(token ?? undefined);
+    socketConnection(token ?? undefined);
 
     // 로비 메시지 핸들러
     const handleLobbyMessage = (message: WebSocketRoomMessage) => {

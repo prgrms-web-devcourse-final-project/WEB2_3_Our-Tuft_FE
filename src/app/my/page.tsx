@@ -205,7 +205,7 @@ export default function Page() {
         nickColor: editedProfile.nickColor.itemId,
       };
 
-      const response = await defaultFetch<ApiResponse<any>>("/myInfo", {
+      const response = await defaultFetch<ApiResponse<unknown>>("/myInfo", {
         method: "PUT",
         body: JSON.stringify(requestBody),
       });

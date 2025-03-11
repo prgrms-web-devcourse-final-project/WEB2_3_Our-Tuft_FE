@@ -28,7 +28,6 @@ export default function MobileRoomList({ roomsData }: MobileRoomListProps) {
   const [error, setError] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
 
-  const gameModes = ["전체", "그림 맞추기", "스피드 퀴즈", "OX 퀴즈"];
   const searchTypes = ["방 제목", "방 번호"];
 
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -192,6 +191,22 @@ export default function MobileRoomList({ roomsData }: MobileRoomListProps) {
             </div>
           </button>
           {/* 드롭다운 내용  */}
+          {isDropdownOpen && (
+            <div className="absolute z-50 w-full mt-2 bg-[var(--color-second)] border border-black rounded-xl overflow-hidden drop-shadow-custom">
+              {["전체", "그림 맞추기", "스피드 퀴즈", "OX 퀴즈"].map((mode) => (
+                <button
+                  key={mode}
+                  onClick={() => {
+                    setSelectedMode(mode);
+                    setIsDropdownOpen(false);
+                  }}
+                  className="w-full px-4 py-2 text-white text-xs hover:bg-[var(--color-amberOrange)] transition-all flex items-center justify-center"
+                >
+                  {mode}
+                </button>
+              ))}
+            </div>
+          )}
         </div>
 
         {/* 검색창 */}
@@ -235,7 +250,7 @@ export default function MobileRoomList({ roomsData }: MobileRoomListProps) {
                   </div>
                 </button>
                 {isFilterDropdownOpen && (
-                  <div className="absolute z-10 w-full mt-2 bg-[var(--color-second)] border border-black rounded-xl overflow-hidden drop-shadow-custom">
+                  <div className="absolute z-50 w-full mt-2 bg-[var(--color-second)] border border-black rounded-xl overflow-hidden drop-shadow-custom">
                     {searchTypes.map((type) => (
                       <button
                         key={type}
