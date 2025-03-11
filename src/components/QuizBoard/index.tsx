@@ -1,6 +1,15 @@
-import Timer from "./Timer";
+"use client";
 
-export default function QuizBoard() {
+import Timer from "./Timer";
+import { quizeMsg } from "../../types/quize";
+
+export default function QuizBoard({
+  quize,
+  chat,
+}: {
+  quize?: string;
+  chat: quizeMsg[];
+}) {
   return (
     <div
       className="
@@ -20,13 +29,22 @@ export default function QuizBoard() {
           rounded-[32px] 2xl:rounded-[12px] text-white 
           "
       >
-        <div className="text-2xl md:text-3xl 2xl:text-4xl">문제 12</div>
         <div className="text-xl md:text-2xl 2xl:text-3xl whitespace-normal">
-          보험금을 노리고 퇴원하지 않는 ( ) 때문에 골치를 앓고 있다. 에서 ( ) 에
-          해당하는 단어는?
+          {quize && (
+            <div>
+              <div className="text-2xl md:text-3xl 2xl:text-4xl mb-5">
+                {chat
+                  .filter((i) => i.message.includes("라운드"))
+                  .pop()
+                  ?.message.slice(0, 2)}{" "}
+                라운드
+              </div>
+              <p>{quize}</p>
+            </div>
+          )}
         </div>
         <div className="absolute bottom-5 2xl:bottom-7 right-5 2xl:right-7">
-          <Timer />
+          <Timer quize={quize ?? ""} />
         </div>
       </div>
     </div>

@@ -1,7 +1,8 @@
+import { roomInfoData } from "../../../types/Room";
 import RoomActionButtons from "./info/RoomActionButtons";
 import RoomsInfo from "./info/RoomsInfo";
 
-export default function RoomsFooter() {
+export default function RoomsFooter({ roomInfo }: { roomInfo: roomInfoData }) {
   return (
     <div
       className="
@@ -16,7 +17,7 @@ export default function RoomsFooter() {
           xl:rounded-[20px] rounded-[12px]
           "
       >
-        <RoomsInfo />
+        <RoomsInfo roomInfo={roomInfo} />
       </div>
       <div className="flex-1">
         <RoomActionButtons />

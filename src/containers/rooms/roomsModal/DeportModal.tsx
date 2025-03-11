@@ -6,9 +6,11 @@ import info from "@/assets/icons/info.svg";
 export default function DeportModal({
   nickName,
   setIsClose,
+  setIsComplete,
 }: {
   nickName: string;
   setIsClose: (val: boolean) => void;
+  setIsComplete: (val?: string) => void;
 }) {
   return (
     <Modal
@@ -16,6 +18,7 @@ export default function DeportModal({
       width={"xl:w-[788px] md:w-[60%] w-[80%]"}
       height={"h-[268px]"}
       setIsClose={setIsClose}
+      setIsComplete={() => setIsComplete()}
     >
       <div
         className="

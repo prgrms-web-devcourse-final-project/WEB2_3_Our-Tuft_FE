@@ -31,9 +31,6 @@ export default function MenuModal({
         <div className="w-full py-3 text-center hover:bg-[var(--color-point-hover)]">
           귓속말
         </div>
-        <div className="w-full py-3  text-center hover:bg-[var(--color-point-hover)] hover:rounded-b-xl">
-          방장 위임
-        </div>
       </div>
     </div>,
     document.body

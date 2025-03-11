@@ -1,4 +1,4 @@
-import { modalProp } from "../../types/modalType";
+import { modalProp } from "../../types/modal";
 
 export default function ModalContainer({
   title,

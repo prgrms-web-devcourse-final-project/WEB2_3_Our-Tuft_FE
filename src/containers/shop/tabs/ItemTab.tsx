@@ -1,27 +1,27 @@
 "use client";
 import { useState } from "react";
 import Image from "next/image";
+
 import ItemCard from "../../../components/ItemCard/ItemCard";
+import { Item } from "../../../types/item";
 
 import searchIcon from "@/assets/images/search.png";
 
 interface ItemTabProps {
-  data: Record<string, { id: number; imgSrc: string; name: string }[]>;
+  data: { [key: string]: Item[] };
 }
 
 export default function ItemTab({ data }: ItemTabProps) {
   const [query, setQuery] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(
-    "머리/눈"
-  );
+  const [selectedCategory, setSelectedCategory] = useState<string | null>("눈");
 
-  const categories = ["머리/눈", "입", "피부", "치장"];
+  const categories = ["눈", "입", "피부", "치장"];
 
   const categoriesMap: Record<string, string> = {
-    "머리/눈": "Hair/Eyes",
-    입: "Mouth",
-    피부: "Skin",
-    치장: "Decoration",
+    눈: "EYE",
+    입: "MOUTH",
+    피부: "SKIN",
+    치장: "NICKNAME",
   };
 
   const handleSearch = () => {
@@ -38,7 +38,7 @@ export default function ItemTab({ data }: ItemTabProps) {
 
   // 선택된 카테고리에 맞는 데이터를 필터링
   const filteredItems = selectedCategory
-    ? data[categoriesMap[selectedCategory]].filter((item) =>
+    ? (data[categoriesMap[selectedCategory]] || []).filter((item) =>
         item.name.toLowerCase().includes(query.toLowerCase())
       )
     : [];
@@ -46,7 +46,7 @@ export default function ItemTab({ data }: ItemTabProps) {
   return (
     <div className="grid grid-rows-8 grid-cols-2 w-full h-full">
       <div className="grid grid-cols-2 row-span-1 col-span-2 bg-[var(--color-main)]/90 flex items-center rounded-tr-md w-full h-full">
-        <div className="grid grid-rows-2 grid-cols-2 md:grid-rows-1 md:grid-cols-4 flex items-center w-full h-full overflow-hidden lg:gap-x-3 xl:gap-x-6 lg:pl-2 xl:pl-4">
+        <div className="grid grid-rows-2 grid-cols-2 md:grid-rows-1 md:grid-cols-4 flex items-center w-full h-full overflow-hidden gap-x-2 lg:gap-x-3 xl:gap-x-6 pl-1 lg:pl-2 xl:pl-4">
           {categories.map((category, index) => (
             <button
               key={index}
@@ -76,12 +76,23 @@ export default function ItemTab({ data }: ItemTabProps) {
           </button>
         </div>
       </div>
-      <div className="row-span-7 col-span-2 bg-[#1B399C] p-4 md:p-2 lg:p-4 xl:p-6 2xl:p-8 overflow-y-auto min-h-0 rounded-b-2xl">
+      <div className="row-span-7 col-span-2 bg-[#1B399C] p-4 md:p-2 lg:p-4 xl:p-6 2xl:p-8 overflow-x-hidden overflow-y-auto min-h-0 rounded-b-2xl relative">
         <div className="grid grid-rows-3 grid-cols-1 md:grid-cols-2 gap-2 lg:gap-3 xl:gap-4">
           {/* 필터링된 아이템들 렌더링 */}
-          {filteredItems.map((item) => (
-            <ItemCard key={item.id} imgSrc={item.imgSrc} name={item.name} />
-          ))}
+          {filteredItems.length > 0 ? (
+            filteredItems.map((item) => (
+              <ItemCard
+                key={item.id}
+                id={item.id}
+                imageUrl={item.imageUrl}
+                name={item.name}
+              />
+            ))
+          ) : (
+            <div className="absolute inset-0 flex justify-center items-center w-full h-full text-white">
+              해당하는 아이템이 없습니다.
+            </div>
+          )}
         </div>
       </div>
     </div>

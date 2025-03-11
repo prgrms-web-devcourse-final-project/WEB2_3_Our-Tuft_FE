@@ -1,22 +1,29 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useIsRoomStore } from "../../../../store/roomStore";
+import { defaultFetch } from "../../../../service/api/defaultFetch";
+
+import UserCard from "./UserCard";
 import DeportModal from "../../roomsModal/DeportModal";
 import MenuModal from "../../roomsModal/MenuModal";
 import ProfileModal from "../../roomsModal/ProfileModal";
-import UserCard from "./UserCard";
+import { roomUserList, roomUserListData } from "../../../../types/Room";
 
-export default function UserList() {
-  const [nickName, setNicKName] = useState<string>("");
+export default function UserList({ userList }: { userList: roomUserListData }) {
+  const { setIsHost, isHost, setAsAllReady } = useIsRoomStore();
+  const storedUserId = sessionStorage.getItem("userId");
+
+  const [user, setUser] = useState<roomUserList>();
   const [isOpenDeport, setOpenDeport] = useState<boolean>(false);
   const [isOpenMenu, setOpenMenu] = useState<boolean>(false);
   const [isOpenProfile, setOpenProfile] = useState<boolean | undefined>(
     undefined
   );
-
   const [position, setPosition] = useState<{ x: number; y: number } | null>(
     null
   );
+  const { setHostNum } = useIsRoomStore();
 
   const handleContextMenu = (event: React.MouseEvent) => {
     event.preventDefault();
@@ -24,19 +31,30 @@ export default function UserList() {
     setOpenMenu(true);
   };
 
-  const data = {
-    players: [
-      "호랑이",
-      "독수리",
-      "고양이",
-      "늑대",
-      "여우",
-      "판다",
-      "드래곤",
-      "사자",
-    ],
+  const deportUser = (userId: string) => {
+    defaultFetch(`/rooms/${userId}/deport`, { method: "PUT" });
   };
 
+  const handleHostModal = (userInfo: roomUserList) => {
+    setUser(userInfo);
+    if (isHost && userInfo.userId !== userList?.data.hostId + "") {
+      setOpenDeport(true);
+    }
+  };
+
+  useEffect(() => {
+    setHostNum(userList.data.hostId + "");
+    setIsHost(Number(userList.data.hostId) === Number(storedUserId));
+  }, [userList.data.hostId, setHostNum, setIsHost, storedUserId]);
+
+  useEffect(() => {
+    const hasNoReadyUsers = userList?.data.dto.some(
+      (user) => user.isReady === "false"
+    );
+    setAsAllReady(!hasNoReadyUsers);
+  }, [userList.data.dto, setAsAllReady]);
+
+  console.log("방 유저 리스트: ", userList?.data);
   return (
     <div
       className="
@@ -49,34 +67,48 @@ export default function UserList() {
         xl:rounded-[32px] rounded-[20px] 
         "
     >
-      {data.players.map((i, index) => (
+      {userList?.data.dto.map((i, index) => (
         <div
           className="h-auto max-h-fit"
-          onClick={() => {
-            setOpenDeport(true);
-            setNicKName(i);
-          }}
+          onClick={() => handleHostModal(i)}
           onContextMenu={handleContextMenu}
           key={index}
         >
-          <UserCard nickName={i}>
+          <UserCard
+            nickName={i.username}
+            isReady={i.isReady}
+            host={Number(i.userId) === Number(userList?.data.hostId)}
+          >
             <div
-              className="
-                absolute xl:static md:static 
-                text-[#993000] 
-                bg-[var(--color-amberOrange)]  
+              className={`absolute xl:static md:static
+                ${i.isReady === "true" ? "text-[#993000]" : "text-white"}  
+                ${
+                  Number(i.userId) === Number(userList?.data.hostId)
+                    ? "bg-[var(--color-main)]"
+                    : i.isReady === "true"
+                    ? "bg-[var(--color-amberOrange)]"
+                    : "bg-[var(--color-point)]"
+                }  
                 xl:text-2xl md:text-xl 
                 xl:py-5 md:py-3 py-0 
-                md:w-full md:text-center"
+                md:w-full md:text-center`}
             >
-              준비완료
+              {i.userId === userList?.data.hostId + ""
+                ? "방장"
+                : i.isReady === "true"
+                ? "준비완료"
+                : "대기중"}
             </div>
           </UserCard>
         </div>
       ))}
 
-      {isOpenDeport && (
-        <DeportModal nickName={nickName} setIsClose={setOpenDeport} />
+      {isOpenDeport && user && (
+        <DeportModal
+          nickName={user.username}
+          setIsClose={setOpenDeport}
+          setIsComplete={() => deportUser(user?.userId)}
+        />
       )}
       {isOpenMenu && (
         <MenuModal

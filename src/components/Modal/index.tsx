@@ -1,6 +1,6 @@
 "use client";
 
-import { modalProp } from "../../types/modalType";
+import { modalProp } from "../../types/modal";
 import { createPortal } from "react-dom";
 import ModalContainer from "./ModalContainer";
 import ModalButton from "./ModalButton";
@@ -14,6 +14,7 @@ export default function Modal({
   children,
   className,
   showCancelButton,
+  showCompleteButton,
 }: modalProp & {
   setIsClose?: (val: boolean) => void;
   setIsComplete?: <T>(val?: T) => void;
@@ -29,6 +30,7 @@ export default function Modal({
       {children}
       <ModalButton
         isVisible={showCancelButton}
+        isVisible2={showCompleteButton}
         setIsClose={setIsClose}
         setIsComplete={setIsComplete}
       />

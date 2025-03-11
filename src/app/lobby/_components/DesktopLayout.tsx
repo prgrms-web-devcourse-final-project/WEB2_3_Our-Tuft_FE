@@ -4,8 +4,13 @@ import ButtonGroup from "./ButtonGroup";
 import UserProfile from "./UserProfile";
 import GameBanner from "./GameBanner";
 import GameRoomList from "./GameRoomList";
+import { Room } from "../../../types/Room";
 
-export default function DesktopLayout() {
+interface DesktopLayoutProps {
+  roomsData?: Room[];
+}
+
+export default function DesktopLayout({ roomsData }: DesktopLayoutProps) {
   return (
     <div className="hidden xl:flex w-full h-full min-h-screen items-center justify-center px-[2.2rem] py-[3.25rem]">
       <div className="w-full h-full min-w-[50rem] max-w-[115.625rem] min-h-[37.5rem] max-h-[60.9375rem] aspect-[1850/975] flex flex-col">
@@ -28,7 +33,8 @@ export default function DesktopLayout() {
 
           {/* 중앙 방 목록 영역 */}
           <div className="w-[54.97%] h-full bg-[var(--color-second)]/90 rounded-2xl drop-shadow-custom p-[0.625rem]">
-            <GameRoomList />
+            {/* 전달받은 roomsData를 GameRoomList에 prop으로 전달 */}
+            <GameRoomList roomsData={roomsData} />
           </div>
 
           {/* 오른쪽 영역 */}

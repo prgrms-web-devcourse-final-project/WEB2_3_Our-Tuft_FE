@@ -6,11 +6,12 @@ export default function UserCard({
   borderRadius = "2xl:rounded-[20px] rounded-[28px]",
   padding = "pt-5 px-7 pb-0",
   imageSize = "h-45",
-  nickname = "닉네임",
+  nickname,
   textSize = "text-xl",
   textSize2 = "text-2xl",
   className,
   children,
+  oxAnswer,
 }: {
   bgColor?: string;
   borderRadius?: string;
@@ -21,12 +22,15 @@ export default function UserCard({
   textSize2?: string;
   className?: string;
   children?: React.ReactNode;
+  oxAnswer?: boolean | null;
 }) {
   return (
     <div>
       <div
         className={`flex flex-col items-center justify-center w-full 
-          ${bgColor} ${borderRadius} ${padding} ${textSize} ${className}  
+          ${
+            oxAnswer ? "bg-[#FFA20E]" : bgColor
+          } ${borderRadius} ${padding} ${textSize} ${className}  
           hover:opacity-80 drop-shadow-custom cursor-pointer`}
       >
         <Image
