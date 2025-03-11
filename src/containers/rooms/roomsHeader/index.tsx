@@ -10,7 +10,7 @@ export default function RoomsHeader({ roomInfo }: { roomInfo: roomInfoData }) {
   const { setInfoRoom } = useIsRoomStore();
   useEffect(() => {
     setInfoRoom(roomInfo.data.gameType);
-  }, [roomInfo.data.gameType]);
+  }, [roomInfo.data.gameType, setInfoRoom]);
   return (
     <div className="flex w-full">
       <div

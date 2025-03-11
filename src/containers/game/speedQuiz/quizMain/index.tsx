@@ -3,7 +3,7 @@ import UserCard from "../../../../components/UserCard";
 import ChatBubble from "../../../../components/ChatBubble";
 import { quizeMsg, quizeUserList } from "../../../../types/quize";
 
-export default function quizMain({
+export default function QuizMain({
   chat,
   userList,
 }: {
@@ -12,8 +12,8 @@ export default function quizMain({
 }) {
   type GroupedData = { [key: string]: (typeof chat)[0][] };
 
-  let answerUser = "";
-  const [userAnswer, setUserAnswer] = useState<string>("");
+  const [userAnswer, setUserAnswer] = useState<string[]>([]);
+  const [gameRound, setGameRound] = useState<string>("");
 
   const groupedById = [...chat].reduce((acc: GroupedData, item) => {
     if (!acc[item.sender]) {
@@ -22,16 +22,23 @@ export default function quizMain({
     acc[item.sender].push(item);
     return acc;
   }, {});
-
   useEffect(() => {
-    answerUser =
+    let round = chat
+      .filter((i) => i.message.includes("라운드"))
+      .pop()
+      ?.message.slice(0, 2);
+    round && setGameRound(round);
+
+    let answerUser =
       chat
         .filter((i) => i.message.includes("정답"))
         .pop()
         ?.message.split("님")[0] || "빈값";
-    setUserAnswer(answerUser);
-    console.log(answerUser);
-  }, [chat]);
+    gameRound === round
+      ? setUserAnswer((pre) => [...pre, answerUser])
+      : setUserAnswer([]);
+    console.log("userAnswer", userAnswer, gameRound, round);
+  }, [chat, gameRound]);
 
   return (
     <div
@@ -51,7 +58,7 @@ export default function quizMain({
               <div className="hidden 2xl:flex flex-col justify-end h-[200px]">
                 {Object.entries(groupedById)
                   .filter(([id]) => id === i.username)
-                  .flatMap(([_, messages]) =>
+                  .flatMap(([i, messages]) =>
                     messages.map((msg, index) => (
                       <ChatBubble msg={msg} key={msg.message + index} />
                     ))
@@ -59,7 +66,7 @@ export default function quizMain({
               </div>
               <UserCard
                 bgColor={`${
-                  userAnswer === i.username
+                  userAnswer.includes(i.username)
                     ? "bg-[var(--color-amberOrange)]"
                     : "bg-[#ffd377]"
                 }`}

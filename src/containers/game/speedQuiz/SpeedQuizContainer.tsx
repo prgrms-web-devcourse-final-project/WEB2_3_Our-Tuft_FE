@@ -17,6 +17,7 @@ import SpeedOXFooter from "../../../components/SpeedOXFooter";
 import { useIsRoomStore } from "../../../store/roomStore";
 import { useInitializeGame } from "../../../service/hooks/useInitializeGame";
 import { useLoginStore } from "../../../store/store";
+import { QuizeMsgType } from "../../../types/quize";
 
 export default function SpeedQuizContainer() {
   const router = useRouter();
@@ -30,15 +31,8 @@ export default function SpeedQuizContainer() {
   >([]);
   const [quize, setQuize] = useState<string>("");
 
-  const {
-    user,
-    scoreList,
-    isOpen,
-    setIsOpen,
-    fetchUserList,
-    fetchScoreList,
-    fetchCreateRoom,
-  } = useInitializeGame(id);
+  const { user, scoreList, isOpen, setIsOpen, fetchUserList, fetchScoreList } =
+    useInitializeGame(id);
 
   const time = new Date();
   const { seconds, restart } = useTimer({
@@ -47,8 +41,9 @@ export default function SpeedQuizContainer() {
     onExpire: () => {},
   });
 
+  /* eslint-disable react-hooks/exhaustive-deps */
   useEffect(() => {
-    const handleNewMessage = async (msg: any) => {
+    const handleNewMessage = async (msg: QuizeMsgType) => {
       if (msg.event === "ALL_CONNECTED" && isHost) {
         sendMessage(`/app/room/${id}/event`, "GAME_STARTED");
       }
@@ -59,7 +54,7 @@ export default function SpeedQuizContainer() {
           "sender" in msg) ||
         "question" in msg
       ) {
-        if ("question" in msg) {
+        if (msg.question && "question" in msg) {
           setQuize(msg.question);
         }
 
@@ -99,6 +94,7 @@ export default function SpeedQuizContainer() {
       }
     };
   }, []);
+  /* eslint-disable react-hooks/exhaustive-deps */
 
   useEffect(() => {
     if (scoreList) {
@@ -106,13 +102,13 @@ export default function SpeedQuizContainer() {
       newTime.setSeconds(newTime.getSeconds() + 5);
       restart(newTime);
     }
-  }, [scoreList]);
+  }, [scoreList, restart]);
 
   useEffect(() => {
     socketConnection(token ?? undefined).catch((error) => {
       console.error("소켓 연결 실패:", error);
     });
-  }, []);
+  }, [token]);
 
   return (
     <>
@@ -139,7 +135,7 @@ export default function SpeedQuizContainer() {
           <div
             className="
           flex items-center justify-center bg-[var(--color-point)] rounded-xl text-white 
-          xl:text-xl text-md w-[707px] w-[80%] mt-23"
+          xl:text-xl text-md xl:w-[707px] w-[80%] mt-23"
           >
             <div className="flex flex-col gap-3 py-5">
               {scoreList &&

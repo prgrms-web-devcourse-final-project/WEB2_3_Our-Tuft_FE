@@ -1,11 +1,10 @@
-"use client";
+import { useEffect, useState, useCallback } from "react";
+import { useParams } from "next/navigation";
 
-import { useEffect, useState } from "react";
-import Modal from "../../../components/Modal/index";
 import { topic, topicModal } from "../../../types/modal";
 import { defaultFetch } from "../../../service/api/defaultFetch";
-import { useParams } from "next/navigation";
-import { useIsRoomStore, useRoomInfoStore } from "../../../store/roomStore";
+import { useIsRoomStore } from "../../../store/roomStore";
+import Modal from "../../../components/Modal/index";
 
 export default function TopicModal({
   setIsClose,
@@ -20,18 +19,18 @@ export default function TopicModal({
   const { infoRoom } = useIsRoomStore();
 
   const [quizCategories, setQuizCategories] = useState<topicModal>();
-  console.log("roomInfo.gameType", infoRoom);
-  const topicData = async () => {
+
+  // useCallback을 사용해 topicData를 메모이제이션
+  const topicData = useCallback(async () => {
     const response = await defaultFetch<topicModal>(`/quizzes/${infoRoom}`, {
       method: "GET",
     });
-    console.log(response);
     setQuizCategories(response);
-  };
+  }, [infoRoom]); // 의존성 배열에 infoRoom 추가
 
   const quizsetData = async () => {
     setIsClose(false);
-    const response = await defaultFetch<{
+    await defaultFetch<{
       isSuccess: true;
       code: "string";
       message: "string";
@@ -43,7 +42,7 @@ export default function TopicModal({
 
   useEffect(() => {
     topicData();
-  }, []);
+  }, [topicData]); // topicData가 변경될 때만 실행
 
   return (
     <Modal

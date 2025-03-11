@@ -37,6 +37,7 @@ export default function RoomsContainer() {
     }
   };
 
+  /* eslint-disable react-hooks/exhaustive-deps */
   useEffect(() => {
     // URL에서 전달된 비밀번호 사용
     if (passwordParam) {
@@ -52,6 +53,7 @@ export default function RoomsContainer() {
       setIsLoading(false);
     }
   }, [params.id, passwordParam]);
+  /* eslint-enable react-hooks/exhaustive-deps */
 
   // 로딩 중 UI
   if (isLoading) {

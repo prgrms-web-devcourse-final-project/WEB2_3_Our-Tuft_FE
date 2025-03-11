@@ -23,7 +23,7 @@ export default function Chat({
   const params = useParams();
   const router = useRouter();
 
-  const { setIsQuizisReady, isQuizisReady, setQuizeSet } = useIsRoomStore();
+  const { setIsQuizisReady, setQuizeSet } = useIsRoomStore();
   const { token } = useLoginStore();
 
   const isFirstRender = useRef<boolean>(true);
@@ -57,7 +57,8 @@ export default function Chat({
    * 해당 방 구독 - 채팅 보내기 (/topic/room/${roomId})
    * 채팅 받기 (/topic/room/${roomId})
    */
-  console.log("isQuizisReady", isQuizisReady);
+
+  /* eslint-disable react-hooks/exhaustive-deps */
   useEffect(() => {
     const handleNewMessage = async (msg: any) => {
       if (
@@ -102,6 +103,7 @@ export default function Chat({
       }
     };
   }, []);
+  /* eslint-disable react-hooks/exhaustive-deps */
 
   useEffect(() => {
     socketConnection(token ?? undefined).catch((error) => {
