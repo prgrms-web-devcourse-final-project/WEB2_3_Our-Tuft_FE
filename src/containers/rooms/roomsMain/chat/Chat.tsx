@@ -135,7 +135,9 @@ export default function Chat({
                 item.sender === "SYSTEM" ? "text-[#FFFF1B]" : ""
               } font-bold`}
             >
-              {item.sender !== "SYSTEM" ? `${item.sender} :` : ""}{" "}
+              {item.sender && item.sender !== "SYSTEM"
+                ? `${item.sender} :`
+                : ""}{" "}
             </span>
             <span
               className={`${item.sender === "SYSTEM" ? "text-[#FFFF1B]" : ""}`}
