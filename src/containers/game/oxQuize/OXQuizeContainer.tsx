@@ -164,10 +164,11 @@ export default function OXQuizeContainer() {
       </div>
       {isOpen && scoreList && (
         <Modal
-          title={"최종 점수"}
+          title={"🏆최종 점수🏆"}
           width={"xl:w-[788px] md:w-[60%] w-[80%]"}
           height={"h-[268px]"}
           showCancelButton={"hidden"}
+          showCompleteButton={"hidden"}
           setIsComplete={() => setIsOpen(false)}
         >
           <div
@@ -176,15 +177,15 @@ export default function OXQuizeContainer() {
           xl:text-xl text-md 
           xl:w-[707px] w-[80%] h-[96px] "
           >
-            <div>
-              {" "}
-              {scoreList.data
-                .sort((a, b) => Number(b.score) - Number(a.score))
-                .map((item, key) => (
-                  <p key={key}>
-                    {item.username} : {parseInt(item.score || "0")}점
-                  </p>
-                ))}
+            <div className="flex flex-col gap-3 py-5">
+              {scoreList &&
+                scoreList.data
+                  .sort((a, b) => Number(b.score) - Number(a.score))
+                  .map((item, key) => (
+                    <p key={key}>
+                      {item.username} : {parseInt(item.score ?? "")}점
+                    </p>
+                  ))}
             </div>
           </div>
         </Modal>
