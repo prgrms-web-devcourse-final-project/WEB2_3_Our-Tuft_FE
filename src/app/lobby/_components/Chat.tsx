@@ -94,7 +94,7 @@ export default function Chat() {
           ref={inputRef}
           type="text"
           placeholder="메시지를 입력하세요..."
-          className="w-full h-full px-4 rounded-lg md:rounded-2xl outline-none"
+          className="w-full h-full px-4 rounded-lg md:rounded-2xl outline-none placeholder-white"
           onKeyDown={handleKeyDown}
         />
       </div>

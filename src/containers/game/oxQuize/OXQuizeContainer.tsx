@@ -1,7 +1,9 @@
 "use client";
 
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState, useRef } from "react";
+import { useTimer } from "react-timer-hook";
+
 import QuizBoard from "../../../components/QuizBoard";
 import OXFooter from "../../../components/OXFooter";
 import OXMain from "./OXMain";
@@ -19,6 +21,7 @@ import Modal from "../../../components/Modal";
 import { useLoginStore } from "../../../store/store";
 
 export default function OXQuizeContainer() {
+  const router = useRouter();
   const searchParams = useSearchParams();
   const id = searchParams.get("id");
   const isFirstRender = useRef<boolean>(true);
@@ -34,6 +37,13 @@ export default function OXQuizeContainer() {
   >([]);
   const [scoreList, setScoreList] = useState<UserScoreList | null>(null);
   const [isOpen, setIsOpen] = useState<boolean>(false);
+
+  const time = new Date();
+  const { seconds, restart } = useTimer({
+    expiryTimestamp: time,
+    autoStart: false,
+    onExpire: () => {},
+  });
 
   const fetchUserList = async () => {
     const response = await defaultFetch<quizeUserList>(
@@ -122,6 +132,18 @@ export default function OXQuizeContainer() {
         console.warn("Unexpected message format:", msg);
       }
 
+      if (msg.event?.includes("NEW_ROOM_CREATED_")) {
+        const match = msg.event.match(/\d+$/);
+        time.setSeconds(time.getSeconds() + 10);
+
+        setTimeout(() => {
+          router.push(`/lobby/rooms/${match}?password=true`);
+        }, 5000);
+      }
+      if (msg.event === "PLAYER_ADDED") {
+        fetchUserList();
+      }
+
       if (msg.event === "PLAYER_ADDED") {
         fetchUserList();
       }
@@ -137,6 +159,14 @@ export default function OXQuizeContainer() {
       }
     };
   }, []);
+
+  useEffect(() => {
+    if (scoreList) {
+      const newTime = new Date();
+      newTime.setSeconds(newTime.getSeconds() + 5);
+      restart(newTime);
+    }
+  }, [scoreList]);
 
   useEffect(() => {
     socketConnection(token ?? undefined).catch((error) => {
@@ -174,8 +204,7 @@ export default function OXQuizeContainer() {
           <div
             className="
           flex items-center justify-center bg-[var(--color-point)] rounded-xl text-white 
-          xl:text-xl text-md 
-          xl:w-[707px] w-[80%] h-[96px] "
+          xl:text-xl text-md w-[707px] w-[80%] h-[96px] mt-23"
           >
             <div className="flex flex-col gap-3 py-5">
               {scoreList &&
@@ -183,10 +212,14 @@ export default function OXQuizeContainer() {
                   .sort((a, b) => Number(b.score) - Number(a.score))
                   .map((item, key) => (
                     <p key={key}>
-                      {item.username} : {parseInt(item.score ?? "")}점
+                      {key + 1}등 {item.username} : {parseInt(item.score ?? "")}
+                      점
                     </p>
                   ))}
             </div>
+          </div>
+          <div className="text-red-600 text-2xl font-bold py-5">
+            {seconds}초 후 방으로 이동합니다.
           </div>
         </Modal>
       )}

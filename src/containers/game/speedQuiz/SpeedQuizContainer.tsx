@@ -139,8 +139,7 @@ export default function SpeedQuizContainer() {
           <div
             className="
           flex items-center justify-center bg-[var(--color-point)] rounded-xl text-white 
-          xl:text-xl text-md 
-          xl:w-[707px] w-[80%] mt-23"
+          xl:text-xl text-md w-[707px] w-[80%] mt-23"
           >
             <div className="flex flex-col gap-3 py-5">
               {scoreList &&

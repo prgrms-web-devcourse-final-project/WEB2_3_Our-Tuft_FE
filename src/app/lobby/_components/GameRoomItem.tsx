@@ -38,7 +38,10 @@ export default function GameRoomItem({
     >
       {/* 게임 진행 중 표시 */}
       {gameRunning && (
-        <div className="absolute inset-0 bg-black/30 rounded-xl z-10 flex items-center justify-center">
+        <div
+          className="absolute inset-0 bg-black/30 rounded-xl z-10 flex items-center justify-center cursor-default"
+          onClick={(e) => e.stopPropagation()}
+        >
           <div className="bg-[var(--color-point)] text-white px-4 py-2 rounded-md text-[1.4em] font-bold">
             게임 진행 중
           </div>
