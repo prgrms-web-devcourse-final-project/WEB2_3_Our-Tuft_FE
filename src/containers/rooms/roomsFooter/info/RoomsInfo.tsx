@@ -9,11 +9,11 @@ import { roomInfoData } from "../../../../types/Room";
 import { useIsRoomStore } from "../../../../store/roomStore";
 
 export default function RoomsInfo({ roomInfo }: { roomInfo: roomInfoData }) {
-  const { isHost } = useIsRoomStore();
+  const { isHost, quizeSet } = useIsRoomStore();
   const [isOpen, setOpen] = useState<boolean>(false);
   const [topic, setTopic] = useState<topic>({
     quizSetId: 0,
-    quizSetName: "주제 선택",
+    quizSetName: "",
   });
   const [isCreateRoomOpen, setCreateRoomOpen] = useState<boolean>(false);
 
@@ -34,7 +34,11 @@ export default function RoomsInfo({ roomInfo }: { roomInfo: roomInfoData }) {
         `}
         onClick={() => isHost && setOpen(true)}
       >
-        {topic?.quizSetName || "선택해주세요"}
+        {topic?.quizSetName
+          ? topic?.quizSetName
+          : isHost
+          ? "퀴즈를 선택해주세요"
+          : quizeSet || "퀴즈 선택중.."}
       </button>
       <div className="flex gap-4 text-center items-center">
         <div className="xl:block md:block hidden">제한 시간</div>
@@ -64,7 +68,7 @@ export default function RoomsInfo({ roomInfo }: { roomInfo: roomInfoData }) {
           {roomInfo.data.round}
         </div>
       </div>
-      {isHost ? (
+      {/* {isHost ? (
         <div
           onClick={() => isHost && setCreateRoomOpen(true)}
           className="
@@ -85,7 +89,7 @@ export default function RoomsInfo({ roomInfo }: { roomInfo: roomInfoData }) {
             <span className="xl:block hidden">설정</span>
           </>
         </div>
-      ) : null}
+      ) : null} */}
       {isOpen && (
         <TopicModal setIsClose={setOpen} setTopic={setTopic} topic={topic} />
       )}

@@ -11,7 +11,7 @@ import {
 import { defaultFetch } from "../../../../service/api/defaultFetch";
 import { useIsRoomStore } from "../../../../store/roomStore";
 import { useLoginStore } from "../../../../store/store";
-import { roomInfoData, roomUserListData } from "../../../../types/Room";
+import { roomUserListData } from "../../../../types/Room";
 
 export default function Chat({
   roomInfo,
@@ -23,7 +23,7 @@ export default function Chat({
   const params = useParams();
   const router = useRouter();
 
-  const { setIsQuizisReady, isQuizisReady } = useIsRoomStore();
+  const { setIsQuizisReady, isQuizisReady, setQuizeSet } = useIsRoomStore();
   const { token } = useLoginStore();
 
   const isFirstRender = useRef<boolean>(true);
@@ -66,7 +66,8 @@ export default function Chat({
           "message" in msg &&
           "sender" in msg) ||
         msg.event === "퀴즈가 등록되지 않았습니다." ||
-        msg.event === "SWITCHING_ROOM_TO_GAME"
+        msg.event === "SWITCHING_ROOM_TO_GAME" ||
+        msg.event === "퀴즈 선택이 완료되었습니다"
       ) {
         if (msg.event === "SWITCHING_ROOM_TO_GAME") {
           router.push(`/game/${roomInfo}?id=${params.id}`);
@@ -75,7 +76,10 @@ export default function Chat({
           setIsQuizisReady(false);
         }
         if (msg.message === "퀴즈 선택이 완료되었습니다") {
-          setIsQuizisReady(true);
+          setQuizeSet("퀴즈 선택 완료!");
+        }
+        if (msg.event === "퀴즈가 등록되지 않았습니다.") {
+          setIsQuizisReady(false);
         }
         setChatList((prevMessages) => [...prevMessages, msg]);
       } else {
@@ -102,6 +106,7 @@ export default function Chat({
     socketConnection(token ?? undefined).catch((error) => {
       console.error("소켓 연결 실패:", error);
     });
+    setQuizeSet("");
   }, []);
 
   useEffect(() => {
