@@ -128,7 +128,7 @@ export default function OXQuizeContainer() {
         if (msg.message === "게임이 종료되었습니다.") {
           setTimeout(async () => {
             await fetchScoreList();
-          }, 5000);
+          }, 1000);
         }
       } else {
         console.warn("Unexpected message format:", msg);

@@ -10,15 +10,9 @@ interface ItemCardProps {
   id: number;
   imageUrl: string;
   name: string;
-  finalPrice: number;
 }
 
-export default function ItemCard({
-  id,
-  imageUrl,
-  name,
-  finalPrice,
-}: ItemCardProps) {
+export default function ItemCard({ id, imageUrl, name }: ItemCardProps) {
   const [isFavorited, setIsFavorited] = useState<boolean>(false);
   const [favoriteItems, setFavoriteItems] = useState<number[]>([]);
 

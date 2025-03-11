@@ -125,24 +125,24 @@ export default function ShopContainer() {
             eye={
               userData?.eye || {
                 itemId: 1,
-                imageUrl: `${process.env.NEXT_PUBLIC_S3_BUCKET_URL}/eye/default-mouth.png`,
+                imageUrl: `${process.env.NEXT_PUBLIC_S3_BUCKET_URL}/eye/eye1.png`,
               }
             }
             mouth={
               userData?.mouth || {
-                itemId: 4,
-                imageUrl: `${process.env.NEXT_PUBLIC_S3_BUCKET_URL}/mouth/default-mouth.png`,
+                itemId: 11,
+                imageUrl: `${process.env.NEXT_PUBLIC_S3_BUCKET_URL}/mouth/mouth1.png`,
               }
             }
             skin={
               userData?.skin || {
-                itemId: 7,
-                imageUrl: `${process.env.NEXT_PUBLIC_S3_BUCKET_URL}/skin/default-skin.png`,
+                itemId: 21,
+                imageUrl: `${process.env.NEXT_PUBLIC_S3_BUCKET_URL}/skin/skin1.png`,
               }
             }
             nickColor={
               userData?.nickColor || {
-                itemId: 10,
+                itemId: 31,
                 value: "#000000",
               }
             }

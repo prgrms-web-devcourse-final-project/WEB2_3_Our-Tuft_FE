@@ -20,18 +20,18 @@ export default function ShopProfile({
     nickname: "사용자",
     eye: {
       itemId: 1,
-      imageUrl: `${process.env.NEXT_PUBLIC_S3_BUCKET_URL}/eye/default-eye.png`,
+      imageUrl: `${process.env.NEXT_PUBLIC_S3_BUCKET_URL}/eye/eye1.png`,
     },
     mouth: {
-      itemId: 4,
-      imageUrl: `${process.env.NEXT_PUBLIC_S3_BUCKET_URL}/mouth/default-mouth.png`,
+      itemId: 11,
+      imageUrl: `${process.env.NEXT_PUBLIC_S3_BUCKET_URL}/mouth/mouth1.png`,
     },
     skin: {
-      itemId: 7,
-      imageUrl: `${process.env.NEXT_PUBLIC_S3_BUCKET_URL}/skin/default-skin.png`,
+      itemId: 21,
+      imageUrl: `${process.env.NEXT_PUBLIC_S3_BUCKET_URL}/skin/skin1.png`,
     },
     nickColor: {
-      itemId: 10,
+      itemId: 31,
       value: "#000000",
     },
   });
@@ -46,26 +46,26 @@ export default function ShopProfile({
         itemId: eye?.itemId ?? 1,
         imageUrl:
           eye?.imageUrl ??
-          `${process.env.NEXT_PUBLIC_S3_BUCKET_URL}/eye/default-eye.png`,
+          `${process.env.NEXT_PUBLIC_S3_BUCKET_URL}/eye/eye1.png`,
       },
       mouth: {
         itemId: mouth?.itemId ?? 4,
         imageUrl:
           mouth?.imageUrl ??
-          `${process.env.NEXT_PUBLIC_S3_BUCKET_URL}/mouth/default-mouth.png`,
+          `${process.env.NEXT_PUBLIC_S3_BUCKET_URL}/mouth/mouth1.png`,
       },
       skin: {
         itemId: skin?.itemId ?? 7,
         imageUrl:
           skin?.imageUrl ??
-          `${process.env.NEXT_PUBLIC_S3_BUCKET_URL}/skin/default-skin.png`,
+          `${process.env.NEXT_PUBLIC_S3_BUCKET_URL}/skin/skin1.png`,
       },
       nickColor: {
         itemId: nickColor?.itemId ?? 10,
         value: nickColor?.value ?? "#000000",
       },
     });
-  }, [nickname, eye, mouth, skin, nickColor]);
+  }, [exp, nickname, eye, mouth, skin, nickColor]);
 
   return (
     <div className="grid grid-rows-9 grid-cols-2 w-full h-full">

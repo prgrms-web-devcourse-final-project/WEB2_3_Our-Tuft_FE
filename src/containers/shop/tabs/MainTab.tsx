@@ -59,7 +59,6 @@ export default function MainTab({ data }: MainTabProps) {
                   id={item.id}
                   imageUrl={item.imageUrl}
                   name={item.name}
-                  finalPrice={item.finalPrice}
                 />
               </React.Fragment>
             ))

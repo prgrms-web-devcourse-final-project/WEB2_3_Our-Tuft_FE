@@ -86,7 +86,6 @@ export default function ItemTab({ data }: ItemTabProps) {
                 id={item.id}
                 imageUrl={item.imageUrl}
                 name={item.name}
-                finalPrice={item.finalPrice}
               />
             ))
           ) : (

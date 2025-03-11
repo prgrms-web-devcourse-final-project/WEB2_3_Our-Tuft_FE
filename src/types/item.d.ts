@@ -4,7 +4,7 @@ export interface Item {
   category: string;
   imageUrl: string;
   nickColor: string;
-  originalPrice: number;
-  discountPrice: number;
-  finalPrice: number;
+  originalPrice?: number;
+  discountPrice?: number;
+  finalPrice?: number;
 }

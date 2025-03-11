@@ -4,7 +4,7 @@ import OImg from "@/assets/images/O-img.png";
 import XImg from "@/assets/images/X-img.svg";
 import { sendMessage } from "../../../../../service/api/socketConnection";
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 
 export default function OXButtons() {
