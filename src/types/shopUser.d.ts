@@ -1,5 +1,5 @@
 export interface ShopUserData {
-  exp: number;
+  points: number;
   nickname: string;
   eye: { itemId: number; imageUrl: string };
   mouth: { itemId: number; imageUrl: string };

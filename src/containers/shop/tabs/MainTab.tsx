@@ -7,12 +7,14 @@ import ItemCard from "../../../components/ItemCard/ItemCard";
 import { Item } from "../../../types/item";
 
 import searchIcon from "@/assets/images/search.png";
+import { defaultFetch } from "../../../service/api/defaultFetch";
 
 interface MainTabProps {
   data: Item[];
+  fetchUserPoints: () => void;
 }
 
-export default function MainTab({ data }: MainTabProps) {
+export default function MainTab({ data, fetchUserPoints }: MainTabProps) {
   const [query, setQuery] = useState("");
 
   // 검색어에 맞는 아이템 필터링
@@ -27,6 +29,32 @@ export default function MainTab({ data }: MainTabProps) {
     console.log("검색어: ", query);
   };
 
+  const checkAttendance = async () => {
+    try {
+      const response = await defaultFetch<{
+        isSuccess: boolean;
+        message: string;
+        data: string;
+      }>("/event/points", {
+        method: "POST",
+      });
+
+      if (response.isSuccess && response.data) {
+        console.log("클릭 이벤트 성공: ", response.data);
+        await fetchUserPoints();
+      } else {
+        console.error("클릭 이벤트 실패: ", response.message);
+      }
+    } catch (error) {
+      // 409 에러 처리
+      if (error instanceof Error && error.message.includes("409")) {
+        console.log("하루에 한번만 가능합니다. ", error.message);
+        return;
+      }
+      console.error("클릭 이벤트 오류: ", error);
+    }
+  };
+
   return (
     <div className="grid grid-rows-8 grid-cols-2 w-full h-full">
       <div className="row-span-1 col-span-2 bg-[var(--color-main)]/90 flex items-center justify-end rounded-tr-md">
@@ -35,10 +63,10 @@ export default function MainTab({ data }: MainTabProps) {
             type="text"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="검색어"
+            placeholder="검색어를 입력해주세요."
             className="bg-transparent text-white placeholder-gray-300 outline-none w-full pl-4"
           />
-          <button onClick={handleSearch} className="mx-2 cursor-pointer">
+          <button onClick={handleSearch} className="mx-2 ml-2 cursor-pointer">
             <Image src={searchIcon} alt="검색" width={36} height={36} />
           </button>
         </div>
@@ -46,7 +74,10 @@ export default function MainTab({ data }: MainTabProps) {
       <div className="row-span-7 col-span-2 bg-[#1B399C] p-4 md:p-2 lg:p-4 xl:p-6 2xl:p-8 overflow-y-auto min-h-0 rounded-b-2xl relative">
         <div className="grid grid-rows-3 grid-cols-1 row-span-6 md:grid-cols-2 gap-2 lg:gap-3 xl:gap-4">
           {!query && (
-            <div className="grid row-span-1 items-center justify-center col-span-1 md:col-span-2 w-full bg-[#d3d3d3]">
+            <div
+              className="grid row-span-1 items-center justify-center col-span-1 md:col-span-2 w-full bg-[#d3d3d3] cursor-pointer"
+              onClick={checkAttendance}
+            >
               <span>베너</span>
             </div>
           )}

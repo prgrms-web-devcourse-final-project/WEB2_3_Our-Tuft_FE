@@ -23,6 +23,7 @@ export default function ShopContainer() {
   const [selectedTab, setSelectedTab] = useState("main");
   const [shopData, setShopData] = useState<ShopData | null>(null);
   const [userData, setUserData] = useState<ShopUserData | null>(null);
+  const [userPoints, setUserPoints] = useState<number>(0);
 
   const fetchShopData = async () => {
     try {
@@ -66,9 +67,31 @@ export default function ShopContainer() {
     }
   };
 
+  const fetchUserPoints = async () => {
+    try {
+      const response = await defaultFetch<{
+        isSuccess: boolean;
+        message: string;
+        data: { points: number };
+      }>("/myInfo/points", {
+        method: "GET",
+      });
+
+      if (response.isSuccess && response.data) {
+        setUserPoints(response.data.points);
+        console.log("유저 포인트: ", response.data.points);
+      } else {
+        console.error("유저 데이터 불러오기 실패: ", response.message);
+      }
+    } catch (error) {
+      console.error("유저 데이터 불러오기 오류: ", error);
+    }
+  };
+
   useEffect(() => {
     fetchShopData();
     fetchUserProfile();
+    fetchUserPoints();
   }, []);
 
   // 메인 탭에서는 ID 순으로 정렬
@@ -120,7 +143,7 @@ export default function ShopContainer() {
         </div>
         <div className="w-full h-full row-span-9">
           <ShopProfile
-            exp={userData?.exp || 0}
+            points={userPoints}
             nickname={userData?.nickname || "사용자"}
             eye={
               userData?.eye || {
@@ -149,7 +172,9 @@ export default function ShopContainer() {
           />
         </div>
         <div className="w-full h-full row-span-8">
-          {selectedTab === "main" && <MainTab data={sortedData} />}
+          {selectedTab === "main" && (
+            <MainTab data={sortedData} fetchUserPoints={fetchUserPoints} />
+          )}
           {selectedTab === "item" && <ItemTab data={groupedData} />}
         </div>
       </div>
