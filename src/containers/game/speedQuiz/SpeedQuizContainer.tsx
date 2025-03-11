@@ -31,7 +31,7 @@ export default function SpeedQuizContainer() {
   >([]);
   const [quize, setQuize] = useState<string>("");
   const [midAnswer, setMidAnswer] = useState<string>("");
-  const [showAnswer, setShowAnswer] = useState<boolean>(false);
+  // const [showAnswer, setShowAnswer] = useState<boolean>(false);
 
   const { user, scoreList, isOpen, setIsOpen, fetchUserList, fetchScoreList } =
     useInitializeGame(id);
