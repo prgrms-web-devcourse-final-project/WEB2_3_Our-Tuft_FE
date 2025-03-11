@@ -49,19 +49,19 @@ export default function ShopProfile({
           `${process.env.NEXT_PUBLIC_S3_BUCKET_URL}/eye/eye1.png`,
       },
       mouth: {
-        itemId: mouth?.itemId ?? 4,
+        itemId: mouth?.itemId ?? 11,
         imageUrl:
           mouth?.imageUrl ??
           `${process.env.NEXT_PUBLIC_S3_BUCKET_URL}/mouth/mouth1.png`,
       },
       skin: {
-        itemId: skin?.itemId ?? 7,
+        itemId: skin?.itemId ?? 21,
         imageUrl:
           skin?.imageUrl ??
           `${process.env.NEXT_PUBLIC_S3_BUCKET_URL}/skin/skin1.png`,
       },
       nickColor: {
-        itemId: nickColor?.itemId ?? 10,
+        itemId: nickColor?.itemId ?? 31,
         value: nickColor?.value ?? "#000000",
       },
     });
