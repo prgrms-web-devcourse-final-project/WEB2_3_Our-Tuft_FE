@@ -1,8 +1,6 @@
 "use client";
 import Image from "next/image";
 import { useState, useEffect } from "react";
-import { defaultFetch } from "../../../service/api/defaultFetch";
-import { useLoginStore } from "../../../store/store";
 
 interface AvatarProfile {
   nickname: string;

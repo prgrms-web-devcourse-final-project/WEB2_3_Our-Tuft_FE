@@ -39,7 +39,6 @@ export default function Lobby() {
   const { isLoading } = useConnectionStore();
   const { token, setUserId } = useLoginStore();
   const [rooms, setRooms] = useState<Room[]>([]);
-  const [socketConnected, setSocketConnected] = useState(false);
 
   useEffect(() => {
     console.log("소켓 연결 시도...");
@@ -89,28 +88,12 @@ export default function Lobby() {
     // 로비 구독
     subscribeToTopic("/topic/room/lobby", handleLobbyMessage);
 
-    // 소켓 연결 상태 확인
-    // const checkConnection = () => {
-    //   if (isConnected()) {
-    //     setSocketConnected(true);
-    //     console.log("소켓 연결됨");
-    //   } else {
-    //     setSocketConnected(false);
-    //     console.log("소켓 연결 안됨");
-    //   }
-    // };
-
-    // // 초기 및 주기적 상태 확인
-    // const intervalId = setInterval(checkConnection, 3000);
-
-    // API를 통해 초기 방 목록 로드 (백업)
-
     const fetchInitialRooms = async () => {
       try {
         const data = await defaultFetch<{ isSuccess: boolean; data: Room[] }>(
           "/lobbies/rooms"
         );
-        if (data.isSuccess && data.data.length > 0 && rooms.length === 0) {
+        if (data.isSuccess && data.data.length > 0) {
           console.log("API로 초기 방 목록 로드:", data.data);
           setRooms(data.data);
         }

@@ -12,7 +12,7 @@ interface PasswordModalProps {
 interface ApiResponse {
   isSuccess: boolean;
   message?: string;
-  data?: any;
+  data?: unknown;
 }
 
 export default function PasswordModal({
@@ -83,8 +83,8 @@ export default function PasswordModal({
 
       // 응답이 성공적이면 비밀번호가 맞음
       return response && response.isSuccess;
-    } catch (err) {
-      console.error("비밀번호 검증 오류:", err);
+    } catch (_err) {
+      console.error("비밀번호 검증 오류:", _err);
       return false;
     }
   };

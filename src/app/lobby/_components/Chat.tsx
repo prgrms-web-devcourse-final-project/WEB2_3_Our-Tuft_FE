@@ -7,14 +7,18 @@ import {
   sendMessage,
 } from "../../../service/api/socketConnection";
 
+// 채팅 메시지를 위한 인터페이스 추가
+interface ChatMessage {
+  message: string;
+  sender: string;
+}
+
 export default function Chat() {
   const inputRef = useRef<HTMLInputElement>(null);
   const lastMessageRef = useRef<HTMLDivElement>(null);
   const subscribedRef = useRef<boolean>(false); // 구독 상태 추적용 ref
 
-  const [chatList, setChatList] = useState<
-    { message: string; sender: string }[]
-  >([]);
+  const [chatList, setChatList] = useState<ChatMessage[]>([]);
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
@@ -36,20 +40,24 @@ export default function Chat() {
       return;
     }
 
-    const handleNewMessage = (msg: any) => {
+    // any 타입 대신 구체적인 타입 사용
+    const handleNewMessage = (msg: unknown) => {
       if (
         typeof msg === "object" &&
         msg !== null &&
         "message" in msg &&
-        "sender" in msg
+        "sender" in msg &&
+        typeof (msg as ChatMessage).message === "string" &&
+        typeof (msg as ChatMessage).sender === "string"
       ) {
         console.log("새 메시지 수신:", msg);
+        const chatMsg = msg as ChatMessage;
 
         // 시스템 메시지 필터링 (sender가 "SYSTEM"인 경우)
-        if (msg.sender !== "SYSTEM") {
-          setChatList((prevMessages) => [...prevMessages, msg]);
+        if (chatMsg.sender !== "SYSTEM") {
+          setChatList((prevMessages) => [...prevMessages, chatMsg]);
         } else {
-          console.log("시스템 메시지:", msg.message);
+          console.log("시스템 메시지:", chatMsg.message);
         }
       } else {
         console.warn("Unexpected message format:", msg);
@@ -94,7 +102,7 @@ export default function Chat() {
           ref={inputRef}
           type="text"
           placeholder="메시지를 입력하세요..."
-          className="w-full h-full px-4 rounded-lg md:rounded-2xl outline-none placeholder-white"
+          className="w-full h-full px-4 rounded-lg md:rounded-2xl outline-none"
           onKeyDown={handleKeyDown}
         />
       </div>

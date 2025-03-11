@@ -111,7 +111,6 @@ export default function UserProfile() {
   const losses = userProfile.totalGames - userProfile.wins;
 
   // 닉네임 색상 가져오기
-  const nickColor = userProfile.nickColor?.value || "#FFFFFF";
 
   return (
     <div className="w-full h-full bg-[var(--color-point)] rounded-xl p-[0.7em] text-[0.85vw] md:text-[0.75vw] xl:text-[0.55vw] flex flex-col justify-between">
