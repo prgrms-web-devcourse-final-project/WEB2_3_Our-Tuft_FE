@@ -8,16 +8,11 @@ import { sendMessage } from "../../../../service/api/socketConnection";
 import { useParams } from "next/navigation";
 import { useIsRoomStore } from "../../../../store/roomStore";
 import Modal from "../../../../components/Modal";
-import { roomInfoData } from "../../../../types/Room";
 
-export default function RoomActionButtons({
-  roomInfo,
-}: {
-  roomInfo: roomInfoData;
-}) {
+export default function RoomActionButtons() {
   const params = useParams();
 
-  const { hostNum, isHost, isAllReady, infoRoom } = useIsRoomStore();
+  const { hostNum, isHost, isAllReady } = useIsRoomStore();
   const [ready, setReady] = useState<boolean>(false);
   const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
 

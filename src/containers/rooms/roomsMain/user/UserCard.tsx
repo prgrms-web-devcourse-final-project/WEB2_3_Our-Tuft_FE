@@ -1,7 +1,5 @@
 import Image from "next/image";
 import dummy from "@/assets/images/dummy.svg";
-import { useIsRoomStore } from "../../../../store/roomStore";
-import { useEffect } from "react";
 
 export default function UserCard({
   nickName,

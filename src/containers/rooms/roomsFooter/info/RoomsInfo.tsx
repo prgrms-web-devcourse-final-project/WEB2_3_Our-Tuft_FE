@@ -1,12 +1,11 @@
 "use client";
-import Image from "next/image";
-import setting from "@/assets/icons/setting.svg";
+
 import { useState } from "react";
-import TopicModal from "../../roomsModal/TopicModal";
-import CreateRoomModal from "../../../../app/lobby/_components/CreateRoomModal";
 import { topic } from "../../../../types/modal";
 import { roomInfoData } from "../../../../types/Room";
 import { useIsRoomStore } from "../../../../store/roomStore";
+import TopicModal from "../../roomsModal/TopicModal";
+import CreateRoomModal from "../../../../app/lobby/_components/CreateRoomModal";
 
 export default function RoomsInfo({ roomInfo }: { roomInfo: roomInfoData }) {
   const { isHost, quizeSet } = useIsRoomStore();

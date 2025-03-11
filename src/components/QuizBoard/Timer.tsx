@@ -19,7 +19,7 @@ export default function Timer({ quize }: { quize: string }) {
       newTime.setSeconds(newTime.getSeconds() + 60);
       restart(newTime);
     }
-  }, [quize]);
+  }, [quize, restart]);
 
   return (
     <div className="flex gap-3 2xl:gap-5">

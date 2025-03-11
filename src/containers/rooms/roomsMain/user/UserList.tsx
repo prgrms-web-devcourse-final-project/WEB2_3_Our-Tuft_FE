@@ -45,14 +45,14 @@ export default function UserList({ userList }: { userList: roomUserListData }) {
   useEffect(() => {
     setHostNum(userList.data.hostId + "");
     setIsHost(Number(userList.data.hostId) === Number(storedUserId));
-  }, [userList.data.hostId]);
+  }, [userList.data.hostId, setHostNum, setIsHost, storedUserId]);
 
   useEffect(() => {
     const hasNoReadyUsers = userList?.data.dto.some(
       (user) => user.isReady === "false"
     );
     setAsAllReady(!hasNoReadyUsers);
-  }, [userList.data.dto]);
+  }, [userList.data.dto, setAsAllReady]);
 
   console.log("방 유저 리스트: ", userList?.data);
   return (
