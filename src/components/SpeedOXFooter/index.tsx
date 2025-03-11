@@ -61,8 +61,16 @@ export default function SpeedOXFooter({ chat }: { chat: quizeMsg[] }) {
                     index === chat.length - 1 || isOpen ? lastMessageRef : null
                   }
                 >
-                  <span className="font-bold">{item.sender} : </span>
-                  {item.message}
+                  <span className="font-bold text-white">
+                    {item.sender === "SYSTEM" ? "" : item.sender + " : "}
+                  </span>
+                  <span
+                    className={
+                      item.sender === "SYSTEM" ? "text-[#FFFF1B]" : "text-white"
+                    }
+                  >
+                    {item.message}
+                  </span>
                 </p>
               ))}
             </div>

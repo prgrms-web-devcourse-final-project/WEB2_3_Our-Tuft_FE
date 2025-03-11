@@ -71,6 +71,7 @@ export default function Chat({
       ) {
         if (msg.event === "SWITCHING_ROOM_TO_GAME") {
           router.push(`/game/${roomInfo}?id=${params.id}`);
+          return;
         }
         if (msg.event === "퀴즈가 등록되지 않았습니다.") {
           setIsQuizisReady(false);
@@ -120,26 +121,34 @@ export default function Chat({
         flex flex-col bg-[var(--color-point)] 
         xl:h-full md:h-full h-[180px]
         xl:rounded-[32px] rounded-[20px] 
-        xl:p-6 p-3 md:px-2 xl:pb-4 md:pb-4 "
+        xl:p-6 p-3 md:px-2 xl:pb-4 md:pb-4"
     >
-      <div className="w-full h-[700px] overflow-auto">
+      <div className="w-full h-[700px] overflow-auto text-white">
         {chatList.map((item, index) => (
           <p
             className={`${item.event && "text-red-600 font-bold text-xl"} pb-1`}
             key={index}
             ref={index === chatList.length - 1 ? lastMessageRef : null}
           >
-            <span className="font-bold">
-              {item.sender ? `${item.sender} :` : ""}{" "}
+            <span
+              className={`${
+                item.sender === "SYSTEM" ? "text-[#FFFF1B]" : ""
+              } font-bold`}
+            >
+              {item.sender !== "SYSTEM" ? `${item.sender} :` : ""}{" "}
             </span>
-            {item.message || item.event}
+            <span
+              className={`${item.sender === "SYSTEM" ? "text-[#FFFF1B]" : ""}`}
+            >
+              {item.message || item.event}
+            </span>
           </p>
         ))}
       </div>
       <input
         ref={inputRef}
         className="
-          w-full text-white bg-[#d9d9d9]  
+          w-full bg-[#d9d9d9] outline-none
           xl:rounded-[20px] rounded-[16px]  
           xl:pl-6 pl-3 xl:pb-0 md:pb-2 xl:h-14 h-11  
           xl:placeholder:text-[20px] placeholder:text-[14px] placeholder:text-gray-500  

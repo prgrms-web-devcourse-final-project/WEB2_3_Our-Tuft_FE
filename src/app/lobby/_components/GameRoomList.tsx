@@ -424,7 +424,7 @@ export default function GameRoomList({ roomsData }: GameRoomListProps) {
         {/* 새로고침 버튼 (우측 하단에 고정) */}
         <button
           onClick={refreshRooms}
-          className="absolute bottom-4 right-4 bg-[var(--color-secondPoint)] hover:bg-[var(--color-secondPoint-hover)] w-16 h-16 rounded-full flex items-center justify-center border border-black drop-shadow-custom transition-all cursor-pointer"
+          className="absolute bottom-4 right-4 bg-[var(--color-secondPoint)] hover:bg-[var(--color-secondPoint-hover)] w-16 h-16 rounded-full flex items-center justify-center border border-black drop-shadow-custom transition-all cursor-pointer z-50"
           aria-label="새로고침"
         >
           <Image
