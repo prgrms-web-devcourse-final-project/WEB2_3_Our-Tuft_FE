@@ -7,7 +7,6 @@ import { defaultFetch } from "../../../service/api/defaultFetch";
 import { useParams } from "next/navigation";
 import { useIsRoomStore, useRoomInfoStore } from "../../../store/roomStore";
 
-
 export default function TopicModal({
   setIsClose,
   setTopic,
@@ -26,6 +25,7 @@ export default function TopicModal({
     const response = await defaultFetch<topicModal>(`/quizzes/${infoRoom}`, {
       method: "GET",
     });
+    console.log(response);
     setQuizCategories(response);
   };
 

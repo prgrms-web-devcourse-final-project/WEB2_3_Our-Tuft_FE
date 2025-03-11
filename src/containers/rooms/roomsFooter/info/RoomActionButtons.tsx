@@ -34,7 +34,7 @@ export default function RoomActionButtons({
       setIsOpenModal(true);
     }
   };
-  
+
   const storedUserId = sessionStorage.getItem("userId");
   console.log("storedUserId", isHost, storedUserId, hostNum);
 
@@ -66,18 +66,6 @@ export default function RoomActionButtons({
     xl:py-8 py-2
     cursor-pointer p-2 mr-3 2xl:relative group`}
           >
-            <div className="group w-[300px] h-[10px] absolute left-[73%] transform -translate-x-1/2 -top-3 2xl:block hidden">
-              <img
-                src="/assets/profile/eyes/default-eye.png"
-                alt="Initial Image"
-                className="w-[20%] group-hover:hidden"
-              />
-              <img
-                src="/assets/profile/eyes/special-eye.png"
-                alt="Hover Image"
-                className="w-[20%] group-hover:block hidden"
-              />
-            </div>
             <span className="relative z-10">
               {ready ? "준비 완료" : "준비"}
             </span>

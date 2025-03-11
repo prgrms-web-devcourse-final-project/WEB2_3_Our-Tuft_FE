@@ -6,11 +6,13 @@ interface booleanState {
   isQuizisReady: boolean;
   isAllReady: boolean;
   infoRoom: string;
+  quizeSet: string;
   setIsHost: (val: boolean) => void;
   setHostNum: (val: string) => void;
   setIsQuizisReady: (val: boolean) => void;
   setAsAllReady: (val: boolean) => void;
   setInfoRoom: (val: string) => void;
+  setQuizeSet: (val: string) => void;
 }
 export const useIsRoomStore = create<booleanState>((set) => ({
   isHost: false,
@@ -18,11 +20,13 @@ export const useIsRoomStore = create<booleanState>((set) => ({
   isQuizisReady: false,
   isAllReady: true,
   infoRoom: "",
+  quizeSet: "",
   setHostNum: (val) => set({ hostNum: val }),
   setIsHost: (val) => set({ isHost: val }),
   setIsQuizisReady: (val) => set({ isQuizisReady: val }),
   setAsAllReady: (val) => set({ isAllReady: val }),
   setInfoRoom: (val) => set({ infoRoom: val }),
+  setQuizeSet: (val) => set({ quizeSet: val }),
 }));
 
 interface roomInfoState {
