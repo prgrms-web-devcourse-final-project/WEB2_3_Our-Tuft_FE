@@ -8,6 +8,7 @@ import QuizBoard from "../../../components/QuizBoard";
 import OXFooter from "../../../components/OXFooter";
 import OXMain from "./OXMain";
 import OXButtons from "./OXMain/oxButtons";
+import Modal from "../../../components/Modal";
 import {
   sendMessage,
   socketConnection,
@@ -17,15 +18,16 @@ import {
 import { quizeUserList } from "../../../types/quize";
 import { UserScoreList } from "../../../store/quizeStore";
 import { defaultFetch } from "../../../service/api/defaultFetch";
-import Modal from "../../../components/Modal";
 import { useLoginStore } from "../../../store/store";
+import { useIsRoomStore } from "../../../store/roomStore";
 
 export default function OXQuizeContainer() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const id = searchParams.get("id");
-  const isFirstRender = useRef<boolean>(true);
   const { token } = useLoginStore();
+  const { isHost } = useIsRoomStore();
+  const isFirstRender = useRef<boolean>(true);
   const [chatList, setChatList] = useState<
     { message: string; sender: string; event?: string }[]
   >([]);
@@ -75,7 +77,7 @@ export default function OXQuizeContainer() {
     const handleNewMessage = async (msg: any) => {
       console.log(msg);
       console.log("msg.event: ", msg.event);
-      if (msg.event === "ALL_CONNECTED") {
+      if (msg.event === "ALL_CONNECTED" && isHost) {
         sendMessage(`/app/room/${id}/event`, " GAME_STARTED");
       }
 
