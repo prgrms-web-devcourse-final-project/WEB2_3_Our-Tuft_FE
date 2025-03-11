@@ -58,7 +58,6 @@ export default function Chat({
    * 채팅 받기 (/topic/room/${roomId})
    */
 
-  /* eslint-disable react-hooks/exhaustive-deps */
   useEffect(() => {
     const handleNewMessage = async (msg: any) => {
       if (
@@ -103,7 +102,6 @@ export default function Chat({
       }
     };
   }, []);
-  /* eslint-disable react-hooks/exhaustive-deps */
 
   useEffect(() => {
     socketConnection(token ?? undefined).catch((error) => {

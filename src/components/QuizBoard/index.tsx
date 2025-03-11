@@ -2,14 +2,29 @@
 
 import Timer from "./Timer";
 import { quizeMsg } from "../../types/quize";
+import { useEffect, useState } from "react";
 
 export default function QuizBoard({
   quize,
   chat,
+  midAnswer,
 }: {
   quize?: string;
   chat: quizeMsg[];
+  midAnswer: string;
 }) {
+  const [showAnswer, setShowAnswer] = useState(false);
+
+  useEffect(() => {
+    if (midAnswer) {
+      setShowAnswer(true);
+      const timer = setTimeout(() => {
+        setShowAnswer(false);
+      }, 5000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [midAnswer]);
   return (
     <div
       className="
@@ -46,6 +61,11 @@ export default function QuizBoard({
         <div className="absolute bottom-5 2xl:bottom-7 right-5 2xl:right-7">
           <Timer quize={quize ?? ""} />
         </div>
+        {midAnswer && (
+          <div className=" absolute bottom-5 text-2xl">
+            이전 정답: 박쥐{midAnswer}
+          </div>
+        )}
       </div>
     </div>
   );

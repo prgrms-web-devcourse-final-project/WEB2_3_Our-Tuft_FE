@@ -5,7 +5,7 @@ import { useEffect } from "react";
 
 export default function Timer({ quize }: { quize: string }) {
   const time = new Date();
-  time.setSeconds(time.getSeconds() + 60);
+  time.setSeconds(time.getSeconds() + 10);
 
   const { seconds, restart } = useTimer({
     expiryTimestamp: time,
@@ -16,7 +16,7 @@ export default function Timer({ quize }: { quize: string }) {
   useEffect(() => {
     if (quize) {
       const newTime = new Date();
-      newTime.setSeconds(newTime.getSeconds() + 60);
+      newTime.setSeconds(newTime.getSeconds() + 10);
       restart(newTime);
     }
   }, [quize, restart]);
