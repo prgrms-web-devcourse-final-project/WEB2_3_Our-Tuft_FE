@@ -11,7 +11,7 @@ export default function QuizBoard({
 }: {
   quize?: string;
   chat: quizeMsg[];
-  midAnswer: string;
+  midAnswer?: string;
 }) {
   const [showAnswer, setShowAnswer] = useState(false);
 
