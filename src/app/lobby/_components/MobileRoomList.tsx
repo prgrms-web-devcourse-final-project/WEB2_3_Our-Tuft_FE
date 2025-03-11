@@ -64,6 +64,27 @@ export default function MobileRoomList({ roomsData }: MobileRoomListProps) {
     }
   };
 
+  // 새로고침
+  const refreshRooms = async () => {
+    setLoading(true);
+    try {
+      const data = await defaultFetch<ApiResponse>("/lobbies/rooms");
+      if (data.isSuccess) {
+        setRooms(data.data);
+        console.log("방 목록 새로고침 완료");
+      } else {
+        throw new Error(data.message || "새로고침에 실패했습니다");
+      }
+    } catch (err) {
+      console.error("Error refreshing rooms:", err);
+      setError(
+        err instanceof Error ? err.message : "방 목록 새로고침에 실패했습니다"
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -126,8 +147,24 @@ export default function MobileRoomList({ roomsData }: MobileRoomListProps) {
     <div className="bg-[var(--color-point)] w-full h-full rounded-xl p-1 relative">
       {/* 상단 버튼과 검색창 */}
       <div className="flex gap-1 items-center mb-2">
+        {/* 새로고침 버튼 */}
+        <div className="w-[30px]">
+          <button
+            onClick={refreshRooms}
+            className="h-[30px] w-[30px] bg-[var(--color-secondPoint)] hover:bg-[var(--color-secondPoint-hover)] rounded-xl flex items-center justify-center border border-black drop-shadow-custom transition-all cursor-pointer"
+            aria-label="새로고침"
+          >
+            <Image
+              src="/assets/images/refresh.png"
+              alt="새로고침"
+              width={16}
+              height={16}
+            />
+          </button>
+        </div>
+
         {/* 게임 모드 드롭다운 */}
-        <div className="relative w-1/3" ref={dropdownRef}>
+        <div className="relative flex-1" ref={dropdownRef}>
           <button
             onClick={() => setIsDropdownOpen(!isDropdownOpen)}
             className="h-[30px] w-full border border-black text-white text-xs rounded-xl cursor-pointer transition-all inline-flex items-center drop-shadow-custom overflow-hidden group"
@@ -154,25 +191,11 @@ export default function MobileRoomList({ roomsData }: MobileRoomListProps) {
               />
             </div>
           </button>
-          {isDropdownOpen && (
-            <div className="absolute z-10 w-full mt-2 bg-[var(--color-second)] border border-black rounded-xl overflow-hidden drop-shadow-custom">
-              {gameModes.map((mode) => (
-                <button
-                  key={mode}
-                  onClick={() => {
-                    setSelectedMode(mode);
-                    setIsDropdownOpen(false);
-                  }}
-                  className="w-full px-4 py-2 text-white text-xs hover:bg-[var(--color-amberOrange)] transition-all flex items-center justify-center"
-                >
-                  {mode}
-                </button>
-              ))}
-            </div>
-          )}
+          {/* 드롭다운 내용  */}
         </div>
+
         {/* 검색창 */}
-        <div className="relative inline-flex items-center h-[30px] w-2/3 bg-transparent border-none">
+        <div className="relative inline-flex items-center h-[30px] w-[60%] bg-transparent border-none">
           <div className="relative w-full">
             <div className="relative flex items-center">
               <input
@@ -262,7 +285,7 @@ export default function MobileRoomList({ roomsData }: MobileRoomListProps) {
                 time={room.time}
                 maxUsers={room.maxUsers}
                 currentUsers={room.currentUsers}
-                gameRunning={room.gameRunning} // gameRunning 속성 추가
+                gameRunning={room.gameRunning}
               />
             </Link>
           ))
@@ -270,7 +293,7 @@ export default function MobileRoomList({ roomsData }: MobileRoomListProps) {
       </div>
       {/* 방 생성 버튼 */}
       <button
-        className="absolute bottom-4 right-4 w-15 h-15 bg-[var(--color-secondPoint)] hover:bg-[var(--color-secondPoint-hover)] drop-shadow-custom rounded-full flex items-center justify-center shadow-lg"
+        className="absolute bottom-4 right-4 w-15 h-15 bg-[var(--color-secondPoint)] hover:bg-[var(--color-secondPoint-hover)] drop-shadow-custom rounded-full flex items-center justify-center shadow-lg z-50"
         onClick={() => setIsCreateModalOpen(true)}
       >
         <Image
