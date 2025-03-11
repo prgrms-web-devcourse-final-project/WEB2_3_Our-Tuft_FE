@@ -304,7 +304,7 @@ export default function GameRoomList({ roomsData }: GameRoomListProps) {
             </div>
           </button>
           {isDropdownOpen && (
-            <div className="absolute z-10 w-full mt-2 bg-[var(--color-second)] border border-black rounded-xl overflow-hidden drop-shadow-custom">
+            <div className="absolute z-50 w-full mt-2 bg-[var(--color-second)] border border-black rounded-xl overflow-hidden drop-shadow-custom">
               {gameModes.map((mode) => (
                 <button
                   key={mode}
@@ -362,7 +362,7 @@ export default function GameRoomList({ roomsData }: GameRoomListProps) {
                   </div>
                 </button>
                 {isFilterDropdownOpen && (
-                  <div className="absolute z-10 w-full mt-2 bg-[var(--color-second)] border border-black rounded-xl overflow-hidden drop-shadow-custom">
+                  <div className="absolute z-50 w-full mt-2 bg-[var(--color-second)] border border-black rounded-xl overflow-hidden drop-shadow-custom">
                     {searchTypes.map((type) => (
                       <button
                         key={type}
