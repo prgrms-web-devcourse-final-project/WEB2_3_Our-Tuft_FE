@@ -68,7 +68,6 @@ export default function SpeedQuizContainer() {
         }
 
         if (msg.message === "게임이 종료되었습니다.") {
-          fetchScoreList();
           setIsOpen(true);
           setTimeout(() => {
             sendMessage(`/app/room/${id}/event`, "GAME_END");
