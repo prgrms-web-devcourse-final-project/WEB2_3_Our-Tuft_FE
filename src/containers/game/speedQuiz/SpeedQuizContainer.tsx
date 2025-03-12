@@ -112,7 +112,7 @@ export default function SpeedQuizContainer() {
       newTime.setSeconds(newTime.getSeconds() + 10);
       restart(newTime);
     }
-  }, [scoreList, restart]);
+  }, [isOpen, restart]);
 
   useEffect(() => {
     socketConnection(token ?? undefined).catch((error) => {
