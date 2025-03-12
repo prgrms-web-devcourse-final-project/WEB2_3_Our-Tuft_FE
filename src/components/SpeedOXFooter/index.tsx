@@ -43,7 +43,7 @@ export default function SpeedOXFooter({ chat }: { chat: quizeMsg[] }) {
           <div
             className={`
             absolute w-full bottom-18 2xl:bottom-23 left-0 
-            bg-[var(--color-point)]/90 h-[200%] z-20 overflow-auto overflow-x-hidden font-white
+            bg-[var(--color-point)]/70 h-[200%] z-20 overflow-auto overflow-x-hidden font-white
             rounded-t-2xl p-7 pr-10
           `}
           >

@@ -42,6 +42,7 @@ export function useInitializeGame(id: string) {
         method: "GET",
       }
     );
+    console.log(response);
     if (response) {
       setScoreList(response);
     }
