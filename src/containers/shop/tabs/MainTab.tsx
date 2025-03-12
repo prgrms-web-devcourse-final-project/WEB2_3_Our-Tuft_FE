@@ -7,6 +7,7 @@ import ItemCard from "../../../components/ItemCard/ItemCard";
 import { Item } from "../../../types/item";
 
 import searchIcon from "@/assets/images/search.png";
+import bannerImg from "@/assets/images/banner.png";
 import { defaultFetch } from "../../../service/api/defaultFetch";
 
 interface MainTabProps {
@@ -78,7 +79,7 @@ export default function MainTab({ data, fetchUserPoints }: MainTabProps) {
               className="grid row-span-1 items-center justify-center col-span-1 md:col-span-2 w-full bg-[#d3d3d3] cursor-pointer"
               onClick={checkAttendance}
             >
-              <span>베너</span>
+              <Image src={bannerImg} alt="" />
             </div>
           )}
           {/* 아이템 렌더링 */}
