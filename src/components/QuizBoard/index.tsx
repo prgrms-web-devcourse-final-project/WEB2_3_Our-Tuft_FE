@@ -14,6 +14,7 @@ export default function QuizBoard({
   midAnswer?: string;
 }) {
   const [showAnswer, setShowAnswer] = useState(false);
+  const [midAnswe, setMidAnswer] = useState("");
 
   useEffect(() => {
     if (midAnswer) {
@@ -25,6 +26,7 @@ export default function QuizBoard({
       return () => clearTimeout(timer);
     }
   }, [midAnswer]);
+
   return (
     <div
       className="
@@ -62,9 +64,7 @@ export default function QuizBoard({
           <Timer quize={quize ?? ""} />
         </div>
         {midAnswer && (
-          <div className=" absolute bottom-5 text-2xl">
-            이전 정답: 박쥐{midAnswer}
-          </div>
+          <div className=" absolute bottom-5 text-2xl">이전 정답: 박쥐{}</div>
         )}
       </div>
     </div>
