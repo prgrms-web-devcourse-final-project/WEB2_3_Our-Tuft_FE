@@ -54,10 +54,10 @@ export default function InfoChange({
     setNickname(e.target.value);
     onInfoChange(e.target.value, introduction);
 
-    // 입력 시 이전 결과 메시지 초기화
-    if (nicknameChangeResult) {
-      setNicknameChangeResult(null);
-    }
+    // // 입력 시 이전 결과 메시지 초기화
+    // if (nicknameChangeResult) {
+    //   setNicknameChangeResult(null);
+    // }
   };
 
   // 자기소개 변경 핸들러
@@ -86,7 +86,6 @@ export default function InfoChange({
 
       if (response.isSuccess) {
         // 프로필 정보 업데이트 반영
-        onInfoChange(nickname, introduction);
         login(response.data.accessToken);
         console.log("accessToken 변경 완료: ", response.data.accessToken);
 
@@ -94,6 +93,7 @@ export default function InfoChange({
           success: true,
           message: "변경이 완료되었습니다!",
         });
+        onInfoChange(nickname, introduction);
       } else {
         setNicknameChangeResult({
           success: false,
