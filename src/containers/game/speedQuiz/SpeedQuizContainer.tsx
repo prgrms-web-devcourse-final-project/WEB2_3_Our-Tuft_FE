@@ -60,11 +60,7 @@ export default function SpeedQuizContainer() {
         }
 
         if ("message" in msg && "sender" in msg) {
-          if (msg.message?.includes("정답")) {
-            setMidAnswer(chatList.pop()?.message!);
-          } else {
-            setChatList((prevMessages) => [...prevMessages, msg]);
-          }
+          setChatList((prevMessages) => [...prevMessages, msg]);
         }
 
         if (msg.message === "게임이 종료되었습니다.") {
