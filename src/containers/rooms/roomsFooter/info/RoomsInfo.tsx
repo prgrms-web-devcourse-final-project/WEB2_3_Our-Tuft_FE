@@ -3,11 +3,9 @@
 import { useState } from "react";
 import { topic } from "../../../../types/modal";
 import { roomInfoData } from "../../../../types/Room";
-import { useIsRoomStore, useRoomInfoStore } from "../../../../store/roomStore";
+import { useIsRoomStore } from "../../../../store/roomStore";
 import TopicModal from "../../roomsModal/TopicModal";
 import CreateRoomModal from "../../../../app/lobby/_components/CreateRoomModal";
-import Image from "next/image";
-import setting from "@/assets/images/setting.png";
 
 export default function RoomsInfo({ roomInfo }: { roomInfo: roomInfoData }) {
   const { isHost, quizeSet } = useIsRoomStore();
@@ -17,7 +15,6 @@ export default function RoomsInfo({ roomInfo }: { roomInfo: roomInfoData }) {
     quizSetName: "",
   });
   const [isCreateRoomOpen, setCreateRoomOpen] = useState<boolean>(false);
-  const { roomInfo: newRoom } = useRoomInfoStore();
 
   return (
     <div
@@ -50,7 +47,7 @@ export default function RoomsInfo({ roomInfo }: { roomInfo: roomInfoData }) {
           xl:rounded-[20px] md:rounded-[16px] rounded-[8px] 
           xl:py-5 xl:px-10 md:px-5 p-1"
         >
-          {newRoom ? newRoom.time : roomInfo.data.time}초
+          {roomInfo.data.time}초
         </div>
       </div>
       <div
@@ -67,10 +64,10 @@ export default function RoomsInfo({ roomInfo }: { roomInfo: roomInfoData }) {
           xl:rounded-[20px] md:rounded-[16px] rounded-[8px]
           xl:py-5 xl:px-10 md:px-5 p-1"
         >
-          {newRoom ? newRoom.round : roomInfo.data.round}
+          {roomInfo.data.round}
         </div>
       </div>
-      {isHost ? (
+      {/* {isHost ? (
         <div
           onClick={() => isHost && setCreateRoomOpen(true)}
           className="
@@ -91,7 +88,7 @@ export default function RoomsInfo({ roomInfo }: { roomInfo: roomInfoData }) {
             <span className="xl:block hidden">설정</span>
           </>
         </div>
-      ) : null}
+      ) : null} */}
       {isOpen && (
         <TopicModal setIsClose={setOpen} setTopic={setTopic} topic={topic} />
       )}

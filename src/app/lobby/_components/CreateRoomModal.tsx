@@ -4,7 +4,6 @@ import { createPortal } from "react-dom";
 import { defaultFetch } from "../../../service/api/defaultFetch";
 import { useParams, useRouter } from "next/navigation";
 import { useLoginStore } from "../../../store/store";
-import { useRoomInfoStore } from "../../../store/roomStore";
 
 interface CreateRoomModalProps {
   isOpen: boolean;
@@ -60,8 +59,7 @@ export default function CreateRoomModal({
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const { setInfo } = useRoomInfoStore();
-  const { roomInfo: newRoom } = useRoomInfoStore();
+
   // 컴포넌트 마운트 상태 관리
   useEffect(() => {
     setMounted(true);
@@ -81,7 +79,7 @@ export default function CreateRoomModal({
   }, [isOpen, mounted]);
 
   // 폼 상태 변수
-  const [roomTitle, setRoomTitle] = useState(newRoom.roomName || "");
+  const [roomTitle, setRoomTitle] = useState("");
   const [password, setPassword] = useState("");
   const [players, setPlayers] = useState(4);
   const [rounds, setRounds] = useState(5);
@@ -192,9 +190,6 @@ export default function CreateRoomModal({
           body: JSON.stringify(requestData),
         }
       );
-
-      setInfo(data.data);
-      console.log(data);
 
       if (data.isSuccess) {
         if (type === "설정") {
