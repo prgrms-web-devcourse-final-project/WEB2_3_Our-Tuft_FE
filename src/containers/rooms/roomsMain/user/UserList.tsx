@@ -23,7 +23,7 @@ export default function UserList({
   userList: roomUserListData;
   playList: playerData;
 }) {
-  console.log(playList);
+  console.log("userList", userList);
 
   const { setIsHost, isHost, setAsAllReady } = useIsRoomStore();
   const storedUserId = sessionStorage.getItem("userId");
@@ -88,7 +88,7 @@ export default function UserList({
           key={index}
         >
           <UserCard
-            playList={playList}
+            playList={userList}
             nickName={i.username}
             isReady={i.isReady}
             host={Number(i.userId) === Number(userList?.data.hostId)}
