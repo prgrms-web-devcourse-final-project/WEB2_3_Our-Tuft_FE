@@ -199,7 +199,9 @@ export default function ShopContainer() {
               wishlist={wishlist}
             />
           )}
-          {selectedTab === "item" && <ItemTab data={groupedData} />}
+          {selectedTab === "item" && (
+            <ItemTab data={groupedData} wishlist={wishlist} />
+          )}
         </div>
       </div>
     </div>

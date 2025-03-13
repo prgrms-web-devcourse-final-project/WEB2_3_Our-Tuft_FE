@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 
 import ItemCard from "../../../components/ItemCard/ItemCard";
@@ -9,11 +9,13 @@ import searchIcon from "@/assets/images/search.png";
 
 interface ItemTabProps {
   data: { [key: string]: Item[] };
+  wishlist: Item[] | null;
 }
 
-export default function ItemTab({ data }: ItemTabProps) {
+export default function ItemTab({ data, wishlist }: ItemTabProps) {
   const [query, setQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string | null>("눈");
+  const [wishlistSet, setWishlistSet] = useState<Set<number>>(new Set());
 
   const categories = ["눈", "입", "피부", "치장"];
 
@@ -23,6 +25,14 @@ export default function ItemTab({ data }: ItemTabProps) {
     피부: "SKIN",
     치장: "NICKNAME",
   };
+
+  useEffect(() => {
+    // wishlist가 있을 경우 Set<number>로 변환하여 저장
+    if (wishlist) {
+      const wishlistIds = new Set(wishlist.map((item) => item.id));
+      setWishlistSet(wishlistIds);
+    }
+  }, [wishlist]);
 
   const handleSearch = () => {
     if (query.trim() === "") return;
@@ -86,6 +96,7 @@ export default function ItemTab({ data }: ItemTabProps) {
                 id={item.id}
                 imageUrl={item.imageUrl}
                 name={item.name}
+                wishlist={wishlistSet}
               />
             ))
           ) : (
