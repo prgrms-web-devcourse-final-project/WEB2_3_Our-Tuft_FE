@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { topic } from "../../../../types/modal";
 import { roomInfoData } from "../../../../types/Room";
 import { useIsRoomStore } from "../../../../store/roomStore";
@@ -30,6 +30,9 @@ export default function RoomsInfo({ roomInfo }: { roomInfo: roomInfoData }) {
     }
     setIsPlaying(!isPlaying);
   };
+  useEffect(() => {
+    audioRef.current && audioRef.current.play();
+  }, []);
   return (
     <div
       className="
