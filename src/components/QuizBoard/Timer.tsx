@@ -16,7 +16,7 @@ export default function Timer({ quize }: { quize: string }) {
   useEffect(() => {
     if (quize) {
       const newTime = new Date();
-      newTime.setSeconds(newTime.getSeconds() + 10);
+      newTime.setSeconds(newTime.getSeconds() + 15);
       restart(newTime);
     }
   }, [quize, restart]);
