@@ -81,7 +81,7 @@ export default function CreateRoomModal({
   }, [isOpen, mounted]);
 
   // 폼 상태 변수
-  const [roomTitle, setRoomTitle] = useState("");
+  const [roomTitle, setRoomTitle] = useState(newRoom.roomName || "");
   const [password, setPassword] = useState("");
   const [players, setPlayers] = useState(4);
   const [rounds, setRounds] = useState(5);
@@ -381,7 +381,7 @@ export default function CreateRoomModal({
                 <label className="text-white text-xl">방 제목</label>
                 <input
                   type="text"
-                  value={newRoom.roomName || roomTitle}
+                  value={roomTitle}
                   onChange={(e) => setRoomTitle(e.target.value)}
                   placeholder="방 제목을 입력하세요"
                   className="w-full bg-[#D9D9D9] border border-white/50 rounded-xl p-3 text-black focus:outline-none md:placeholder:opacity-0 xl:placeholder:opacity-100"
