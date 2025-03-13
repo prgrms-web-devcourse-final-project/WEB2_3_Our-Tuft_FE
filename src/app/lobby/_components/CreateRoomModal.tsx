@@ -190,6 +190,7 @@ export default function CreateRoomModal({
           body: JSON.stringify(requestData),
         }
       );
+      console.log(data);
 
       if (data.isSuccess) {
         if (type === "설정") {

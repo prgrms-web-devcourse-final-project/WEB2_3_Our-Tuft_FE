@@ -6,6 +6,8 @@ import { roomInfoData } from "../../../../types/Room";
 import { useIsRoomStore } from "../../../../store/roomStore";
 import TopicModal from "../../roomsModal/TopicModal";
 import CreateRoomModal from "../../../../app/lobby/_components/CreateRoomModal";
+import Image from "next/image";
+import setting from "@/assets/icons/setting.png";
 
 export default function RoomsInfo({ roomInfo }: { roomInfo: roomInfoData }) {
   const { isHost, quizeSet } = useIsRoomStore();
@@ -67,7 +69,7 @@ export default function RoomsInfo({ roomInfo }: { roomInfo: roomInfoData }) {
           {roomInfo.data.round}
         </div>
       </div>
-      {/* {isHost ? (
+      {isHost ? (
         <div
           onClick={() => isHost && setCreateRoomOpen(true)}
           className="
@@ -88,7 +90,7 @@ export default function RoomsInfo({ roomInfo }: { roomInfo: roomInfoData }) {
             <span className="xl:block hidden">설정</span>
           </>
         </div>
-      ) : null} */}
+      ) : null}
       {isOpen && (
         <TopicModal setIsClose={setOpen} setTopic={setTopic} topic={topic} />
       )}
