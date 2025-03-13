@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useSearchParams, useParams } from "next/navigation";
 
 import RoomsMain from "./roomsMain";
@@ -35,6 +35,18 @@ export default function RoomsContainer() {
       setError("방 정보를 불러오는데 실패했습니다.");
       setIsLoading(false);
     }
+  };
+
+  const [isPlaying, setIsPlaying] = useState(false);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+
+  const togglePlayPause = () => {
+    if (isPlaying) {
+      audioRef.current && audioRef.current.pause();
+    } else {
+      audioRef.current && audioRef.current.play();
+    }
+    setIsPlaying(!isPlaying);
   };
 
   useEffect(() => {
@@ -85,6 +97,17 @@ export default function RoomsContainer() {
         <RoomsHeader roomInfo={roomInfo} />
         <RoomsMain roomInfo={roomInfo} />
         <RoomsFooter roomInfo={roomInfo} />
+      </div>
+
+      <div>
+        <h1>음악 플레이어</h1>
+        <audio ref={audioRef}>
+          <source src="path_to_your_song.mp3" type="audio/mp3" />
+          Your browser does not support the audio element.
+        </audio>
+        <button onClick={togglePlayPause}>
+          {isPlaying ? "일시 정지" : "재생"}
+        </button>
       </div>
     </div>
   );
