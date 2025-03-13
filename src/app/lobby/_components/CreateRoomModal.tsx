@@ -83,7 +83,7 @@ export default function CreateRoomModal({
   const [password, setPassword] = useState("");
   const [players, setPlayers] = useState(4);
   const [rounds, setRounds] = useState(5);
-  const [timeLimit, setTimeLimit] = useState(10);
+  const [timeLimit, setTimeLimit] = useState(15);
   const [selectedGameMode, setSelectedGameMode] = useState(0);
 
   // 게임 모드 데이터
