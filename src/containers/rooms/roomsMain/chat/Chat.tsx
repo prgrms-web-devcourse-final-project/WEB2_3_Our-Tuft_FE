@@ -99,11 +99,7 @@ export default function Chat({
     fetchUserList();
 
     return () => {
-      if (isFirstRender.current) {
-        isFirstRender.current = false;
-      } else {
-        unsubscribeFromTopic(`/topic/room/${params.id}`);
-      }
+      unsubscribeFromTopic(`/topic/room/${params.id}`);
     };
   }, []);
 
