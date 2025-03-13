@@ -8,7 +8,7 @@ interface GameRoomItemProps {
   gameType: "SPEED" | "OX";
   time?: number;
   maxUsers?: number;
-  currentPlayers?: number;
+  currentPlayer?: number;
   gameRunning?: boolean;
 }
 
@@ -20,7 +20,7 @@ export default function GameRoomItem({
   gameType,
   time = 60, // 기본값 설정
   maxUsers = 8, // 기본값 설정
-  currentPlayers = 1, // 기본값 설정
+  currentPlayer = 1, // 기본값 설정
   gameRunning = false, // 기본값 설정
 }: GameRoomItemProps) {
   // 게임 타입에 맞는 한글 이름으로 변환
@@ -90,7 +90,7 @@ export default function GameRoomItem({
 
       {/* 참가자 수 */}
       <div className="absolute left-[22%] bottom-[8%] text-[1.4em]">
-        {currentPlayers} / {maxUsers}
+        {currentPlayer} / {maxUsers}
       </div>
 
       {/* 카테고리 태그 */}

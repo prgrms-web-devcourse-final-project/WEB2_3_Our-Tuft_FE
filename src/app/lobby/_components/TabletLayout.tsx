@@ -19,7 +19,7 @@ interface GameRoomListRoom {
   gameType: "SPEED" | "OX";
   time?: number;
   maxUsers?: number;
-  currentPlayers?: number;
+  currentPlayer?: number;
   gameRunning?: boolean;
 }
 
