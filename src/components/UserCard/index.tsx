@@ -28,13 +28,16 @@ export default function UserCard({
   playList: quizeUserList;
 }) {
   return (
-    <div>
+    <div className="flex flex-col items-center justify-center w-full">
       <div
-        className={`flex flex-col items-center justify-center w-full 
-          ${
-            oxAnswer ? "bg-[#FFA20E]" : bgColor
-          } ${borderRadius} ${padding} ${textSize} ${className}  
-          hover:opacity-80 drop-shadow-custom cursor-pointer`}
+        className={`
+          flex flex-col items-center justify-center
+          cursor-pointer hover:opacity-80 drop-shadow-custom 
+          w-full 2xl:w-full 
+          xl:px-8 xl:pt-8 md:p-3 py-3 px-7 
+          2xl:rounded-[20px] md:rounded-[18px] rounded-[28px] 
+          2xl:text-xl md:text-xl text-lg 
+        `}
       >
         <div className="relative w-full h-full overflow-hidden flex items-center">
           <div
