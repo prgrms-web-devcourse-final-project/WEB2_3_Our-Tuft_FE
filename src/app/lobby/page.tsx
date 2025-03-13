@@ -26,7 +26,7 @@ interface Room {
   gameType: "SPEED" | "OX";
   time?: number;
   maxUsers?: number;
-  currentUsers?: number;
+  currentPlayers?: number;
 }
 
 // 메시지 인터페이스 정의
