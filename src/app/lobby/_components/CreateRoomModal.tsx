@@ -242,6 +242,8 @@ export default function CreateRoomModal({
 
   if (!isOpen || !mounted) return null;
 
+  console.log("selectedGameMode", selectedGameMode);
+
   const modalContent = (
     <div className="fixed inset-0 flex items-center justify-center z-[9999]">
       {/* 전체 화면 마스킹*/}
@@ -586,10 +588,7 @@ export default function CreateRoomModal({
                     className={`px-6 py-2.5 md:px-4 md:py-2 bg-[var(--color-secondPoint)] text-white text-lg md:text-base rounded-lg hover:opacity-90 transition-opacity ${
                       isLoading ? "opacity-70 cursor-wait" : ""
                     }`}
-                    disabled={
-                      isLoading ||
-                      gameModes[selectedGameMode].name === "CATCHMIND"
-                    }
+                    disabled={isLoading || selectedGameMode === 1}
                   >
                     {isLoading
                       ? "생성 중..."
