@@ -19,7 +19,7 @@ export default function RoomsInfo({ roomInfo }: { roomInfo: roomInfoData }) {
   });
   const [isCreateRoomOpen, setCreateRoomOpen] = useState<boolean>(false);
 
-  const [isPlaying, setIsPlaying] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(true);
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
   const togglePlayPause = () => {
@@ -82,15 +82,18 @@ export default function RoomsInfo({ roomInfo }: { roomInfo: roomInfoData }) {
         </div>
       </div>
       <div>
-        <audio ref={audioRef}>
+        <audio ref={audioRef} loop>
           <source src="/assets/audio/SellBuyMusicbgm.mp3" type="audio/mp3" />
           Your browser does not support the audio element.
         </audio>
-        <button onClick={togglePlayPause} className="mr-3">
+        <button
+          onClick={togglePlayPause}
+          className="mr-bg-[var(--color-point)] xl:rounded-[20px] md:rounded-[16px] rounded-[8px]  p-1"
+        >
           {isPlaying ? (
-            <Image src={off} alt="소리" />
+            <Image src={off} alt="소리" width="60" />
           ) : (
-            <Image src={up} alt="소리" />
+            <Image src={up} alt="소리" width="60" />
           )}
         </button>
       </div>
