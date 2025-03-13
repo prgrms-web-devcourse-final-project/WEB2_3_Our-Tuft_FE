@@ -4,6 +4,7 @@ import { createPortal } from "react-dom";
 import { defaultFetch } from "../../../service/api/defaultFetch";
 import { useParams, useRouter } from "next/navigation";
 import { useLoginStore } from "../../../store/store";
+import { useRoomInfoStore } from "../../../store/roomStore";
 
 interface CreateRoomModalProps {
   isOpen: boolean;
@@ -59,7 +60,8 @@ export default function CreateRoomModal({
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-
+  const { setInfo } = useRoomInfoStore();
+  const { roomInfo: newRoom } = useRoomInfoStore();
   // 컴포넌트 마운트 상태 관리
   useEffect(() => {
     setMounted(true);
@@ -190,6 +192,8 @@ export default function CreateRoomModal({
           body: JSON.stringify(requestData),
         }
       );
+
+      setInfo(data.data);
       console.log(data);
 
       if (data.isSuccess) {
@@ -377,7 +381,7 @@ export default function CreateRoomModal({
                 <label className="text-white text-xl">방 제목</label>
                 <input
                   type="text"
-                  value={roomTitle}
+                  value={newRoom.roomName || roomTitle}
                   onChange={(e) => setRoomTitle(e.target.value)}
                   placeholder="방 제목을 입력하세요"
                   className="w-full bg-[#D9D9D9] border border-white/50 rounded-xl p-3 text-black focus:outline-none md:placeholder:opacity-0 xl:placeholder:opacity-100"

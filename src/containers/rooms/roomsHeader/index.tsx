@@ -3,10 +3,11 @@ import lock from "@/assets/icons/rock.png";
 import unlock from "@/assets/images/public.png";
 import CloseButton from "../../../components/CloseButton/CloseButton";
 import { roomInfoData } from "../../../types/Room";
-import { useIsRoomStore } from "../../../store/roomStore";
+import { useIsRoomStore, useRoomInfoStore } from "../../../store/roomStore";
 import { useEffect } from "react";
 
 export default function RoomsHeader({ roomInfo }: { roomInfo: roomInfoData }) {
+  const { roomInfo: newRoom } = useRoomInfoStore();
   const { setInfoRoom } = useIsRoomStore();
   useEffect(() => {
     setInfoRoom(roomInfo.data.gameType);
@@ -43,7 +44,7 @@ export default function RoomsHeader({ roomInfo }: { roomInfo: roomInfoData }) {
               p-0 pl-20 xl:p-4 md:p-2
               "
           >
-            # {roomInfo.data.roomId}
+            # {newRoom ? newRoom.roomId : roomInfo.data.roomId}
           </div>
 
           <div
@@ -55,7 +56,7 @@ export default function RoomsHeader({ roomInfo }: { roomInfo: roomInfoData }) {
               mt-3 xl:m-0 md:m-0
               "
           >
-            {roomInfo.data.gameType} 퀴즈
+            {newRoom ? newRoom.gameType : roomInfo.data.gameType} 퀴즈
           </div>
 
           <div
@@ -71,7 +72,7 @@ export default function RoomsHeader({ roomInfo }: { roomInfo: roomInfoData }) {
               xl:overflow-visible xl:whitespace-normal xl:max-w-none 
               "
           >
-            {roomInfo.data.roomName}
+            {newRoom ? newRoom.roomName : roomInfo.data.roomName}
           </div>
         </div>
 
