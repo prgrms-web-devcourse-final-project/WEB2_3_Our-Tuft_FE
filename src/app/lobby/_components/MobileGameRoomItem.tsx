@@ -10,7 +10,7 @@ interface MobileGameRoomItemProps {
   time?: number;
   maxUsers?: number;
   currentPlayer?: number;
-  gameRunning?: boolean; // gameRunning 속성 추가
+  gameRunning?: boolean;
 }
 
 export default function MobileGameRoomItem({
@@ -19,16 +19,20 @@ export default function MobileGameRoomItem({
   round,
   disclosure,
   gameType,
-  time = 60, // 기본값 설정
-  maxUsers = 8, // 기본값 설정
-  currentPlayer = 1, // 기본값 설정
-  gameRunning = false, // 기본값 설정
+  time = 60,
+  maxUsers = 8,
+  currentPlayer = 1,
+  gameRunning = false,
 }: MobileGameRoomItemProps) {
-  // 게임 타입에 맞는 한글 이름으로 변환
   const gameTypeToKorean = {
     SPEED: "스피드 퀴즈",
     OX: "OX 퀴즈",
   };
+
+  const isFull =
+    currentPlayer !== undefined &&
+    maxUsers !== undefined &&
+    currentPlayer >= maxUsers;
 
   return (
     <div
