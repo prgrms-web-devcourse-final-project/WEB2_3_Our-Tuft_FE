@@ -66,7 +66,9 @@ export default function SpeedQuizContainer() {
         if (msg.message === "게임이 종료되었습니다.") {
           await fetchScoreList();
           setIsOpen(true);
-          sendMessage(`/app/room/${id}/event`, "GAME_END");
+          setTimeout(() => {
+            sendMessage(`/app/room/${id}/event`, "GAME_END");
+          }, 2000);
         }
 
         if (msg.message?.includes("라운드")) {
