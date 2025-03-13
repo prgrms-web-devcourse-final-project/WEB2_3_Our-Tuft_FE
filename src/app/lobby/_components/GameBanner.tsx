@@ -13,11 +13,11 @@ export default function GameBanner() {
     },
     {
       name: "speed",
-      image: "/assets/images/speed.png",
+      image: "/assets/images/speed-main.png",
     },
     {
       name: "ox",
-      image: "/assets/images/OX.png",
+      image: "/assets/images/OX-main.png",
     },
   ];
 
