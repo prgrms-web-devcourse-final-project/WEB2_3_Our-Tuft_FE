@@ -11,14 +11,16 @@ import {
 import { defaultFetch } from "../../../../service/api/defaultFetch";
 import { useIsRoomStore } from "../../../../store/roomStore";
 import { useLoginStore } from "../../../../store/store";
-import { roomUserListData } from "../../../../types/Room";
+import { roomPlayListData, roomUserListData } from "../../../../types/Room";
 
 export default function Chat({
   roomInfo,
   setUserList,
+  setPlayList,
 }: {
   roomInfo: string;
   setUserList: Dispatch<SetStateAction<roomUserListData | undefined>>;
+  setPlayList: Dispatch<SetStateAction<roomPlayListData | undefined>>;
 }) {
   const params = useParams();
   const router = useRouter();
@@ -57,6 +59,16 @@ export default function Chat({
     setUserList(response);
   };
 
+  const fetchGameUserList = async () => {
+    const response = await defaultFetch<roomPlayListData>(
+      `/room/${params.id}/game/players`,
+      {
+        method: "GET",
+      }
+    );
+    setPlayList(response);
+  };
+
   /*
    * 해당 방 구독 - 채팅 보내기 (/topic/room/${roomId})
    * 채팅 받기 (/topic/room/${roomId})
@@ -92,11 +104,27 @@ export default function Chat({
       }
 
       if (msg.event) {
-        fetchUserList();
+        Promise.all([fetchUserList(), fetchGameUserList()])
+          .then(([userList, gameUserList]) => {
+            console.log("유저 리스트:", userList);
+            console.log("게임 유저 리스트:", gameUserList);
+          })
+          .catch((error) => {
+            console.error("하나 이상의 요청이 실패함:", error);
+          });
       }
     };
+
     subscribeToTopic(`/topic/room/${params.id}`, handleNewMessage);
-    fetchUserList();
+
+    Promise.all([fetchUserList(), fetchGameUserList()])
+      .then(([userList, gameUserList]) => {
+        console.log("유저 리스트:", userList);
+        console.log("게임 유저 리스트:", gameUserList);
+      })
+      .catch((error) => {
+        console.error("하나 이상의 요청이 실패함:", error);
+      });
 
     return () => {
       unsubscribeFromTopic(`/topic/room/${params.id}`);
