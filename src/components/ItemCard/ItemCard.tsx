@@ -10,31 +10,18 @@ interface ItemCardProps {
   id: number;
   imageUrl: string;
   name: string;
+  wishlist: Set<number>;
 }
 
-export default function ItemCard({ id, imageUrl, name }: ItemCardProps) {
+export default function ItemCard({
+  id,
+  imageUrl,
+  name,
+  wishlist,
+}: ItemCardProps) {
   // const [isFavorited, setIsFavorited] = useState<boolean>(false);
   // const [favoriteItems, setFavoriteItems] = useState<number[]>([]);
-  const [favoriteItems, setFavoriteItems] = useState<Set<number>>(new Set());
-
-  // 찜 목록 가져오기 (초기 1회만 실행)
-  useEffect(() => {
-    const fetchFavorites = async () => {
-      try {
-        const response: { data: { content: { id: number }[] } } =
-          await defaultFetch("/shop/wishlist", { method: "GET" });
-
-        const favoriteSet = new Set(
-          response.data.content.map((item) => item.id)
-        );
-        setFavoriteItems(favoriteSet);
-      } catch (error) {
-        console.error("서버 요청 중 오류 발생:", error);
-      }
-    };
-
-    fetchFavorites();
-  }, []);
+  const [favoriteItems, setFavoriteItems] = useState<Set<number>>(wishlist);
 
   // 찜 여부 확인
   const isFavorited = favoriteItems.has(id);
