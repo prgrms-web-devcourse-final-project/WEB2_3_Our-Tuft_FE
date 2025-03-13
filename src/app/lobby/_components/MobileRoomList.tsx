@@ -114,7 +114,6 @@ export default function MobileRoomList({ roomsData }: MobileRoomListProps) {
     // 게임 타입 필터링
     if (selectedMode !== "전체") {
       const modeMap: Record<string, string> = {
-        "그림 맞추기": "CATCHMIND",
         "스피드 퀴즈": "SPEED",
         "OX 퀴즈": "OX",
       };
@@ -193,7 +192,7 @@ export default function MobileRoomList({ roomsData }: MobileRoomListProps) {
           {/* 드롭다운 내용  */}
           {isDropdownOpen && (
             <div className="absolute z-50 w-full mt-2 bg-[var(--color-second)] border border-black rounded-xl overflow-hidden drop-shadow-custom">
-              {["전체", "그림 맞추기", "스피드 퀴즈", "OX 퀴즈"].map((mode) => (
+              {["전체", "스피드 퀴즈", "OX 퀴즈"].map((mode) => (
                 <button
                   key={mode}
                   onClick={() => {
@@ -296,7 +295,9 @@ export default function MobileRoomList({ roomsData }: MobileRoomListProps) {
                 roomName={room.roomName}
                 round={room.round}
                 disclosure={room.disclosure}
-                gameType={room.gameType}
+                gameType={
+                  room.gameType === "CATCHMIND" ? "SPEED" : room.gameType
+                }
                 time={room.time}
                 maxUsers={room.maxUsers}
                 currentUsers={room.currentUsers}
