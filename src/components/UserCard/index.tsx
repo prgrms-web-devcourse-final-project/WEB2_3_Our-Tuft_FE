@@ -36,7 +36,7 @@ export default function UserCard({
           } ${borderRadius} ${padding} ${textSize} ${className}  
           hover:opacity-80 drop-shadow-custom cursor-pointer`}
       >
-        <div className="relative w-[35%] h-full overflow-hidden flex items-center">
+        <div className="relative w-full h-full overflow-hidden flex items-center">
           <div
             className="relative w-full rounded-xl overflow-hidden"
             style={{ aspectRatio: "1/1.2" }}
@@ -47,7 +47,7 @@ export default function UserCard({
                 src="/assets/profile/profile-bg.png"
                 alt="프로필 배경"
                 fill
-                sizes="(max-width: 768px) 30vw, (max-width: 1200px) 25vw, 15vw"
+                sizes="(max-width: 768px) 40vw, (max-width: 1200px) 25vw, 15vw"
                 className="object-cover rounded-xl"
                 style={{ objectPosition: "center top" }}
                 priority
@@ -63,7 +63,7 @@ export default function UserCard({
                 }
                 alt="스킨"
                 fill
-                sizes="(max-width: 768px) 30vw, (max-width: 1200px) 25vw, 15vw"
+                sizes="(max-width: 768px) 40vw, (max-width: 1200px) 25vw, 15vw"
                 className="object-contain"
                 style={{ objectPosition: "center bottom" }}
                 priority

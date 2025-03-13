@@ -26,7 +26,7 @@ export default function UserCard({
   children?: React.ReactNode;
 }) {
   return (
-    <div className="flex flex-col items-center justify-center">
+    <div className="flex flex-col items-center justify-center w-full">
       <div
         className={`
           flex flex-col items-center justify-center
@@ -44,9 +44,9 @@ export default function UserCard({
           2xl:text-xl md:text-xl text-lg 
         `}
       >
-        <div className="relative w-[35%] h-full overflow-hidden flex items-center">
+        <div className="relative w-full h-full overflow-hidden flex items-center">
           <div
-            className="relative w-full rounded-xl overflow-hidden"
+            className="relative w-full overflow-hidden"
             style={{ aspectRatio: "1/1.2" }}
           >
             {/* 배경 이미지 */}
