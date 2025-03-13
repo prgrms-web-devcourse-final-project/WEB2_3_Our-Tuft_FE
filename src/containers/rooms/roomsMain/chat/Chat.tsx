@@ -35,9 +35,13 @@ export default function Chat({
   >([]);
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.nativeEvent.isComposing) {
+      return;
+    }
     if (e.key === "Enter") {
       if (inputRef.current) {
         sendMessage(`/app/room/${params.id}`, inputRef.current.value);
+        console.log(inputRef.current.value);
         inputRef.current.value = "";
       }
     }

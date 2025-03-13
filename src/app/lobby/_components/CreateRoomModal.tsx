@@ -89,16 +89,6 @@ export default function CreateRoomModal({
   // 게임 모드 데이터
   const gameModes: GameModeInfo[] = [
     {
-      name: "그림 맞추기",
-      image: "/assets/images/skribbl.png",
-      title: "그림 맞추기",
-      descriptions: [
-        "각 라운드마다 제시어에 맞게\n플레이어는 그림으로 표현합니다.",
-        "그림을 보고, 제시어를 맞힌\n플레이어 순으로 점수를 획득합니다.",
-        "가장 많은 점수를 얻은\n플레이어가 승리합니다.",
-      ],
-    },
-    {
       name: "스피드 퀴즈",
       image: "/assets/images/speed.png",
       title: "스피드 퀴즈",
@@ -116,6 +106,16 @@ export default function CreateRoomModal({
         "O 또는 X로 답할 수 있는\n퀴즈가 출제됩니다.",
         "제한 시간 안에 정답을\n선택해야 합니다.",
         "많은 문제를 맞힐수록\n높은 포인트를 획득합니다.",
+      ],
+    },
+    {
+      name: "그림 맞추기",
+      image: "/assets/images/skribbl.png",
+      title: "그림 맞추기",
+      descriptions: [
+        "각 라운드마다 제시어에 맞게\n플레이어는 그림으로 표현합니다.",
+        "그림을 보고, 제시어를 맞힌\n플레이어 순으로 점수를 획득합니다.",
+        "가장 많은 점수를 얻은\n플레이어가 승리합니다.",
       ],
     },
   ];
@@ -586,7 +586,10 @@ export default function CreateRoomModal({
                     className={`px-6 py-2.5 md:px-4 md:py-2 bg-[var(--color-secondPoint)] text-white text-lg md:text-base rounded-lg hover:opacity-90 transition-opacity ${
                       isLoading ? "opacity-70 cursor-wait" : ""
                     }`}
-                    disabled={isLoading}
+                    disabled={
+                      isLoading ||
+                      gameModes[selectedGameMode].name === "CATCHMIND"
+                    }
                   >
                     {isLoading
                       ? "생성 중..."
