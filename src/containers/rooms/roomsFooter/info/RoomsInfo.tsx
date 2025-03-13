@@ -44,7 +44,7 @@ export default function RoomsInfo({ roomInfo }: { roomInfo: roomInfoData }) {
       <button
         className={`
           bg-[var(--color-secondPoint)] ${
-            isHost && "hover:bg-[var(--color-secondPoint-hover)]"
+            isHost && "hover:bg-[var(--color-secondPoint-hover)] cursor-pointer"
           }
           xl:rounded-[20px] rounded-[16px] xl:py-5 py-2 w-[40%] cursor-pointer"
         `}
@@ -94,9 +94,9 @@ export default function RoomsInfo({ roomInfo }: { roomInfo: roomInfoData }) {
           className="bg-[var(--color-point)] xl:rounded-[20px] md:rounded-[16px] rounded-[8px] p-1"
         >
           {isPlaying ? (
-            <Image src={off} alt="소리" width="60" />
+            <Image src={up} alt="소리" width="60" className="cursor-pointer" />
           ) : (
-            <Image src={up} alt="소리" width="60" />
+            <Image src={off} alt="소리" width="60" className="cursor-pointer" />
           )}
         </button>
       </div>
