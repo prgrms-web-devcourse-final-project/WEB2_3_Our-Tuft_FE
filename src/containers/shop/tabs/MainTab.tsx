@@ -76,10 +76,10 @@ export default function MainTab({ data, fetchUserPoints }: MainTabProps) {
         <div className="grid grid-rows-3 grid-cols-1 row-span-6 md:grid-cols-2 gap-2 lg:gap-3 xl:gap-4">
           {!query && (
             <div
-              className="grid row-span-1 items-center justify-center col-span-1 md:col-span-2 w-full bg-[#d3d3d3] cursor-pointer"
+              className="grid row-span-1 items-center justify-center col-span-1 md:col-span-2 w-full bg-[#DAEBFA] cursor-pointer"
               onClick={checkAttendance}
             >
-              <Image src={bannerImg} alt="" />
+              <Image src={bannerImg} alt="" className="min-h-[130px]" />
             </div>
           )}
           {/* 아이템 렌더링 */}

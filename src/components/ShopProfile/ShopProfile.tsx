@@ -151,7 +151,7 @@ export default function ShopProfile({
       {/* 사용자 닉네임, 장바구니 */}
       <div className="grid grid-rows-3 grid-cols-1 row-span-3 col-span-2 justify-center w-full h-full">
         <div className="row-span-1 bg-[#E9ECEF] w-full h-full flex items-center justify-center drop-shadow-custom">
-          <span className="md:text-xl lg:text-3xl xl:text-4xl 2xl:text-5xl">
+          <span className="text-base md:text-xl lg:text-3xl xl:text-4xl 2xl:text-5xl text-center">
             {nickname === null ? "사용자" : nickname}
           </span>
         </div>
