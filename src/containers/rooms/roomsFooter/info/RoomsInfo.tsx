@@ -1,11 +1,14 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { topic } from "../../../../types/modal";
 import { roomInfoData } from "../../../../types/Room";
 import { useIsRoomStore } from "../../../../store/roomStore";
 import TopicModal from "../../roomsModal/TopicModal";
 import CreateRoomModal from "../../../../app/lobby/_components/CreateRoomModal";
+import up from "@/assets/icons/volumeOn.svg";
+import off from "@/assets/icons/volumeOff.svg";
+import Image from "next/image";
 
 export default function RoomsInfo({ roomInfo }: { roomInfo: roomInfoData }) {
   const { isHost, quizeSet } = useIsRoomStore();
@@ -16,6 +19,17 @@ export default function RoomsInfo({ roomInfo }: { roomInfo: roomInfoData }) {
   });
   const [isCreateRoomOpen, setCreateRoomOpen] = useState<boolean>(false);
 
+  const [isPlaying, setIsPlaying] = useState(false);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+
+  const togglePlayPause = () => {
+    if (isPlaying) {
+      audioRef.current && audioRef.current.pause();
+    } else {
+      audioRef.current && audioRef.current.play();
+    }
+    setIsPlaying(!isPlaying);
+  };
   return (
     <div
       className="
@@ -66,6 +80,19 @@ export default function RoomsInfo({ roomInfo }: { roomInfo: roomInfoData }) {
         >
           {roomInfo.data.round}
         </div>
+      </div>
+      <div>
+        <audio ref={audioRef}>
+          <source src="/assets/audio/SellBuyMusicbgm.mp3" type="audio/mp3" />
+          Your browser does not support the audio element.
+        </audio>
+        <button onClick={togglePlayPause} className="mr-3">
+          {isPlaying ? (
+            <Image src={off} alt="소리" />
+          ) : (
+            <Image src={up} alt="소리" />
+          )}
+        </button>
       </div>
       {/* {isHost ? (
         <div
