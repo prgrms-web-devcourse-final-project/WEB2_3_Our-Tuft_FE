@@ -95,7 +95,7 @@ export default function ShopContainer() {
         isSuccess: boolean;
         message: string;
         data: ShopData;
-      }>("/wishlist", { method: "GET" });
+      }>("/shop/wishlist", { method: "GET" });
 
       if (response.isSuccess && response.data) {
         setWishlist(response.data.content);
