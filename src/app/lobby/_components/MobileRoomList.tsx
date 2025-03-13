@@ -295,7 +295,7 @@ export default function MobileRoomList({ roomsData }: MobileRoomListProps) {
                 gameType={room.gameType}
                 time={room.time}
                 maxUsers={room.maxUsers}
-                currentPlayers={room.currentPlayers}
+                currentPlayer={room.currentPlayer}
                 gameRunning={room.gameRunning}
               />
             </Link>
