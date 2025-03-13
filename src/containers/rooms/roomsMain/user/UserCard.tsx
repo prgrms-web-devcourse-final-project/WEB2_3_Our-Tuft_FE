@@ -1,5 +1,4 @@
 import Image from "next/image";
-import dummy from "@/assets/images/dummy.svg";
 import {
   playerData,
   roomPlayList,

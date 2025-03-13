@@ -8,6 +8,10 @@ export interface quizeUserList {
 export interface User {
   userId: string;
   username: string;
+  eye?: string;
+  mouth?: string;
+  skin?: string;
+  nickColor?: string;
   score?: number;
 }
 

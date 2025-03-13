@@ -51,6 +51,7 @@ export default function QuizMain({
                     )}
                 </div>
                 <UserCard
+                  playList={userList}
                   bgColor={"bg-[#ffd377]"}
                   imageSize={"h-40"}
                   textSize2={"2xl:text-[18px] md:text-[28px] sm:text-[20px]"}
