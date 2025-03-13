@@ -2,6 +2,7 @@ import UserList from "./user/UserList";
 import Chat from "./chat/Chat";
 import { useState } from "react";
 import {
+  playerData,
   roomInfoData,
   roomPlayListData,
   roomUserListData,
@@ -9,7 +10,7 @@ import {
 
 export default function RoomsMain({ roomInfo }: { roomInfo: roomInfoData }) {
   const [userList, setUserList] = useState<roomUserListData>();
-  const [playList, setPlayList] = useState<roomPlayListData>();
+  const [playList, setPlayList] = useState<playerData>();
 
   return (
     <div className="relative flex xl:gap-9 md:gap-5 pt-3  xl:pb-3 md:pb-3 w-full drop-shadow-custom">

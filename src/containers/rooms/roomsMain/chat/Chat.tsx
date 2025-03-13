@@ -11,7 +11,11 @@ import {
 import { defaultFetch } from "../../../../service/api/defaultFetch";
 import { useIsRoomStore } from "../../../../store/roomStore";
 import { useLoginStore } from "../../../../store/store";
-import { roomPlayListData, roomUserListData } from "../../../../types/Room";
+import {
+  playerData,
+  roomPlayListData,
+  roomUserListData,
+} from "../../../../types/Room";
 
 export default function Chat({
   roomInfo,
@@ -20,7 +24,7 @@ export default function Chat({
 }: {
   roomInfo: string;
   setUserList: Dispatch<SetStateAction<roomUserListData | undefined>>;
-  setPlayList: Dispatch<SetStateAction<roomPlayListData | undefined>>;
+  setPlayList: Dispatch<SetStateAction<playerData | undefined>>;
 }) {
   const params = useParams();
   const router = useRouter();
@@ -60,7 +64,7 @@ export default function Chat({
   };
 
   const fetchPlayerList = async () => {
-    const response = await defaultFetch<roomPlayListData>(
+    const response = await defaultFetch<playerData>(
       `/room/${params.id}/game/players`,
       {
         method: "GET",
