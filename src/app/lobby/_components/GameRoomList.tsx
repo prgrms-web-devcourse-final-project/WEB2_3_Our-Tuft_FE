@@ -65,7 +65,7 @@ export default function GameRoomList({ roomsData }: GameRoomListProps) {
   const [selectedRoom, setSelectedRoom] = useState<Room | null>(null);
 
   // 게임 모드와 검색 타입 배열
-  const gameModes = ["전체", "그림 맞추기", "스피드 퀴즈", "OX 퀴즈"];
+  const gameModes = ["전체", "스피드 퀴즈", "OX 퀴즈"];
   const searchTypes = ["방 제목", "방 번호"];
 
   // 드롭다운과 필터 드롭다운을 위한 ref
