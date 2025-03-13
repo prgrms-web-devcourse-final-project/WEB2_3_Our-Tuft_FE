@@ -54,6 +54,7 @@ export default function OXMain({
                     )}
                 </div>
                 <UserCard
+                  playList={userList}
                   bgColor={`${
                     isCorrectUser
                       ? "bg-[var(--color-amberOrange)]"
