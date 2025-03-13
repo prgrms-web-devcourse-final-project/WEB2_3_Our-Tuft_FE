@@ -65,7 +65,7 @@ export default function UserCard({
 
             {/* 스킨 */}
             <div className="absolute inset-0 z-5">
-              {/* <Image
+              <Image
                 src={
                   playList.data.dto.filter(
                     (user) => user.username === nickName
@@ -77,7 +77,7 @@ export default function UserCard({
                 className="object-contain"
                 style={{ objectPosition: "center bottom" }}
                 priority
-              /> */}
+              />
             </div>
 
             {/* 눈(중간층) */}
@@ -86,7 +86,7 @@ export default function UserCard({
               style={{ top: "27%", height: "35%" }}
             >
               <div className="relative w-[80%] h-full mx-auto">
-                {/* <Image
+                <Image
                   src={
                     playList.data.dto.filter(
                       (user) => user.username === nickName
@@ -97,7 +97,7 @@ export default function UserCard({
                   sizes="(max-width: 768px) 20vw, (max-width: 1200px) 15vw, 10vw"
                   className="object-contain"
                   priority
-                /> */}
+                />
               </div>
             </div>
 
@@ -107,7 +107,7 @@ export default function UserCard({
               style={{ top: "45%", height: "30%" }}
             >
               <div className="relative w-[70%] h-full mx-auto">
-                {/* <Image
+                <Image
                   src={
                     playList.data.dto.filter(
                       (user) => user.username === nickName
@@ -118,7 +118,7 @@ export default function UserCard({
                   sizes="(max-width: 768px) 15vw, (max-width: 1200px) 12vw, 8vw"
                   className="object-contain"
                   priority
-                /> */}
+                />
               </div>
             </div>
           </div>
