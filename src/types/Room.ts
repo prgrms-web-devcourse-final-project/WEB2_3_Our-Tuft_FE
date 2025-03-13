@@ -28,7 +28,7 @@ export type roomInfoData = {
 
 export type roomInfo = {
   disclosure: string;
-  gameType: "SPEED" | "OX" | "DRAWING";
+  gameType: "SPEED" | "OX";
   hostId: number;
   maxUsers: number;
   roomId: number;

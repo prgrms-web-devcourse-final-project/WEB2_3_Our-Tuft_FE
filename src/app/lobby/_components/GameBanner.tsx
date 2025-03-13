@@ -8,8 +8,8 @@ export default function GameBanner() {
 
   const games = [
     {
-      name: "skribbl",
-      image: "/assets/images/skribbl.png",
+      name: "HIQ",
+      image: "/assets/images/HIQ.png",
     },
     {
       name: "speed",
