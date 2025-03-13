@@ -88,7 +88,7 @@ export default function RoomsInfo({ roomInfo }: { roomInfo: roomInfoData }) {
         </audio>
         <button
           onClick={togglePlayPause}
-          className="mr-bg-[var(--color-point)] xl:rounded-[20px] md:rounded-[16px] rounded-[8px]  p-1"
+          className="bg-[var(--color-point)] xl:rounded-[20px] md:rounded-[16px] rounded-[8px] p-1"
         >
           {isPlaying ? (
             <Image src={off} alt="소리" width="60" />
