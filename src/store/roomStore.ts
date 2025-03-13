@@ -36,7 +36,7 @@ interface roomInfoState {
     round?: number;
     hostId?: number;
     disclosure?: boolean;
-    gameType?: "SPEED" | "CATCHMIND" | "OX";
+    gameType?: "SPEED" | "OX";
     time?: number;
     maxUsers?: number;
   };
@@ -46,7 +46,7 @@ interface roomInfoState {
     round?: number;
     hostId?: number;
     disclosure?: boolean;
-    gameType?: "SPEED" | "CATCHMIND" | "OX";
+    gameType?: "SPEED" | "OX";
     time?: number;
     maxUsers?: number;
   }) => void;
@@ -54,7 +54,7 @@ interface roomInfoState {
 export const useRoomInfoStore = create<roomInfoState>((set) => ({
   roomInfo: {
     disclosure: true,
-    gameType: "CATCHMIND",
+    gameType: "SPEED",
     hostId: 0,
     maxUsers: 0,
     roomId: 0,
