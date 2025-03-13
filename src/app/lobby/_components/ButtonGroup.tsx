@@ -74,10 +74,10 @@ export default function ButtonGroup() {
       <div className="h-full w-full flex gap-2">
         {/* 볼륨 버튼 */}
         <div>
-          <audio ref={audioRef} loop>
+          {/* <audio ref={audioRef} loop>
             <source src="/assets/audio/SellBuyMusicbgm.mp3" type="audio/mp3" />
             Your browser does not support the audio element.
-          </audio>
+          </audio> */}
           <button
             onClick={togglePlayPause}
             className="flex-1 h-full bg-[var(--color-second)]/90 hover:bg-[var(--color-second-hover)]/90 rounded-lg sm:rounded-xl md:rounded-2xl p-2 drop-shadow-custom flex items-center justify-center cursor-pointer transition-all"
