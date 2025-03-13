@@ -102,7 +102,7 @@ export default function RoomsContainer() {
       <div>
         <h1>음악 플레이어</h1>
         <audio ref={audioRef}>
-          <source src="path_to_your_song.mp3" type="audio/mp3" />
+          <source src="/assets/audio/SellBuyMusicbgm.mp3" type="audio/mp3" />
           Your browser does not support the audio element.
         </audio>
         <button onClick={togglePlayPause}>
