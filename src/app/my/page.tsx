@@ -169,7 +169,7 @@ export default function Page() {
     };
 
     fetchUserProfile();
-  }, [token]);
+  }, []);
 
   // 아바타 변경 처리 함수
   const handleAvatarChange = (updatedProfile: AvatarProfile) => {
@@ -220,8 +220,7 @@ export default function Page() {
 
       // 1.5초 후에 로비로 이동
       setTimeout(() => {
-        // router.push("/lobby");
-        window.location.href = "/lobby";
+        router.push("/lobby");
       }, 1500);
     } catch (err) {
       setSaveError(
