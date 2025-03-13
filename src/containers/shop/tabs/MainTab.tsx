@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 
 import ItemCard from "../../../components/ItemCard/ItemCard";
@@ -13,10 +13,24 @@ import { defaultFetch } from "../../../service/api/defaultFetch";
 interface MainTabProps {
   data: Item[];
   fetchUserPoints: () => void;
+  wishlist: Item[] | null;
 }
 
-export default function MainTab({ data, fetchUserPoints }: MainTabProps) {
+export default function MainTab({
+  data,
+  fetchUserPoints,
+  wishlist,
+}: MainTabProps) {
   const [query, setQuery] = useState("");
+  const [wishlistSet, setWishlistSet] = useState<Set<number>>(new Set());
+
+  useEffect(() => {
+    // wishlist가 있을 경우 Set<number>로 변환하여 저장
+    if (wishlist) {
+      const wishlistIds = new Set(wishlist.map((item) => item.id));
+      setWishlistSet(wishlistIds);
+    }
+  }, [wishlist]);
 
   // 검색어에 맞는 아이템 필터링
   const filteredData = query
@@ -91,6 +105,7 @@ export default function MainTab({ data, fetchUserPoints }: MainTabProps) {
                   id={item.id}
                   imageUrl={item.imageUrl}
                   name={item.name}
+                  wishlist={wishlistSet}
                 />
               </React.Fragment>
             ))
