@@ -68,6 +68,10 @@ export type roomUserList = {
   userId: string;
   username: string;
   isReady: string;
+  eye?: string;
+  mouth?: string;
+  skin?: string;
+  nickColor?: string;
 };
 
 export type roomPlayListData = {
