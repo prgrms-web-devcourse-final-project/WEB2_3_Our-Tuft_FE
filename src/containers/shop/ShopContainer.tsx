@@ -24,6 +24,7 @@ export default function ShopContainer() {
   const [shopData, setShopData] = useState<ShopData | null>(null);
   const [userData, setUserData] = useState<ShopUserData | null>(null);
   const [userPoints, setUserPoints] = useState<number>(0);
+  const [wishlist, setWishlist] = useState<Item[] | null>(null);
 
   const fetchShopData = async () => {
     try {
@@ -88,10 +89,29 @@ export default function ShopContainer() {
     }
   };
 
+  const fetchWishlist = async () => {
+    try {
+      const response = await defaultFetch<{
+        isSuccess: boolean;
+        message: string;
+        data: ShopData;
+      }>("/wishlist", { method: "GET" });
+
+      if (response.isSuccess && response.data) {
+        setWishlist(response.data.content);
+      } else {
+        console.error("위시리스트 불러오기 실패: ", response.message);
+      }
+    } catch (error) {
+      console.error("위시리스트 불러오기 오류: ", error);
+    }
+  };
+
   useEffect(() => {
     fetchShopData();
     fetchUserProfile();
     fetchUserPoints();
+    fetchWishlist();
   }, []);
 
   // 메인 탭에서는 ID 순으로 정렬
@@ -173,7 +193,11 @@ export default function ShopContainer() {
         </div>
         <div className="w-full h-full row-span-8">
           {selectedTab === "main" && (
-            <MainTab data={sortedData} fetchUserPoints={fetchUserPoints} />
+            <MainTab
+              data={sortedData}
+              fetchUserPoints={fetchUserPoints}
+              wishlist={wishlist}
+            />
           )}
           {selectedTab === "item" && <ItemTab data={groupedData} />}
         </div>
