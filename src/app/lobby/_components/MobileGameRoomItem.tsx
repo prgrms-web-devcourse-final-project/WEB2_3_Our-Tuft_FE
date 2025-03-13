@@ -9,8 +9,8 @@ interface MobileGameRoomItemProps {
   gameType: "SPEED" | "OX";
   time?: number;
   maxUsers?: number;
-  currentUsers?: number;
-  gameRunning?: boolean;
+  currentPlayers?: number;
+  gameRunning?: boolean; // gameRunning 속성 추가
 }
 
 export default function MobileGameRoomItem({
@@ -21,7 +21,7 @@ export default function MobileGameRoomItem({
   gameType,
   time = 60, // 기본값 설정
   maxUsers = 8, // 기본값 설정
-  currentUsers = 1, // 기본값 설정
+  currentPlayers = 1, // 기본값 설정
   gameRunning = false, // 기본값 설정
 }: MobileGameRoomItemProps) {
   // 게임 타입에 맞는 한글 이름으로 변환
@@ -74,7 +74,7 @@ export default function MobileGameRoomItem({
         진행시간 {time}초
       </div>
       <div className="absolute right-[8px] top-[5px] text-sm">
-        {currentUsers} / {maxUsers}
+        {currentPlayers} / {maxUsers}
       </div>
       <div className="absolute right-[5px] rounded-[5px] bottom-[27px] bg-[#D9D9D9] w-[80px] h-[15px] text-xs flex justify-center items-center">
         상식
