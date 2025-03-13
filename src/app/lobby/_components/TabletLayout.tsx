@@ -30,12 +30,10 @@ export default function TabletLayout({ roomsData }: TabletLayoutProps) {
 
   useEffect(() => {
     if (roomsData) {
-      // Room 데이터의 gameType 변환
       const converted = roomsData.map(
         (room) =>
           ({
             ...room,
-            gameType: room.gameType === "CATCHMIND" ? "SPEED" : room.gameType,
           } as GameRoomListRoom)
       );
 
