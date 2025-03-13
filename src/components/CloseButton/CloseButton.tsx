@@ -5,6 +5,7 @@ import Link from "next/link";
 export default function CloseButton({ url }: { url?: string }) {
   return (
     <Link
+      onClick={() => console.log("@@나가기@@")}
       href={url || ""}
       className="bg-[var(--color-lightRed)] hover:bg-[var(--color-lightRed-hover)] 2xl:p-4 p-2 2xl:rounded-[12px] rounded-[8px]"
     >
