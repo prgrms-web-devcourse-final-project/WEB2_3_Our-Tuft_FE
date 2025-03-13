@@ -27,7 +27,7 @@ interface Room {
   gameType: "SPEED" | "OX";
   time?: number; // 시간 제한
   maxUsers?: number; // 최대 인원수
-  currentPlayers?: number; // 현재 인원수
+  currentPlayer?: number; // 현재 인원수
   gameRunning?: boolean; // 게임 진행 중 여부
 }
 
@@ -406,7 +406,7 @@ export default function GameRoomList({ roomsData }: GameRoomListProps) {
                   gameType={room.gameType}
                   time={room.time}
                   maxUsers={room.maxUsers}
-                  currentPlayers={room.currentPlayers}
+                  currentPlayer={room.currentPlayer}
                   gameRunning={room.gameRunning}
                 />
               </div>

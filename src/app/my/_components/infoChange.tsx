@@ -85,14 +85,15 @@ export default function InfoChange({
       );
 
       if (response.isSuccess) {
-        setNicknameChangeResult({
-          success: true,
-          message: "변경이 완료되었습니다!",
-        });
         // 프로필 정보 업데이트 반영
         onInfoChange(nickname, introduction);
         login(response.data.accessToken);
         console.log("accessToken 변경 완료: ", response.data.accessToken);
+
+        setNicknameChangeResult({
+          success: true,
+          message: "변경이 완료되었습니다!",
+        });
       } else {
         setNicknameChangeResult({
           success: false,
