@@ -24,7 +24,7 @@ interface Room {
   round: number;
   hostId: number;
   disclosure: boolean;
-  gameType: "SPEED" | "CATCHMIND" | "OX";
+  gameType: "SPEED" | "OX";
   time?: number; // 시간 제한
   maxUsers?: number; // 최대 인원수
   currentUsers?: number; // 현재 인원수
@@ -65,7 +65,7 @@ export default function GameRoomList({ roomsData }: GameRoomListProps) {
   const [selectedRoom, setSelectedRoom] = useState<Room | null>(null);
 
   // 게임 모드와 검색 타입 배열
-  const gameModes = ["전체", "그림 맞추기", "스피드 퀴즈", "OX 퀴즈"];
+  const gameModes = ["전체", "스피드 퀴즈", "OX 퀴즈"];
   const searchTypes = ["방 제목", "방 번호"];
 
   // 드롭다운과 필터 드롭다운을 위한 ref
@@ -216,7 +216,6 @@ export default function GameRoomList({ roomsData }: GameRoomListProps) {
     // 게임 타입 필터링
     if (selectedMode !== "전체") {
       const modeMap: Record<string, string> = {
-        "그림 맞추기": "CATCHMIND",
         "스피드 퀴즈": "SPEED",
         "OX 퀴즈": "OX",
       };
@@ -279,7 +278,6 @@ export default function GameRoomList({ roomsData }: GameRoomListProps) {
             <div className="flex-1 h-full flex items-center justify-center bg-[var(--color-second)] group-hover:bg-[var(--color-second-hover)] transition-all">
               <span
                 className={`${
-                  selectedMode === "그림 맞추기" ||
                   selectedMode === "스피드 퀴즈"
                     ? "text-md xl:text-lg"
                     : "text-lg xl:text-xl"

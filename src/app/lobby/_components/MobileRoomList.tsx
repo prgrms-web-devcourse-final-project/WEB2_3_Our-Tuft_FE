@@ -114,7 +114,6 @@ export default function MobileRoomList({ roomsData }: MobileRoomListProps) {
     // 게임 타입 필터링
     if (selectedMode !== "전체") {
       const modeMap: Record<string, string> = {
-        "그림 맞추기": "CATCHMIND",
         "스피드 퀴즈": "SPEED",
         "OX 퀴즈": "OX",
       };
@@ -171,10 +170,7 @@ export default function MobileRoomList({ roomsData }: MobileRoomListProps) {
             <div className="flex-1 h-full flex items-center justify-center bg-[var(--color-second)] group-hover:bg-[var(--color-second-hover)] transition-all">
               <span
                 className={`${
-                  selectedMode === "그림 맞추기" ||
-                  selectedMode === "스피드 퀴즈"
-                    ? "text-xs"
-                    : "text-xs"
+                  selectedMode === "스피드 퀴즈" ? "text-xs" : "text-xs"
                 }`}
               >
                 {selectedMode}

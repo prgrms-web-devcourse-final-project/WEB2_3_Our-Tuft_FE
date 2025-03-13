@@ -10,7 +10,7 @@ interface MobileGameRoomItemProps {
   time?: number;
   maxUsers?: number;
   currentUsers?: number;
-  gameRunning?: boolean; // gameRunning 속성 추가
+  gameRunning?: boolean;
 }
 
 export default function MobileGameRoomItem({
