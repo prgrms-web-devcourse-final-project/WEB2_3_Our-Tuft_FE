@@ -189,7 +189,7 @@ export default function MobileRoomList({ roomsData }: MobileRoomListProps) {
           {/* 드롭다운 내용  */}
           {isDropdownOpen && (
             <div className="absolute z-50 w-full mt-2 bg-[var(--color-second)] border border-black rounded-xl overflow-hidden drop-shadow-custom">
-              {["전체", "그림 맞추기", "스피드 퀴즈", "OX 퀴즈"].map((mode) => (
+              {["전체", "스피드 퀴즈", "OX 퀴즈"].map((mode) => (
                 <button
                   key={mode}
                   onClick={() => {

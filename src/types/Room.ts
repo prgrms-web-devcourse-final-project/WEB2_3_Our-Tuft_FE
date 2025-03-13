@@ -4,7 +4,7 @@ export interface Room {
   round: number;
   hostId: number;
   disclosure: boolean;
-  gameType: "SPEED" | "CATCHMIND" | "OX";
+  gameType: "SPEED" | "OX";
   time?: number;
   maxUsers?: number;
   currentUsers?: number;
@@ -28,7 +28,7 @@ export type roomInfoData = {
 
 export type roomInfo = {
   disclosure: string;
-  gameType: "SPEED" | "OX" | "DRAWING";
+  gameType: "SPEED" | "OX";
   hostId: number;
   maxUsers: number;
   roomId: number;
@@ -41,8 +41,24 @@ export type roomUserListData = {
   data: { hostId: number; dto: roomUserList[] };
 };
 
+export type roomPlayListData = {
+  isSuccess: boolean;
+  code: string;
+  message: string;
+  data: roomPlayList[];
+};
+
 export type roomUserList = {
   userId: string;
   username: string;
   isReady: string;
+};
+
+export type roomPlayList = {
+  userId: string;
+  username: string;
+  eye: string;
+  mouth: string;
+  skin: string;
+  nickColor: string;
 };

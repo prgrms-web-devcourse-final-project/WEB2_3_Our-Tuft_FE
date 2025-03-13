@@ -6,7 +6,7 @@ interface MobileGameRoomItemProps {
   roomName: string;
   round: number;
   disclosure: boolean;
-  gameType: "SPEED" | "CATCHMIND" | "OX";
+  gameType: "SPEED" | "OX";
   time?: number;
   maxUsers?: number;
   currentUsers?: number;
@@ -27,7 +27,6 @@ export default function MobileGameRoomItem({
   // 게임 타입에 맞는 한글 이름으로 변환
   const gameTypeToKorean = {
     SPEED: "스피드 퀴즈",
-    CATCHMIND: "그림 맞추기",
     OX: "OX 퀴즈",
   };
 

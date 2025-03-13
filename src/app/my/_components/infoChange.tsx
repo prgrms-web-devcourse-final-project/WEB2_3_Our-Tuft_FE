@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import { defaultFetch } from "../../../service/api/defaultFetch";
+import { useLoginStore } from "../../../store/store";
 
 interface Profile {
   nickname: string;
@@ -21,6 +22,7 @@ interface NicknameResponse {
   message: string;
   data: {
     nickName: string;
+    accessToken: string;
   };
 }
 
@@ -30,6 +32,7 @@ export default function InfoChange({
   onInfoChange,
   onSave,
 }: InfoChangeProps) {
+  const { login } = useLoginStore();
   const [nickname, setNickname] = useState("");
   const [introduction, setIntroduction] = useState("");
   const [isChangingNickname, setIsChangingNickname] = useState(false);
@@ -88,6 +91,8 @@ export default function InfoChange({
         });
         // 프로필 정보 업데이트 반영
         onInfoChange(nickname, introduction);
+        login(response.data.accessToken);
+        console.log("accessToken 변경 완료: ", response.data.accessToken);
       } else {
         setNicknameChangeResult({
           success: false,

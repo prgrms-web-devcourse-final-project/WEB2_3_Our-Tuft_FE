@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useSearchParams, useParams } from "next/navigation";
 
 import RoomsMain from "./roomsMain";

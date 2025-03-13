@@ -23,7 +23,7 @@ interface Room {
   round: number;
   hostId: number;
   disclosure: boolean;
-  gameType: "SPEED" | "CATCHMIND" | "OX";
+  gameType: "SPEED" | "OX";
   time?: number;
   maxUsers?: number;
   currentUsers?: number;

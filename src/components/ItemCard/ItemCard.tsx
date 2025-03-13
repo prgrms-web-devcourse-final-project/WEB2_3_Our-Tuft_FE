@@ -10,50 +10,79 @@ interface ItemCardProps {
   id: number;
   imageUrl: string;
   name: string;
+  wishlist: Set<number>;
 }
 
-export default function ItemCard({ id, imageUrl, name }: ItemCardProps) {
-  const [isFavorited, setIsFavorited] = useState<boolean>(false);
-  const [favoriteItems, setFavoriteItems] = useState<number[]>([]);
+export default function ItemCard({
+  id,
+  imageUrl,
+  name,
+  wishlist,
+}: ItemCardProps) {
+  // const [isFavorited, setIsFavorited] = useState<boolean>(false);
+  // const [favoriteItems, setFavoriteItems] = useState<number[]>([]);
+  const [favoriteItems, setFavoriteItems] = useState<Set<number>>(new Set());
 
-  // 찜 목록 가져오기
-  const favoriteList = async () => {
-    try {
-      const response: { data: { content: { id: number }[] } } =
-        await defaultFetch("/shop/wishlist", {
-          method: "GET",
-        });
+  // 찜 여부 확인
+  const isFavorited = favoriteItems.has(id);
 
-      const favoriteIds = response.data.content.map((item) => item.id);
-      setFavoriteItems(favoriteIds);
-    } catch (error) {
-      console.log("서버 요청 중 오류 발생:", error);
-    }
-  };
-
-  // 찜하기, 찜 취소 로직
+  // 찜하기/취소 로직
   const toggleFavorite = async () => {
     try {
-      await defaultFetch(
-        isFavorited ? `/shop/wishlist/${id}` : `/shop/wishlist/${id}`,
-        {
-          method: isFavorited ? "DELETE" : "POST",
-        }
-      );
-      setIsFavorited((prev) => !prev);
+      await defaultFetch(`/shop/wishlist/${id}`, {
+        method: isFavorited ? "DELETE" : "POST",
+      });
+
+      setFavoriteItems((prev) => {
+        const updated = new Set(prev);
+        isFavorited ? updated.delete(id) : updated.add(id);
+        return updated;
+      });
     } catch (error) {
-      console.log("서버 요청 중 오류 발생:", error);
+      console.error("서버 요청 중 오류 발생:", error);
     }
   };
+  // // 찜 목록 가져오기
+  // const favoriteList = async () => {
+  //   try {
+  //     const response: { data: { content: { id: number }[] } } =
+  //       await defaultFetch("/shop/wishlist", {
+  //         method: "GET",
+  //       });
+
+  //     const favoriteIds = response.data.content.map((item) => item.id);
+  //     setFavoriteItems(favoriteIds);
+  //   } catch (error) {
+  //     console.log("서버 요청 중 오류 발생:", error);
+  //   }
+  // };
+
+  // // 찜하기, 찜 취소 로직
+  // const toggleFavorite = async () => {
+  //   try {
+  //     await defaultFetch(
+  //       isFavorited ? `/shop/wishlist/${id}` : `/shop/wishlist/${id}`,
+  //       {
+  //         method: isFavorited ? "DELETE" : "POST",
+  //       }
+  //     );
+  //     setIsFavorited((prev) => !prev);
+  //   } catch (error) {
+  //     console.log("서버 요청 중 오류 발생:", error);
+  //   }
+  // };
+
+  // useEffect(() => {
+  //   favoriteList();
+  // }, []);
 
   useEffect(() => {
-    favoriteList();
-  }, []);
+    setFavoriteItems(new Set(wishlist));
+  }, [wishlist]);
 
-  useEffect(() => {
-    // 현재 id가 찜한 목록에 있는지 체크
-    setIsFavorited(favoriteItems.includes(id));
-  }, [favoriteItems, id]);
+  console.log("wishlist: ", wishlist);
+  console.log("favoriteItems: ", favoriteItems);
+  console.log("isFavorited: ", isFavorited);
 
   return (
     <div className="grid grid-rows-3 grid-cols-2 bg-[var(--color-second)] hover:bg-[var(--color-second-hover)] w-full h-18 h-36 md:h-24 lg:h-28 xl:h-36 2xl:h-56 px-5 py-3 max-[480px]:px-3 md:px-3.5 md:py-2 xl:px-5 xl:py-3 max-[480px]:gap-x-2.5 gap-x-5 gap-y-2.5 md:gap-x-2.5 md:gap-y-1.5 lg:gap-x-5 lg:gap-y-2.5 rounded-2xl relative cursor-pointer">

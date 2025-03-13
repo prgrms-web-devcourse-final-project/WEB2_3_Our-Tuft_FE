@@ -23,7 +23,7 @@ interface CreateRoomRequest {
   disclosure: boolean; // true=공개방, false=비공개방
   password: string;
   round: number;
-  gameType: "SPEED" | "CATCHMIND" | "OX";
+  gameType: "SPEED" | "OX";
   time: number;
   maxUsers: number;
 }

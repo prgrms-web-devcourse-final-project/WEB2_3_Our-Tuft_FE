@@ -17,7 +17,7 @@ export function useInitializeGame(id: string) {
       round?: number;
       hostId?: number;
       disclosure?: boolean;
-      gameType?: "SPEED" | "CATCHMIND" | "OX";
+      gameType?: "SPEED" | "OX";
       time?: number;
       maxUsers?: number;
     };

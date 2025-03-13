@@ -83,7 +83,7 @@ export default function CreateRoomModal({
   const [password, setPassword] = useState("");
   const [players, setPlayers] = useState(4);
   const [rounds, setRounds] = useState(5);
-  const [timeLimit, setTimeLimit] = useState(10);
+  const [timeLimit, setTimeLimit] = useState(15);
   const [selectedGameMode, setSelectedGameMode] = useState(0);
 
   // 게임 모드 데이터
@@ -229,6 +229,8 @@ export default function CreateRoomModal({
   }, [isOpen, onClose]);
 
   if (!isOpen || !mounted) return null;
+
+  console.log("selectedGameMode", selectedGameMode);
 
   const modalContent = (
     <div className="fixed inset-0 flex items-center justify-center z-[9999]">
@@ -572,9 +574,11 @@ export default function CreateRoomModal({
                     type="button"
                     onClick={handleCreateRoom}
                     className={`px-6 py-2.5 md:px-4 md:py-2 bg-[var(--color-secondPoint)] text-white text-lg md:text-base rounded-lg hover:opacity-90 transition-opacity ${
-                      isLoading ? "opacity-70 cursor-wait" : ""
+                      isLoading || selectedGameMode === 2
+                        ? "opacity-70 cursor-wait"
+                        : ""
                     }`}
-                    disabled={isLoading}
+                    disabled={isLoading || selectedGameMode === 2}
                   >
                     {isLoading
                       ? "생성 중..."
