@@ -90,7 +90,7 @@ export default function CreateRoomModal({
   const gameModes: GameModeInfo[] = [
     {
       name: "스피드 퀴즈",
-      image: "/assets/images/speed.png",
+      image: "/assets/images/speed-main.png",
       title: "스피드 퀴즈",
       descriptions: [
         "시간 제한 안에 주어진\n퀴즈를 맞춰야 합니다.",
@@ -100,7 +100,7 @@ export default function CreateRoomModal({
     },
     {
       name: "OX 퀴즈",
-      image: "/assets/images/OX.png",
+      image: "/assets/images/OX-main.png",
       title: "OX 퀴즈",
       descriptions: [
         "O 또는 X로 답할 수 있는\n퀴즈가 출제됩니다.",

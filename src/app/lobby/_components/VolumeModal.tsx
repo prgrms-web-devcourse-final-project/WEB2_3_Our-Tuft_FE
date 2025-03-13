@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 
 interface VolumeModalProps {
@@ -9,6 +9,7 @@ interface VolumeModalProps {
 export default function VolumeModal({ isOpen, onClose }: VolumeModalProps) {
   const [volume, setVolume] = useState(50); // 기본 볼륨 50%
   const [isMuted, setIsMuted] = useState(false);
+  const audioRef = useRef<HTMLAudioElement>(null); // 오디오 엘리먼트에 접근할 ref
 
   if (!isOpen) return null;
 
@@ -32,6 +33,13 @@ export default function VolumeModal({ isOpen, onClose }: VolumeModalProps) {
       setIsMuted(false);
     }
   };
+
+  // 오디오의 볼륨을 상태에 맞게 설정
+  useEffect(() => {
+    if (audioRef.current) {
+      audioRef.current.volume = volume / 100; // 0 ~ 1 사이의 값으로 설정
+    }
+  }, [volume]);
 
   return (
     <div className="fixed inset-0 flex items-center justify-center z-50">
@@ -104,6 +112,12 @@ export default function VolumeModal({ isOpen, onClose }: VolumeModalProps) {
           </div>
         </div>
       </div>
+
+      {/* 오디오 엘리먼트 추가 */}
+      <audio ref={audioRef} autoPlay loop>
+        <source src="/assets/audio/SellBuyMusicbgm.mp3" type="audio/mp3" />
+        Your browser does not support the audio element.
+      </audio>
     </div>
   );
 }
