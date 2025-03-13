@@ -3,14 +3,15 @@ import Image from "next/image";
 import Link from "next/link";
 import MobileGameRoomItem from "./MobileGameRoomItem";
 import MobileRoomModal from "./MobileRoomModal";
+import PasswordModal from "./PasswordModal";
 import { Room } from "../../../types/Room";
 import { defaultFetch } from "../../../service/api/defaultFetch";
+import { useRouter } from "next/navigation";
 
 interface MobileRoomListProps {
   roomsData?: Room[];
 }
 
-// API 응답 인터페이스 정의
 interface ApiResponse {
   isSuccess: boolean;
   message?: string;
@@ -28,12 +29,16 @@ export default function MobileRoomList({ roomsData }: MobileRoomListProps) {
   const [error, setError] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
 
+  // 비밀번호 모달
+  const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
+  const [selectedRoom, setSelectedRoom] = useState<Room | null>(null);
+  const router = useRouter();
+
   const searchTypes = ["방 제목", "방 번호"];
 
   const dropdownRef = useRef<HTMLDivElement>(null);
   const filterDropdownRef = useRef<HTMLDivElement>(null);
 
-  // roomsData를 rooms 상태에 설정
   useEffect(() => {
     if (roomsData) {
       setRooms(roomsData);
@@ -107,7 +112,6 @@ export default function MobileRoomList({ roomsData }: MobileRoomListProps) {
     };
   }, []);
 
-  // 필터링된 방 목록 구하기
   const getFilteredRooms = () => {
     let filteredRooms = [...rooms];
 
@@ -136,6 +140,30 @@ export default function MobileRoomList({ roomsData }: MobileRoomListProps) {
     }
 
     return filteredRooms;
+  };
+
+  const handleRoomClick = (room: Room, e: React.MouseEvent) => {
+    e.preventDefault();
+
+    const isFull =
+      room.currentPlayer !== undefined &&
+      room.maxUsers !== undefined &&
+      room.currentPlayer >= room.maxUsers;
+
+    // 게임 진행 중이거나 방이 가득 찬 경우 접근 불가
+    if (room.gameRunning || isFull) {
+      return;
+    }
+
+    // 정상적인 방 접근 처리
+    if (room.disclosure) {
+      // 공개방은 바로 이동
+      router.push(`/lobby/rooms/${room.roomId}?password=true`);
+    } else {
+      // 비공개방은 비밀번호 모달 표시
+      setSelectedRoom(room);
+      setIsPasswordModalOpen(true);
+    }
   };
 
   // 필터링된 방 목록
@@ -281,25 +309,35 @@ export default function MobileRoomList({ roomsData }: MobileRoomListProps) {
             검색 결과가 없습니다
           </div>
         ) : (
-          filteredRooms.map((room) => (
-            <Link
-              href={`/rooms/${room.roomId}`}
-              key={room.roomId}
-              className="block w-full"
-            >
-              <MobileGameRoomItem
-                roomId={room.roomId}
-                roomName={room.roomName}
-                round={room.round}
-                disclosure={room.disclosure}
-                gameType={room.gameType}
-                time={room.time}
-                maxUsers={room.maxUsers}
-                currentPlayer={room.currentPlayer}
-                gameRunning={room.gameRunning}
-              />
-            </Link>
-          ))
+          filteredRooms.map((room) => {
+            // 방이 꽉 찼는지 여부 확인
+            const isFull =
+              room.currentPlayer !== undefined &&
+              room.maxUsers !== undefined &&
+              room.currentPlayer >= room.maxUsers;
+
+            return (
+              <div
+                key={room.roomId}
+                className={`block w-full ${
+                  isFull || room.gameRunning ? "cursor-not-allowed" : ""
+                }`}
+                onClick={(e) => handleRoomClick(room, e)}
+              >
+                <MobileGameRoomItem
+                  roomId={room.roomId}
+                  roomName={room.roomName}
+                  round={room.round}
+                  disclosure={room.disclosure}
+                  gameType={room.gameType as "SPEED" | "OX"}
+                  time={room.time}
+                  maxUsers={room.maxUsers}
+                  currentPlayer={room.currentPlayer}
+                  gameRunning={room.gameRunning}
+                />
+              </div>
+            );
+          })
         )}
       </div>
       {/* 방 생성 버튼 */}
@@ -320,6 +358,15 @@ export default function MobileRoomList({ roomsData }: MobileRoomListProps) {
         isOpen={isCreateModalOpen}
         onClose={() => setIsCreateModalOpen(false)}
       />
+
+      {/* 비밀번호 확인 모달*/}
+      {selectedRoom && (
+        <PasswordModal
+          isOpen={isPasswordModalOpen}
+          onClose={() => setIsPasswordModalOpen(false)}
+          roomId={selectedRoom.roomId}
+        />
+      )}
     </div>
   );
 }
