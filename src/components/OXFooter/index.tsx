@@ -17,6 +17,9 @@ export default function OXFooter({ chat }: { chat: quizeMsg[] }) {
   const id = searchParams.get("id");
 
   const onkeydown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.nativeEvent.isComposing) {
+      return;
+    }
     if (e.key === "Enter") {
       if (inputRef.current) {
         sendMessage(`/app/game/${id}`, inputRef.current.value);

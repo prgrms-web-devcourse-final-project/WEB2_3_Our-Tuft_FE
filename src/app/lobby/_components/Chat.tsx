@@ -21,6 +21,9 @@ export default function Chat() {
   const [chatList, setChatList] = useState<ChatMessage[]>([]);
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.nativeEvent.isComposing) {
+      return;
+    }
     if (e.key === "Enter") {
       if (inputRef.current && inputRef.current.value.trim() !== "") {
         console.log("전송");

@@ -19,6 +19,9 @@ export default function SpeedOXFooter({ chat }: { chat: quizeMsg[] }) {
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
   const onkeydown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.nativeEvent.isComposing) {
+      return;
+    }
     if (e.key === "Enter") {
       if (inputRef.current) {
         sendMessage(`/app/game/${id}/speed`, inputRef.current.value);
