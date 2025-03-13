@@ -586,9 +586,11 @@ export default function CreateRoomModal({
                     type="button"
                     onClick={handleCreateRoom}
                     className={`px-6 py-2.5 md:px-4 md:py-2 bg-[var(--color-secondPoint)] text-white text-lg md:text-base rounded-lg hover:opacity-90 transition-opacity ${
-                      isLoading ? "opacity-70 cursor-wait" : ""
+                      isLoading || selectedGameMode === 2
+                        ? "opacity-70 cursor-wait"
+                        : ""
                     }`}
-                    disabled={isLoading || selectedGameMode === 1}
+                    disabled={isLoading || selectedGameMode === 2}
                   >
                     {isLoading
                       ? "생성 중..."
