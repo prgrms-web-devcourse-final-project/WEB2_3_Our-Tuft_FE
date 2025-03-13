@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { defaultFetch } from "../../service/api/defaultFetch";
 
 import coinIcon from "@/assets/icons/coin.svg";
@@ -21,7 +21,7 @@ export default function ItemCard({
 }: ItemCardProps) {
   // const [isFavorited, setIsFavorited] = useState<boolean>(false);
   // const [favoriteItems, setFavoriteItems] = useState<number[]>([]);
-  const [favoriteItems, setFavoriteItems] = useState<Set<number>>(wishlist);
+  const [favoriteItems, setFavoriteItems] = useState<Set<number>>(new Set());
 
   // 찜 여부 확인
   const isFavorited = favoriteItems.has(id);
@@ -76,10 +76,13 @@ export default function ItemCard({
   //   favoriteList();
   // }, []);
 
-  // useEffect(() => {
-  //   // 현재 id가 찜한 목록에 있는지 체크
-  //   setIsFavorited(favoriteItems.includes(id));
-  // }, [favoriteItems, id]);
+  useEffect(() => {
+    setFavoriteItems(new Set(wishlist));
+  }, [wishlist]);
+
+  console.log("wishlist: ", wishlist);
+  console.log("favoriteItems: ", favoriteItems);
+  console.log("isFavorited: ", isFavorited);
 
   return (
     <div className="grid grid-rows-3 grid-cols-2 bg-[var(--color-second)] hover:bg-[var(--color-second-hover)] w-full h-18 h-36 md:h-24 lg:h-28 xl:h-36 2xl:h-56 px-5 py-3 max-[480px]:px-3 md:px-3.5 md:py-2 xl:px-5 xl:py-3 max-[480px]:gap-x-2.5 gap-x-5 gap-y-2.5 md:gap-x-2.5 md:gap-y-1.5 lg:gap-x-5 lg:gap-y-2.5 rounded-2xl relative cursor-pointer">
