@@ -23,7 +23,7 @@ interface CreateRoomRequest {
   disclosure: boolean; // true=공개방, false=비공개방
   password: string;
   round: number;
-  gameType: "SPEED" | "CATCHMIND" | "OX";
+  gameType: "SPEED" | "OX";
   time: number;
   maxUsers: number;
 }
@@ -68,16 +68,6 @@ export default function MobileRoomModal({
   // 게임 모드 데이터
   const gameModes: GameModeInfo[] = [
     {
-      name: "그림 맞추기",
-      image: "/assets/images/skribbl.png",
-      title: "그림 맞추기",
-      descriptions: [
-        "각 라운드마다 제시어에 맞게\n플레이어는 그림으로 표현합니다.",
-        "그림을 보고, 제시어를 맞힌\n플레이어 순으로 점수를 획득합니다.",
-        "가장 많은 점수를 얻은\n플레이어가 승리합니다.",
-      ],
-    },
-    {
       name: "스피드 퀴즈",
       image: "/assets/images/speed.png",
       title: "스피드 퀴즈",
@@ -108,7 +98,6 @@ export default function MobileRoomModal({
 
   // 게임 모드 이름 매핑 추가
   const gameModeToType: { [key: string]: string } = {
-    "그림 맞추기": "CATCHMIND",
     "스피드 퀴즈": "SPEED",
     "OX 퀴즈": "OX",
   };
@@ -145,7 +134,6 @@ export default function MobileRoomModal({
         round: rounds,
         gameType: gameModeToType[gameModes[selectedGameMode].name] as
           | "SPEED"
-          | "CATCHMIND"
           | "OX",
         time: timeLimit,
         maxUsers: players,
