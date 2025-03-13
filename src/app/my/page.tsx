@@ -277,7 +277,7 @@ export default function Page() {
                         imageUrl:
                           "https://team09-bucket.s3.ap-northeast-2.amazonaws.com/skin/skin1.png",
                       },
-                      nickColor: { itemId: 31, value: "#FFFFFF" },
+                      nickColor: { itemId: 31, value: "#000000" },
                     }
                   }
                   isLoading={isLoading}

@@ -82,21 +82,14 @@ export default function ButtonGroup() {
             onClick={togglePlayPause}
             className="flex-1 h-full bg-[var(--color-second)]/90 hover:bg-[var(--color-second-hover)]/90 rounded-lg sm:rounded-xl md:rounded-2xl p-2 drop-shadow-custom flex items-center justify-center cursor-pointer transition-all"
           >
-            {isPlaying ? (
-              <Image
-                src={up}
-                alt="소리"
-                width="60"
-                className="cursor-pointer"
-              />
-            ) : (
-              <Image
-                src={off}
-                alt="소리"
-                width="60"
-                className="cursor-pointer"
-              />
-            )}
+            <Image
+              src={isPlaying ? up : off}
+              alt="소리"
+              width={40}
+              height={40}
+              className="w-[30px] h-[30px] md:w-[30px] md:h-[30px] xl:w-[40px] xl:h-[40px]"
+              priority
+            />
           </button>
         </div>
         {/* 상점 버튼 */}
