@@ -37,18 +37,6 @@ export default function RoomsContainer() {
     }
   };
 
-  const [isPlaying, setIsPlaying] = useState(false);
-  const audioRef = useRef<HTMLAudioElement | null>(null);
-
-  const togglePlayPause = () => {
-    if (isPlaying) {
-      audioRef.current && audioRef.current.pause();
-    } else {
-      audioRef.current && audioRef.current.play();
-    }
-    setIsPlaying(!isPlaying);
-  };
-
   useEffect(() => {
     // URL에서 전달된 비밀번호 사용
     if (passwordParam) {
@@ -97,17 +85,6 @@ export default function RoomsContainer() {
         <RoomsHeader roomInfo={roomInfo} />
         <RoomsMain roomInfo={roomInfo} />
         <RoomsFooter roomInfo={roomInfo} />
-      </div>
-
-      <div>
-        <h1>음악 플레이어</h1>
-        <audio ref={audioRef}>
-          <source src="/assets/audio/SellBuyMusicbgm.mp3" type="audio/mp3" />
-          Your browser does not support the audio element.
-        </audio>
-        <button onClick={togglePlayPause}>
-          {isPlaying ? "일시 정지" : "재생"}
-        </button>
       </div>
     </div>
   );

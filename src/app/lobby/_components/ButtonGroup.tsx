@@ -1,10 +1,12 @@
 import Link from "next/link";
 import Image from "next/image";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import VolumeModal from "./VolumeModal";
 import MobileVolume from "./MobileVolume";
 import { useLoginStore } from "../../../store/store";
+import up from "@/assets/icons/volumeOn.svg";
+import off from "@/assets/icons/volumeOff.svg";
 
 export default function ButtonGroup() {
   const [isVolumeModalOpen, setIsVolumeModalOpen] = useState(false);
@@ -53,22 +55,50 @@ export default function ButtonGroup() {
     }
   };
 
+  const [isPlaying, setIsPlaying] = useState(true);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+
+  const togglePlayPause = () => {
+    if (isPlaying) {
+      audioRef.current && audioRef.current.pause();
+    } else {
+      audioRef.current && audioRef.current.play();
+    }
+    setIsPlaying(!isPlaying);
+  };
+  useEffect(() => {
+    audioRef.current && audioRef.current.play();
+  }, []);
   return (
     <>
       <div className="h-full w-full flex gap-2">
         {/* 볼륨 버튼 */}
-        <button
-          onClick={() => setIsVolumeModalOpen(true)}
-          className="flex-1 h-full bg-[var(--color-second)]/90 hover:bg-[var(--color-second-hover)]/90 rounded-lg sm:rounded-xl md:rounded-2xl p-2 drop-shadow-custom flex items-center justify-center cursor-pointer transition-all"
-        >
-          <Image
-            src="/assets/images/volume.png"
-            alt="setting"
-            width={40}
-            height={40}
-            className="w-[30px] h-[30px] md:w-[30px] md:h-[30px] xl:w-[40px] xl:h-[40px]"
-          />
-        </button>
+        <div>
+          {/* <audio ref={audioRef} loop>
+            <source src="/assets/audio/SellBuyMusicbgm.mp3" type="audio/mp3" />
+            Your browser does not support the audio element.
+          </audio> */}
+          <button
+            onClick={togglePlayPause}
+            className="flex-1 h-full bg-[var(--color-second)]/90 hover:bg-[var(--color-second-hover)]/90 rounded-lg sm:rounded-xl md:rounded-2xl p-2 drop-shadow-custom flex items-center justify-center cursor-pointer transition-all"
+          >
+            {isPlaying ? (
+              <Image
+                src={up}
+                alt="소리"
+                width="60"
+                className="cursor-pointer"
+              />
+            ) : (
+              <Image
+                src={off}
+                alt="소리"
+                width="60"
+                className="cursor-pointer"
+              />
+            )}
+          </button>
+        </div>
         {/* 상점 버튼 */}
         <Link
           href="/shop"

@@ -1,11 +1,14 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { topic } from "../../../../types/modal";
 import { roomInfoData } from "../../../../types/Room";
 import { useIsRoomStore } from "../../../../store/roomStore";
 import TopicModal from "../../roomsModal/TopicModal";
 import CreateRoomModal from "../../../../app/lobby/_components/CreateRoomModal";
+import up from "@/assets/icons/volumeOn.svg";
+import off from "@/assets/icons/volumeOff.svg";
+import Image from "next/image";
 
 export default function RoomsInfo({ roomInfo }: { roomInfo: roomInfoData }) {
   const { isHost, quizeSet } = useIsRoomStore();
@@ -16,6 +19,20 @@ export default function RoomsInfo({ roomInfo }: { roomInfo: roomInfoData }) {
   });
   const [isCreateRoomOpen, setCreateRoomOpen] = useState<boolean>(false);
 
+  const [isPlaying, setIsPlaying] = useState(true);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+
+  const togglePlayPause = () => {
+    if (isPlaying) {
+      audioRef.current && audioRef.current.pause();
+    } else {
+      audioRef.current && audioRef.current.play();
+    }
+    setIsPlaying(!isPlaying);
+  };
+  useEffect(() => {
+    audioRef.current && audioRef.current.play();
+  }, []);
   return (
     <div
       className="
@@ -27,7 +44,7 @@ export default function RoomsInfo({ roomInfo }: { roomInfo: roomInfoData }) {
       <button
         className={`
           bg-[var(--color-secondPoint)] ${
-            isHost && "hover:bg-[var(--color-secondPoint-hover)]"
+            isHost && "hover:bg-[var(--color-secondPoint-hover)] cursor-pointer"
           }
           xl:rounded-[20px] rounded-[16px] xl:py-5 py-2 w-[40%] cursor-pointer"
         `}
@@ -66,6 +83,22 @@ export default function RoomsInfo({ roomInfo }: { roomInfo: roomInfoData }) {
         >
           {roomInfo.data.round}
         </div>
+      </div>
+      <div>
+        <audio ref={audioRef} loop>
+          <source src="/assets/audio/SellBuyMusicbgm.mp3" type="audio/mp3" />
+          Your browser does not support the audio element.
+        </audio>
+        <button
+          onClick={togglePlayPause}
+          className="bg-[var(--color-point)] xl:rounded-[20px] md:rounded-[16px] rounded-[8px] p-1"
+        >
+          {isPlaying ? (
+            <Image src={up} alt="소리" width="60" className="cursor-pointer" />
+          ) : (
+            <Image src={off} alt="소리" width="60" className="cursor-pointer" />
+          )}
+        </button>
       </div>
       {/* {isHost ? (
         <div

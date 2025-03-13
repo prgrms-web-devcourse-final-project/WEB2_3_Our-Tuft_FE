@@ -24,7 +24,7 @@ interface CreateRoomRequest {
   disclosure: boolean; // true=공개방, false=비공개방
   password: string;
   round: number;
-  gameType: "SPEED" | "CATCHMIND" | "OX";
+  gameType: "SPEED" | "OX";
   time: number;
   maxUsers: number;
 }
@@ -39,7 +39,7 @@ interface CreateRoomResponse {
     round?: number;
     hostId?: number;
     disclosure?: boolean;
-    gameType?: "SPEED" | "CATCHMIND" | "OX";
+    gameType?: "SPEED" | "OX";
     time?: number;
     maxUsers?: number;
   };
@@ -83,21 +83,11 @@ export default function CreateRoomModal({
   const [password, setPassword] = useState("");
   const [players, setPlayers] = useState(4);
   const [rounds, setRounds] = useState(5);
-  const [timeLimit, setTimeLimit] = useState(10);
+  const [timeLimit, setTimeLimit] = useState(15);
   const [selectedGameMode, setSelectedGameMode] = useState(0);
 
   // 게임 모드 데이터
   const gameModes: GameModeInfo[] = [
-    {
-      name: "그림 맞추기",
-      image: "/assets/images/skribbl.png",
-      title: "그림 맞추기",
-      descriptions: [
-        "각 라운드마다 제시어에 맞게\n플레이어는 그림으로 표현합니다.",
-        "그림을 보고, 제시어를 맞힌\n플레이어 순으로 점수를 획득합니다.",
-        "가장 많은 점수를 얻은\n플레이어가 승리합니다.",
-      ],
-    },
     {
       name: "스피드 퀴즈",
       image: "/assets/images/speed-main.png",
@@ -139,7 +129,6 @@ export default function CreateRoomModal({
 
   // 게임 모드 이름 매핑
   const gameModeToType: { [key: string]: string } = {
-    "그림 맞추기": "CATCHMIND",
     "스피드 퀴즈": "SPEED",
     "OX 퀴즈": "OX",
   };
@@ -175,7 +164,6 @@ export default function CreateRoomModal({
         round: rounds,
         gameType: gameModeToType[gameModes[selectedGameMode].name] as
           | "SPEED"
-          | "CATCHMIND"
           | "OX",
         time: timeLimit,
         maxUsers: players,
@@ -241,6 +229,8 @@ export default function CreateRoomModal({
   }, [isOpen, onClose]);
 
   if (!isOpen || !mounted) return null;
+
+  console.log("selectedGameMode", selectedGameMode);
 
   const modalContent = (
     <div className="fixed inset-0 flex items-center justify-center z-[9999]">
@@ -584,9 +574,11 @@ export default function CreateRoomModal({
                     type="button"
                     onClick={handleCreateRoom}
                     className={`px-6 py-2.5 md:px-4 md:py-2 bg-[var(--color-secondPoint)] text-white text-lg md:text-base rounded-lg hover:opacity-90 transition-opacity ${
-                      isLoading ? "opacity-70 cursor-wait" : ""
+                      isLoading || selectedGameMode === 2
+                        ? "opacity-70 cursor-wait"
+                        : ""
                     }`}
-                    disabled={isLoading}
+                    disabled={isLoading || selectedGameMode === 2}
                   >
                     {isLoading
                       ? "생성 중..."
