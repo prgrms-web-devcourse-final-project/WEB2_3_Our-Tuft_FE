@@ -5,8 +5,8 @@ import { useRouter } from "next/navigation";
 import VolumeModal from "./VolumeModal";
 import MobileVolume from "./MobileVolume";
 import { useLoginStore } from "../../../store/store";
-import up from "@/assets/icons/volumeOn.svg";
-import off from "@/assets/icons/volumeOff.svg";
+import up from "@/assets/icons/up.png";
+import off from "@/assets/icons/off.png";
 
 export default function ButtonGroup() {
   const [isVolumeModalOpen, setIsVolumeModalOpen] = useState(false);
