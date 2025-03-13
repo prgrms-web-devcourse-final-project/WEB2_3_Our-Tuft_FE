@@ -18,12 +18,11 @@ export default function GameRoomItem({
   round,
   disclosure,
   gameType,
-  time = 60, // 기본값 설정
-  maxUsers = 8, // 기본값 설정
-  currentPlayer = 1, // 기본값 설정
-  gameRunning = false, // 기본값 설정
+  time = 60,
+  maxUsers = 8,
+  currentPlayer = 1,
+  gameRunning = false,
 }: GameRoomItemProps) {
-  // 게임 타입에 맞는 한글 이름으로 변환
   const gameTypeToKorean = {
     SPEED: "스피드 퀴즈",
     OX: "OX 퀴즈",
