@@ -7,7 +7,7 @@ import { useIsRoomStore } from "../../../../store/roomStore";
 import TopicModal from "../../roomsModal/TopicModal";
 import CreateRoomModal from "../../../../app/lobby/_components/CreateRoomModal";
 import Image from "next/image";
-import setting from "@/assets/icons/setting.png";
+import setting from "@/assets/images/setting.png";
 
 export default function RoomsInfo({ roomInfo }: { roomInfo: roomInfoData }) {
   const { isHost, quizeSet } = useIsRoomStore();
