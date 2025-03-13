@@ -81,7 +81,7 @@ export default function RoomsContainer() {
       className="w-full 2xl:pt-5 md:pt-5 min-h-screen flex justify-center bg-center bg-cover bg-repeat"
       style={{ backgroundImage: "url('/assets/images/bg.png')" }}
     >
-      <div className="w-[90vw] h-[90vh] ">
+      <div className="w-[90vw]">
         <RoomsHeader roomInfo={roomInfo} />
         <RoomsMain roomInfo={roomInfo} />
         <RoomsFooter roomInfo={roomInfo} />
