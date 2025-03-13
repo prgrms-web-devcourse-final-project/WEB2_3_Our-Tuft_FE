@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { defaultFetch } from "../../service/api/defaultFetch";
 
 import coinIcon from "@/assets/icons/coin.svg";
