@@ -13,47 +13,86 @@ interface ItemCardProps {
 }
 
 export default function ItemCard({ id, imageUrl, name }: ItemCardProps) {
-  const [isFavorited, setIsFavorited] = useState<boolean>(false);
-  const [favoriteItems, setFavoriteItems] = useState<number[]>([]);
+  // const [isFavorited, setIsFavorited] = useState<boolean>(false);
+  // const [favoriteItems, setFavoriteItems] = useState<number[]>([]);
+  const [favoriteItems, setFavoriteItems] = useState<Set<number>>(new Set());
 
-  // 찜 목록 가져오기
-  const favoriteList = async () => {
-    try {
-      const response: { data: { content: { id: number }[] } } =
-        await defaultFetch("/shop/wishlist", {
-          method: "GET",
-        });
-
-      const favoriteIds = response.data.content.map((item) => item.id);
-      setFavoriteItems(favoriteIds);
-    } catch (error) {
-      console.log("서버 요청 중 오류 발생:", error);
-    }
-  };
-
-  // 찜하기, 찜 취소 로직
-  const toggleFavorite = async () => {
-    try {
-      await defaultFetch(
-        isFavorited ? `/shop/wishlist/${id}` : `/shop/wishlist/${id}`,
-        {
-          method: isFavorited ? "DELETE" : "POST",
-        }
-      );
-      setIsFavorited((prev) => !prev);
-    } catch (error) {
-      console.log("서버 요청 중 오류 발생:", error);
-    }
-  };
-
+  // 찜 목록 가져오기 (초기 1회만 실행)
   useEffect(() => {
-    favoriteList();
+    const fetchFavorites = async () => {
+      try {
+        const response: { data: { content: { id: number }[] } } =
+          await defaultFetch("/shop/wishlist", { method: "GET" });
+
+        const favoriteSet = new Set(
+          response.data.content.map((item) => item.id)
+        );
+        setFavoriteItems(favoriteSet);
+      } catch (error) {
+        console.error("서버 요청 중 오류 발생:", error);
+      }
+    };
+
+    fetchFavorites();
   }, []);
 
-  useEffect(() => {
-    // 현재 id가 찜한 목록에 있는지 체크
-    setIsFavorited(favoriteItems.includes(id));
-  }, [favoriteItems, id]);
+  // 찜 여부 확인
+  const isFavorited = favoriteItems.has(id);
+
+  // 찜하기/취소 로직
+  const toggleFavorite = async () => {
+    try {
+      await defaultFetch(`/shop/wishlist/${id}`, {
+        method: isFavorited ? "DELETE" : "POST",
+      });
+
+      setFavoriteItems((prev) => {
+        const updated = new Set(prev);
+        isFavorited ? updated.delete(id) : updated.add(id);
+        return updated;
+      });
+    } catch (error) {
+      console.error("서버 요청 중 오류 발생:", error);
+    }
+  };
+  // // 찜 목록 가져오기
+  // const favoriteList = async () => {
+  //   try {
+  //     const response: { data: { content: { id: number }[] } } =
+  //       await defaultFetch("/shop/wishlist", {
+  //         method: "GET",
+  //       });
+
+  //     const favoriteIds = response.data.content.map((item) => item.id);
+  //     setFavoriteItems(favoriteIds);
+  //   } catch (error) {
+  //     console.log("서버 요청 중 오류 발생:", error);
+  //   }
+  // };
+
+  // // 찜하기, 찜 취소 로직
+  // const toggleFavorite = async () => {
+  //   try {
+  //     await defaultFetch(
+  //       isFavorited ? `/shop/wishlist/${id}` : `/shop/wishlist/${id}`,
+  //       {
+  //         method: isFavorited ? "DELETE" : "POST",
+  //       }
+  //     );
+  //     setIsFavorited((prev) => !prev);
+  //   } catch (error) {
+  //     console.log("서버 요청 중 오류 발생:", error);
+  //   }
+  // };
+
+  // useEffect(() => {
+  //   favoriteList();
+  // }, []);
+
+  // useEffect(() => {
+  //   // 현재 id가 찜한 목록에 있는지 체크
+  //   setIsFavorited(favoriteItems.includes(id));
+  // }, [favoriteItems, id]);
 
   return (
     <div className="grid grid-rows-3 grid-cols-2 bg-[var(--color-second)] hover:bg-[var(--color-second-hover)] w-full h-18 h-36 md:h-24 lg:h-28 xl:h-36 2xl:h-56 px-5 py-3 max-[480px]:px-3 md:px-3.5 md:py-2 xl:px-5 xl:py-3 max-[480px]:gap-x-2.5 gap-x-5 gap-y-2.5 md:gap-x-2.5 md:gap-y-1.5 lg:gap-x-5 lg:gap-y-2.5 rounded-2xl relative cursor-pointer">
