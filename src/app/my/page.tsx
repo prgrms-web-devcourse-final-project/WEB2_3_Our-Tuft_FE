@@ -220,7 +220,8 @@ export default function Page() {
 
       // 1.5초 후에 로비로 이동
       setTimeout(() => {
-        router.push("/lobby");
+        // router.push("/lobby");
+        window.location.href = "/lobby";
       }, 1500);
     } catch (err) {
       setSaveError(
