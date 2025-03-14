@@ -16,13 +16,7 @@ import {
   roomUserListData,
 } from "../../../../types/Room";
 
-export default function UserList({
-  userList,
-  playList,
-}: {
-  userList: roomUserListData;
-  playList: playerData;
-}) {
+export default function UserList({ userList }: { userList: roomUserListData }) {
   console.log("userList", userList);
 
   const { setIsHost, isHost, setAsAllReady } = useIsRoomStore();
