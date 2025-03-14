@@ -122,23 +122,16 @@ export default function InfoChange({
         >
           닉네임
         </label>
-        <div className="flex items-center gap-2">
+        <div>
           <input
             id="nickname"
             type="text"
             value={nickname}
             onChange={handleNicknameChange}
             disabled={isChangingNickname}
-            className="flex-1 py-2 md:py-3 lg:py-4 px-3 rounded-lg bg-white text-black text-base md:text-lg lg:text-xl disabled:bg-gray-200"
+            className="w-full py-2 md:py-3 lg:py-4 px-3 rounded-lg bg-white text-black text-base md:text-lg lg:text-xl disabled:bg-gray-200"
             placeholder="닉네임을 입력하세요"
           />
-          <button
-            onClick={handleChangeNickname}
-            disabled={isChangingNickname}
-            className="shrink-0 py-2 md:py-3 lg:py-4 px-4 md:px-5 lg:px-6 bg-[var(--color-secondPoint)] hover:bg-[var(--color-secondPoint-hover)] disabled:bg-gray-400 text-white text-sm md:text-base lg:text-lg rounded-lg transition-all flex items-center justify-center"
-          >
-            {isChangingNickname ? "변경 중..." : "변경"}
-          </button>
         </div>
         <div className="flex flex-col md:flex-row md:items-center justify-between mt-2 md:mt-4">
           {nicknameChangeResult ? (
