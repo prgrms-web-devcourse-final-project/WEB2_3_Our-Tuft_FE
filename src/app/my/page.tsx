@@ -43,16 +43,6 @@ interface ToastProps {
   isVisible: boolean;
 }
 
-interface NicknameResponse {
-  isSuccess: boolean;
-  code: string;
-  message: string;
-  data: {
-    nickName: string;
-    accessToken: string;
-  };
-}
-
 function Toast({ message, type, isVisible }: ToastProps) {
   if (!isVisible) return null;
 
@@ -100,7 +90,7 @@ function Toast({ message, type, isVisible }: ToastProps) {
 
 export default function Page() {
   const router = useRouter();
-  const { token, login } = useLoginStore();
+  const { token } = useLoginStore();
   const [originalProfile, setOriginalProfile] = useState<AvatarProfile | null>(
     null
   );
@@ -222,20 +212,6 @@ export default function Page() {
 
       if (!response.isSuccess) {
         throw new Error(response.message || "프로필 변경에 실패했습니다");
-      }
-
-      // accessToken 변경
-      const changeToken = await defaultFetch<NicknameResponse>(
-        "/myInfo/nickname",
-        {
-          method: "PUT",
-          body: JSON.stringify({ nickName: originalProfile?.nickname }),
-        }
-      );
-
-      if (changeToken.isSuccess) {
-        login(changeToken.data.accessToken);
-        console.log("accessToken 변경 완료: ", changeToken.data.accessToken);
       }
 
       // 저장 성공 시 원본 프로필 업데이트
